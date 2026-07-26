@@ -3,6 +3,7 @@ import { Inter, Roboto_Slab } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/providers/session-provider";
 import Header from "@/components/layout/header";
+import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import * as Sentry from "@sentry/nextjs";
 import { GlobalStateProvider } from "@/context/GlobalStateContext";
@@ -41,6 +42,7 @@ export default function RootLayout({
             <Sentry.ErrorBoundary fallback={<p>Something went wrong</p>}>
               <main className="flex-1">{children}</main>
             </Sentry.ErrorBoundary>
+            <Footer />
             <Toaster />
           </GlobalStateProvider>
         </SessionProvider>

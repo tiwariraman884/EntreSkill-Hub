@@ -14,7 +14,24 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, SlidersHorizontal, Sparkles, Clock, ArrowRight, Bookmark } from "lucide-react";
+import {
+  Search, SlidersHorizontal, Sparkles, Clock, ArrowRight, Bookmark,
+  Zap, BarChart3, TrendingUp, Shield, Target, Lightbulb
+} from "lucide-react";
+
+const IDEA_FEATURES = [
+  { icon: Sparkles, label: "AI Idea Generator", desc: "Describe your skills and get 10 tailored business ideas in seconds" },
+  { icon: BarChart3, label: "Market Validation", desc: "See TAM, competition density, and market readiness scores" },
+  { icon: TrendingUp, label: "Revenue Models", desc: "Explore pricing strategies and realistic income projections" },
+  { icon: Shield, label: "SWOT Analysis", desc: "AI-generated strengths, weaknesses, opportunities, and threats" },
+  { icon: Target, label: "Idea Score", desc: "A composite 0–100 AI score across viability, timing, and competition" },
+  { icon: Lightbulb, label: "Launch Checklist", desc: "Step-by-step action plan to go from idea to first customer" },
+];
+
+const TRENDING_CATEGORIES = [
+  "AI Tools", "SaaS", "EdTech", "HealthTech", "Freelance Services",
+  "E-commerce", "Content Creator", "FinTech", "Sustainability", "Local Services"
+];
 
 export default function IdeasPage() {
   const [search, setSearch] = useState("");
@@ -60,17 +77,92 @@ export default function IdeasPage() {
   }, [search, category, difficulty, sort]);
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-7xl">
-      <div className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold font-heading mb-4">Discover Business Ideas</h1>
-        <p className="text-muted-foreground text-lg max-w-2xl">
-          Explore validated startup ideas, curated based on market demand, investment size, and your personal skills.
-        </p>
-      </div>
+    <div className="min-h-screen bg-background">
+      {/* Public marketing hero */}
+      <section className="relative border-b bg-gradient-to-br from-primary/6 via-background to-secondary/4 pt-20 pb-14 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[80px] -translate-y-1/2" />
+        </div>
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/15 border border-secondary/30 text-secondary-foreground text-sm font-medium mb-6">
+              <Zap className="h-4 w-4 fill-secondary text-secondary" aria-hidden="true" />
+              AI-Powered Startup Explorer
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-5 text-balance leading-tight">
+              Find your next{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+                business idea
+              </span>{" "}
+              — validated by AI
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              Browse 200+ curated startup ideas with market validation, SWOT analysis, revenue models, and AI-generated launch checklists. Or describe your skills and let our AI generate 10 personalized ideas just for you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+              <button
+                onClick={() => document.getElementById("idea-explorer")?.scrollIntoView({ behavior: "smooth" })}
+                className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Explore Ideas <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl border-2 border-border font-semibold hover:bg-muted/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Sparkles className="h-4 w-4" aria-hidden="true" /> Generate My Idea
+              </Link>
+            </div>
+
+            {/* Trending categories */}
+            <div className="flex flex-wrap justify-center gap-2">
+              <span className="text-xs text-muted-foreground self-center mr-1">Trending:</span>
+              {TRENDING_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat === category ? "All" : cat)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    category === cat
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-card text-muted-foreground hover:border-primary hover:text-primary"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Feature chips */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {IDEA_FEATURES.map(({ icon: Icon, label, desc }) => (
+              <div
+                key={label}
+                className="group flex flex-col items-center text-center gap-2 p-4 rounded-xl border bg-card/70 hover:bg-card hover:border-primary/40 hover:shadow-sm transition-all"
+                title={desc}
+              >
+                <div className="w-9 h-9 rounded-xl bg-primary/8 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+                  <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
+                </div>
+                <p className="text-xs font-semibold leading-tight">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Existing explorer content */}
+      <div id="idea-explorer" className="container mx-auto px-4 py-12 max-w-7xl">
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold font-heading mb-3">Discover Business Ideas</h2>
+          <p className="text-muted-foreground text-base max-w-2xl">
+            Explore validated startup ideas curated by our AI — filtered by market demand, investment size, and your personal skills.
+          </p>
+        </div>
 
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" aria-hidden="true" />
           <Input 
             placeholder="Search ideas (e.g., Bakery, Freelance)..." 
             className="pl-9 h-11"
@@ -100,7 +192,7 @@ export default function IdeasPage() {
           </Select>
           <Select value={sort} onValueChange={(val) => setSort(val || "popularity")}>
             <SelectTrigger className="w-[160px] h-11">
-              <SlidersHorizontal className="size-4 mr-2 text-muted-foreground" />
+              <SlidersHorizontal className="size-4 mr-2 text-muted-foreground" aria-hidden="true" />
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -126,6 +218,7 @@ export default function IdeasPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

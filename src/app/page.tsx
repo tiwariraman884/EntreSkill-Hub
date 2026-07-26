@@ -396,62 +396,7 @@ function FinalCTA() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="bg-background border-t py-16">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-16">
-          <div className="col-span-2 lg:col-span-2 pr-8">
-            <h3 className="font-heading font-bold text-xl mb-4">EntreSkill Hub</h3>
-            <p className="text-muted-foreground text-sm mb-6 max-w-xs">Empowering skilled individuals to build successful micro-businesses through structured roadmaps and expert mentorship.</p>
-            <div className="flex gap-4">
-              {/* Dummy icons for socials */}
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer">X</div>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer">In</div>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer">Gh</div>
-            </div>
-          </div>
-          
-          <div>
-            <h4 className="font-bold mb-4">Product</h4>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><Link href="#" className="hover:text-foreground transition-colors">Roadmaps</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Learning Hub</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Mentors</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Business Ideas</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-bold mb-4">Company</h4>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><Link href="#" className="hover:text-foreground transition-colors">About Us</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Blog</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Careers</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-bold mb-4">Legal</h4>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><Link href="#" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
-              <li><Link href="#" className="hover:text-foreground transition-colors">Cookie Policy</Link></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} EntreSkill Hub. All rights reserved.</p>
-          <div className="flex items-center gap-2">
-            <span>Built for founders, by founders.</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
+// Footer is rendered globally via src/app/layout.tsx
 
 // --- Main Page Component ---
 
@@ -468,7 +413,6 @@ export default function Home() {
       <SneakPeeks />
       <FAQ />
       <FinalCTA />
-      <Footer />
     </div>
   );
 }
