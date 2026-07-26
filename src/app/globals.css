@@ -1,0 +1,96 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Colors */
+  --color-canvas: #F2ECDD;
+  --color-ink: #241F1C;
+  --color-indigo: #2B3A67;
+  --color-marigold: #E8A33D;
+  --color-terracotta-deep: #A8452F;
+  --color-thread: #6B6156;
+  --color-verified: #3F6B4A;
+
+  /* Typography */
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.5rem;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* Shadcn UI Variable Mappings */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  /* Map design tokens to shadcn variables for light mode */
+  --background: #F2ECDD; /* canvas */
+  --foreground: #241F1C; /* ink */
+  
+  --card: #ffffff; /* White cards for contrast against canvas */
+  --card-foreground: #241F1C;
+  
+  --popover: #ffffff;
+  --popover-foreground: #241F1C;
+  
+  --primary: #2B3A67; /* indigo */
+  --primary-foreground: #F2ECDD;
+  
+  --secondary: #E8A33D; /* marigold */
+  --secondary-foreground: #241F1C;
+  
+  --muted: #e6dfcc; /* Darker canvas for muted backgrounds */
+  --muted-foreground: #6B6156; /* thread */
+  
+  --accent: #E8A33D;
+  --accent-foreground: #241F1C;
+  
+  --destructive: #A8452F; /* terracotta-deep */
+  --destructive-foreground: #F2ECDD;
+  
+  --border: #6B6156; /* thread */
+  --input: #6B6156; /* thread */
+  --ring: #2B3A67; /* indigo */
+}
+
+/* Base styles */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-ink;
+  }
+}

@@ -1,0 +1,661 @@
+openapi: 3.0.3
+info:
+  title: EntreSkill Hub API
+  description: >
+    Skill-to-Startup Enablement Platform API. Covers auth, assessment,
+    recommendations, roadmaps, learning resources, mentors, notifications,
+    and admin operations. See docs/API.md for narrative documentation.
+  version: "1.0.0"
+  contact:
+    name: EntreSkill Hub Engineering
+servers:
+  - url: https://entreskillhub.com/api
+    description: Production
+  - url: https://staging.entreskillhub.com/api
+    description: Staging
+  - url: http://localhost:3000/api
+    description: Local development
+
+tags:
+  - name: Auth
+  - name: Assessment
+  - name: Recommendations
+  - name: Roadmaps
+  - name: Resources
+  - name: Bookmarks
+  - name: Mentors
+  - name: Sessions
+  - name: Notifications
+  - name: Admin
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user (email/password)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId: { type: string }
+                  emailVerificationRequired: { type: boolean }
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "409":
+          description: Email already registered
+
+  /auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Request a password reset email
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        "200":
+          description: Always returns 200 regardless of whether the email exists
+
+  /auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Reset password using a signed token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, newPassword]
+              properties:
+                token: { type: string }
+                newPassword: { type: string, minLength: 8 }
+      responses:
+        "200": { description: Password updated }
+        "400": { description: Invalid or expired token }
+
+  /profile/me:
+    get:
+      tags: [Assessment]
+      summary: Get current user's profile
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /assessment:
+    patch:
+      tags: [Assessment]
+      summary: Submit or update skill/interest profiling questionnaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssessmentInput"
+      responses:
+        "200":
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+
+  /recommendations:
+    get:
+      tags: [Recommendations]
+      summary: Get ranked business idea recommendations for the current user
+      parameters:
+        - name: refresh
+          in: query
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/RecommendedIdea" }
+                  fallback: { type: boolean }
+
+  /recommendations/{ideaId}:
+    get:
+      tags: [Recommendations]
+      summary: Get full detail for a single business idea
+      parameters:
+        - $ref: "#/components/parameters/IdeaId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/BusinessIdea" }
+        "404": { description: Not found }
+
+  /roadmaps/{id}:
+    get:
+      tags: [Roadmaps]
+      summary: Get a roadmap and its ordered steps
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Roadmap" }
+
+  /progress:
+    get:
+      tags: [Roadmaps]
+      summary: Get current user's progress across all started roadmaps
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/UserProgress" }
+
+  /progress/{roadmapId}/step/{stepId}/complete:
+    post:
+      tags: [Roadmaps]
+      summary: Mark a roadmap step complete (idempotent)
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: stepId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UserProgress" }
+    delete:
+      tags: [Roadmaps]
+      summary: Un-mark a roadmap step
+      parameters:
+        - name: roadmapId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: stepId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: Updated progress }
+
+  /resources:
+    get:
+      tags: [Resources]
+      summary: List approved learning resources
+      security: []
+      parameters:
+        - name: type
+          in: query
+          schema: { type: string, enum: [video, article, checklist] }
+        - name: tag
+          in: query
+          schema: { type: string }
+        - name: q
+          in: query
+          schema: { type: string }
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PaginatedResources" }
+
+  /resources/{id}/feedback:
+    post:
+      tags: [Resources]
+      summary: Submit rating/feedback on a resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rating]
+              properties:
+                rating: { type: integer, minimum: 1, maximum: 5 }
+                comment: { type: string }
+      responses:
+        "201": { description: Feedback recorded }
+
+  /bookmarks:
+    get:
+      tags: [Bookmarks]
+      summary: List current user's bookmarks
+      responses:
+        "200": { description: OK }
+    post:
+      tags: [Bookmarks]
+      summary: Toggle a bookmark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [targetType, targetId]
+              properties:
+                targetType: { type: string, enum: [idea, resource] }
+                targetId: { type: string }
+      responses:
+        "200": { description: New bookmark state }
+
+  /mentors:
+    get:
+      tags: [Mentors]
+      summary: List verified mentors
+      security: []
+      parameters:
+        - name: expertise
+          in: query
+          schema: { type: string }
+        - name: availabilityDay
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/MentorProfile" }
+
+  /mentors/apply:
+    post:
+      tags: [Mentors]
+      summary: Apply to become a mentor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MentorApplication" }
+      responses:
+        "201": { description: Mentor application created (pending verification) }
+
+  /mentors/{id}/request-session:
+    post:
+      tags: [Sessions]
+      summary: Request a mentor session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string }
+      responses:
+        "201": { description: Session request created }
+
+  /sessions/{id}:
+    patch:
+      tags: [Sessions]
+      summary: Mentor confirms, declines, or reschedules a session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action: { type: string, enum: [confirm, decline, reschedule] }
+                scheduledAt: { type: string, format: date-time }
+                meetingLink: { type: string }
+      responses:
+        "200": { description: Session updated }
+
+  /sessions/{id}/messages:
+    get:
+      tags: [Sessions]
+      summary: Get Q&A thread for a session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200": { description: OK }
+    post:
+      tags: [Sessions]
+      summary: Post a message to the Q&A thread
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body: { type: string }
+      responses:
+        "201": { description: Message posted }
+
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List current user's notifications
+      parameters:
+        - name: unreadOnly
+          in: query
+          schema: { type: boolean }
+      responses:
+        "200": { description: OK }
+
+  /admin/users:
+    get:
+      tags: [Admin]
+      summary: List/filter users (admin only)
+      parameters:
+        - name: role
+          in: query
+          schema: { type: string, enum: [user, mentor, admin] }
+        - name: verificationStatus
+          in: query
+          schema: { type: string }
+        - name: q
+          in: query
+          schema: { type: string }
+      responses:
+        "200": { description: OK }
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /admin/content/pending:
+    get:
+      tags: [Admin]
+      summary: List pending learning resources awaiting approval
+      responses:
+        "200": { description: OK }
+
+  /admin/content/{id}/approve:
+    patch:
+      tags: [Admin]
+      summary: Approve, reject, or request changes on a resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approved, rejected, changes_requested] }
+                reason: { type: string }
+      responses:
+        "200": { description: Content status updated }
+
+  /admin/business-ideas:
+    post:
+      tags: [Admin]
+      summary: Create a new business idea
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/BusinessIdeaInput" }
+      responses:
+        "201": { description: Created }
+
+  /admin/analytics:
+    get:
+      tags: [Admin]
+      summary: Get pre-aggregated platform analytics
+      responses:
+        "200": { description: OK }
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: next-auth.session-token
+  parameters:
+    IdeaId:
+      name: ideaId
+      in: path
+      required: true
+      schema: { type: string }
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, default: 1 }
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, default: 20, maximum: 100 }
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: No valid session
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Authenticated but role/ownership does not permit this action
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+            fields: { type: object, additionalProperties: { type: string } }
+    User:
+      type: object
+      properties:
+        _id: { type: string }
+        name: { type: string }
+        email: { type: string }
+        role: { type: string, enum: [user, mentor, admin] }
+        skills: { type: array, items: { type: string } }
+        interests: { type: array, items: { type: string } }
+        location:
+          type: object
+          properties:
+            state: { type: string }
+            district: { type: string }
+            isRural: { type: boolean }
+    AssessmentInput:
+      type: object
+      required: [skills, interests, location]
+      properties:
+        skills: { type: array, items: { type: string } }
+        interests: { type: array, items: { type: string } }
+        experienceLevels:
+          type: object
+          additionalProperties: { type: string, enum: [beginner, intermediate, advanced] }
+        location:
+          type: object
+          properties:
+            state: { type: string }
+            district: { type: string }
+            isRural: { type: boolean }
+        timeCommitment: { type: string, enum: [part-time, full-time] }
+    BusinessIdea:
+      type: object
+      properties:
+        _id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        relatedSkills: { type: array, items: { type: string } }
+        difficultyLevel: { type: string, enum: [beginner, intermediate, advanced] }
+        estimatedStartupCostINR:
+          type: object
+          properties:
+            min: { type: number }
+            max: { type: number }
+        roadmapId: { type: string }
+        isActive: { type: boolean }
+    BusinessIdeaInput:
+      allOf:
+        - $ref: "#/components/schemas/BusinessIdea"
+    RecommendedIdea:
+      allOf:
+        - $ref: "#/components/schemas/BusinessIdea"
+        - type: object
+          properties:
+            score: { type: number }
+            reasons: { type: array, items: { type: string } }
+    Roadmap:
+      type: object
+      properties:
+        _id: { type: string }
+        businessIdeaId: { type: string }
+        title: { type: string }
+        steps:
+          type: array
+          items: { $ref: "#/components/schemas/RoadmapStep" }
+    RoadmapStep:
+      type: object
+      properties:
+        _id: { type: string }
+        order: { type: integer }
+        type:
+          type: string
+          enum: [validation, skills_tools, legal_registration, cost_estimation, marketing_basics]
+        title: { type: string }
+        content: { type: string }
+        resourceIds: { type: array, items: { type: string } }
+    UserProgress:
+      type: object
+      properties:
+        roadmapId: { type: string }
+        completedStepIds: { type: array, items: { type: string } }
+        completionPercent: { type: number }
+        lastActivityAt: { type: string, format: date-time }
+    PaginatedResources:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/LearningResource" }
+        page: { type: integer }
+        limit: { type: integer }
+        total: { type: integer }
+        hasMore: { type: boolean }
+    LearningResource:
+      type: object
+      properties:
+        _id: { type: string }
+        title: { type: string }
+        type: { type: string, enum: [video, article, checklist] }
+        url: { type: string }
+        uploadedBy: { type: string }
+        approvalStatus: { type: string, enum: [pending, approved, rejected] }
+        tags: { type: array, items: { type: string } }
+    MentorProfile:
+      type: object
+      properties:
+        _id: { type: string }
+        userId: { type: string }
+        expertiseAreas: { type: array, items: { type: string } }
+        yearsExperience: { type: integer }
+        bio: { type: string }
+        verificationStatus: { type: string, enum: [pending, verified, rejected] }
+        availability:
+          type: array
+          items:
+            type: object
+            properties:
+              day: { type: string }
+              startTime: { type: string }
+              endTime: { type: string }
+    MentorApplication:
+      type: object
+      required: [bio, expertiseAreas, yearsExperience]
+      properties:
+        bio: { type: string }
+        expertiseAreas: { type: array, items: { type: string } }
+        yearsExperience: { type: integer }
+        supportingLinks: { type: array, items: { type: string } }
+
+security:
+  - sessionCookie: []

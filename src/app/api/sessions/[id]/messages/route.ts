@@ -1,0 +1,52 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { getSessionMessages, addSessionMessage } from "@/domains/mentors/service";
+
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const messages = await getSessionMessages(id);
+    return NextResponse.json({ messages });
+  } catch (error: unknown) {
+    console.error("Messages fetch error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await request.json();
+    const { body: messageBody } = body as { body?: string };
+
+    if (!messageBody || typeof messageBody !== "string") {
+      return NextResponse.json(
+        { error: { code: "VALIDATION_ERROR", message: "Message body is required" } },
+        { status: 400 }
+      );
+    }
+
+    const message = await addSessionMessage(id, session.user.id, messageBody);
+    return NextResponse.json({ message }, { status: 201 });
+  } catch (error: unknown) {
+    console.error("Message creation error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
