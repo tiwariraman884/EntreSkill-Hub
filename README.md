@@ -92,31 +92,6 @@
 *   **Monitoring**: Integrated Sentry tracking for performance and error telemetry.
 
 ---
-
-## 📸 Screenshots
-
-| Landing Page | Login |
-| :---: | :---: |
-| ![Landing Page Placeholder](https://via.placeholder.com/800x450?text=Landing+Page) | ![Login Placeholder](https://via.placeholder.com/800x450?text=Authentication) |
-
-| User Dashboard | Learning Roadmaps |
-| :---: | :---: |
-| ![Dashboard Placeholder](https://via.placeholder.com/800x450?text=User+Dashboard) | ![Roadmaps Placeholder](https://via.placeholder.com/800x450?text=Interactive+Roadmaps) |
-
-| Mentorship | Admin Dashboard |
-| :---: | :---: |
-| ![Mentorship Placeholder](https://via.placeholder.com/800x450?text=Mentor+Discovery) | ![Admin Placeholder](https://via.placeholder.com/800x450?text=Admin+Panel) |
-
-| Bookmarks | Notifications |
-| :---: | :---: |
-| ![Bookmarks Placeholder](https://via.placeholder.com/800x450?text=Bookmarks) | ![Notifications Placeholder](https://via.placeholder.com/800x450?text=Notifications) |
-
-| Profile | Assessment |
-| :---: | :---: |
-| ![Profile Placeholder](https://via.placeholder.com/800x450?text=User+Profile) | ![Assessment Placeholder](https://via.placeholder.com/800x450?text=Assessment) |
-
----
-
 ## 🏗 System Architecture
 
 ```mermaid
