@@ -1,10 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
-import mongoose from "mongoose";
 import { connectToDatabase } from "../src/lib/mongoose";
 import { LearningResource, User } from "../src/models";
 
-const categories = [
+const _categories = [
   "Business Planning", "Marketing", "Finance", "Sales", 
   "Product Development", "Leadership", "Startup Legal", 
   "AI Tools", "Operations", "Branding", "Customer Research", 

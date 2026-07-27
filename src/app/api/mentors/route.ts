@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
     const mentorSession = await createSession(validated.mentorId, session.user.id, validated.notes);
     return NextResponse.json({ session: mentorSession }, { status: 201 });
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Session request error:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

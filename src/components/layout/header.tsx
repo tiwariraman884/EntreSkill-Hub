@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Compass, Menu, User as UserIcon, LogOut } from "lucide-react";
+import { Compass, LayoutDashboard, Menu, User as UserIcon, LogOut } from "lucide-react";
 import { useState } from "react";
 
 /** A nav link that is always rendered — authenticated users get the real href,
@@ -54,7 +55,7 @@ export default function Header() {
       <header className="border-b">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary" aria-hidden="true" />
+            <Image src="/logo.png" alt="EntreSkill Hub Logo" width={48} height={48} priority className="h-10 w-10 md:h-11 md:w-11 lg:h-12 lg:w-12 object-contain select-none shrink-0" />
             <span className="font-bold text-xl">EntreSkill Hub</span>
           </div>
         </div>
@@ -67,7 +68,7 @@ export default function Header() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2" aria-label="EntreSkill Hub home">
-            <BookOpen className="h-6 w-6 text-primary" aria-hidden="true" />
+            <Image src="/logo.png" alt="EntreSkill Hub Logo" width={48} height={48} priority className="h-10 w-10 md:h-11 md:w-11 lg:h-12 lg:w-12 object-contain select-none shrink-0" />
             <span className="font-bold text-xl hidden sm:inline-block">EntreSkill Hub</span>
           </Link>
 
@@ -76,7 +77,7 @@ export default function Header() {
             {isAuthed && (
               <SmartNavLink
                 label="Dashboard"
-                icon={BookOpen}
+                icon={LayoutDashboard}
                 authedHref="/dashboard"
                 anonHref="/login"
                 pathname={pathname}
@@ -148,7 +149,7 @@ export default function Header() {
           {isAuthed && (
             <SmartNavLink
               label="Dashboard"
-              icon={BookOpen}
+              icon={LayoutDashboard}
               authedHref="/dashboard"
               anonHref="/login"
               pathname={pathname}

@@ -263,7 +263,7 @@ export default function BlogPage() {
               <BookOpen className="h-7 w-7 text-primary mb-3" aria-hidden="true" />
               <h3 className="font-bold font-heading mb-2">The Founder Weekly</h3>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                One email every Saturday. Curated founder stories, AI tools, and the week's best reads — never spam.
+                 One email every Saturday. Curated founder stories, AI tools, and the week&apos;s best reads — never spam.
               </p>
               <form aria-label="Blog newsletter signup" className="space-y-2">
                 <input

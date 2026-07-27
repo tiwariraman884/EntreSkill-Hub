@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
-  BookOpen,
   Globe,
   Code2,
   Share2,
@@ -90,10 +90,7 @@ export default function Footer() {
               className="flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
               aria-label="EntreSkill Hub home"
             >
-              <BookOpen
-                className="h-7 w-7 text-primary group-hover:scale-110 transition-transform"
-                aria-hidden="true"
-              />
+              <Image src="/logo.png" alt="EntreSkill Hub Logo" width={36} height={36} className="h-9 w-9 object-contain select-none shrink-0" />
               <span className="font-bold text-xl font-heading">EntreSkill Hub</span>
             </Link>
 
@@ -181,7 +178,7 @@ export default function Footer() {
             {subscribed ? (
               <div className="flex items-center gap-2 text-sm font-medium text-primary">
                 <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
-                You're on the list! Check your inbox soon.
+                You&apos;re on the list! Check your inbox soon.
               </div>
             ) : (
               <form

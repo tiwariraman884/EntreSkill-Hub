@@ -6,8 +6,7 @@ import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, PlayCircle, FileText, CheckSquare, Bookmark, CheckCircle2, Clock, Eye, Star, ArrowRight, Share2, Award } from "lucide-react";
+import { ArrowLeft, FileText, CheckSquare, Bookmark, CheckCircle2, Clock, Eye, Star, ArrowRight, Share2, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ResourcePage({ params }: { params: { id: string } }) {

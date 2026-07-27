@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,7 @@ import { BookOpen, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface Bookmark {
   _id: string;
@@ -26,7 +27,7 @@ export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchBookmarks = async () => {
+  const fetchBookmarks = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch("/api/bookmarks");
@@ -41,11 +42,11 @@ export default function BookmarksPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchBookmarks();
-  }, []);
+  }, [fetchBookmarks]);
 
   const handleRemove = async (targetType: string, targetId: string) => {
     try {
@@ -92,9 +93,9 @@ export default function BookmarksPage() {
         <div className="border rounded-xl p-8 text-center">
           <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground mb-4">You haven&apos;t saved any resources yet.</p>
-            <a href="/learn" className={cn(buttonVariants({ variant: "outline" }))}>
+            <Link href="/learn" className={cn(buttonVariants({ variant: "outline" }))}>
               Explore Resources
-            </a>
+            </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

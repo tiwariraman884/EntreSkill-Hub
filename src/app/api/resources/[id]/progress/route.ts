@@ -38,7 +38,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     );
 
     return NextResponse.json({ data: progress }, { status: 200 });
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Progress update error:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

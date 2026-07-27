@@ -41,7 +41,7 @@ export async function PATCH(request: Request) {
     
     // Create any missing skills
     const missingSkills = skillLabels.filter(label => !existingSkillNames.includes(label));
-    let newSkills: any[] = [];
+    let newSkills: { _id: string }[] = [];
     if (missingSkills.length > 0) {
       newSkills = await Skill.insertMany(missingSkills.map(name => ({
         name,
@@ -59,7 +59,7 @@ export async function PATCH(request: Request) {
     }, { new: true }).select("-passwordHash").lean();
 
     return NextResponse.json(updatedUser, { status: 200 });
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Assessment error:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(

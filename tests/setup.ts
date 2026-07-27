@@ -1,4 +1,4 @@
-require("dotenv/config");
+import "dotenv/config";
 
 beforeAll(async () => {
   process.env.NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || "test-secret";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useGlobalState } from "@/context/GlobalStateContext";
@@ -10,22 +10,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from "recharts";
-import { Target, Lightbulb, GraduationCap, Download, ArrowRight, TrendingUp, AlertTriangle, Clock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Target, GraduationCap, ArrowRight, TrendingUp, AlertTriangle, Clock } from "lucide-react";
+import { useIsClient } from "@/lib/use-is-client";
 
 export default function AssessmentResultsPage() {
   const router = useRouter();
   const { assessmentScores } = useGlobalState();
-  const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
 
   useEffect(() => {
-    setMounted(true);
-    if (assessmentScores === null) {
+    if (isClient && assessmentScores === null) {
       router.push("/assessment");
     }
-  }, [assessmentScores, router]);
+  }, [isClient, assessmentScores, router]);
 
-  if (!mounted || !assessmentScores) return null;
+  if (!isClient || !assessmentScores) return null;
 
   // Format data for Radar Chart
   const chartData = Object.entries(assessmentScores).map(([subject, score]) => ({
@@ -79,7 +78,7 @@ export default function AssessmentResultsPage() {
                 <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
                 <Tooltip 
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: any) => [`${value}%`, 'Proficiency']}
+                  formatter={(value) => [`${Number(value ?? 0)}%`, 'Proficiency']}
                 />
                 <Radar
                   name="Your Score"

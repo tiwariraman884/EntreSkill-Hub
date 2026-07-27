@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     const user = await toggleBookmark(session.user.id, validated.targetType, validated.targetId);
     const bookmarks = (user.bookmarks as Array<{ targetType: string; targetId: string }>);
     return NextResponse.json({ bookmarks });
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Bookmark toggle error:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(

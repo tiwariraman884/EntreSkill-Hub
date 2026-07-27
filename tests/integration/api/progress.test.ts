@@ -1,7 +1,5 @@
-import { NextRequest } from "next/server";
 import { markStepComplete } from "@/domains/roadmaps/service";
 import { connectToDatabase } from "@/lib/mongoose";
-import { UserProgress, Roadmap, RoadmapStep } from "@/models";
 
 describe("POST /api/progress/[roadmapId]/step/[stepId]/complete", () => {
   beforeAll(async () => {
@@ -9,7 +7,6 @@ describe("POST /api/progress/[roadmapId]/step/[stepId]/complete", () => {
   });
 
   it("marks step complete and returns updated progress", async () => {
-    const userId = new Map(); // use a fake user id
     const uid = "user123";
     const rid = "roadmap123";
     const sid = "step001";

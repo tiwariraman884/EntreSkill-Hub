@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 import {
-  BookOpen, Sparkles, Target, Clock, Trophy, Users, Play,
-  Star, ArrowRight, CheckCircle2, Layers, Code2, Shield,
+  BookOpen, Sparkles, Target, Clock, Play,
+  Star, ArrowRight, CheckCircle2, Code2, Shield,
   Smartphone, Cloud, BarChart3, Bitcoin, Palette, Terminal,
   Rocket, Megaphone, PenTool, TrendingUp, Zap, FlaskConical,
   FileQuestion, Briefcase, Award, Bookmark, Eye, Brain

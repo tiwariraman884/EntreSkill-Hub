@@ -1,4 +1,4 @@
-import { getStorageConfig, configureStorage } from "@/lib/storage";
+import { getStorageConfig } from "@/lib/storage";
 
 describe("storage", () => {
   it("throws when storage is not configured", () => {

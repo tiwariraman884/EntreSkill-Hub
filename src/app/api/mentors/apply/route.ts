@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const profile = await applyToBeMentor(session.user.id, validated);
     return NextResponse.json({ profile }, { status: 201 });
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Mentor application error:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

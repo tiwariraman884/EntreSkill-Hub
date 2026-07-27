@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
@@ -13,7 +14,7 @@ export default function CertificatePage({ params }: { params: { id: string } }) 
   }
 
   // Generate a mock certificate ID and date
-  const certId = `CERT-${resource.id.toUpperCase()}-${Math.floor(Math.random() * 1000000)}`;
+  const certId = `CERT-${resource.id.toUpperCase()}`;
   const issueDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
@@ -43,9 +44,7 @@ export default function CertificatePage({ params }: { params: { id: string } }) 
             <div className="mb-12">
               <div className="flex justify-center mb-6">
                 <div className="flex items-center gap-2">
-                  <div className="bg-primary text-primary-foreground p-2 rounded-lg">
-                    <Award className="size-8" />
-                  </div>
+                  <Image src="/logo.png" alt="EntreSkill Hub Logo" width={48} height={48} className="object-contain select-none shrink-0" />
                   <span className="text-2xl font-bold font-heading">EntreSkill Hub</span>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Bell, CheckCheck, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -18,7 +18,7 @@ export default function NotificationsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "unread">("all");
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
       const url = new URL("/api/notifications", window.location.origin);
@@ -39,11 +39,11 @@ export default function NotificationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
 
   useEffect(() => {
     fetchNotifications();
-  }, [filter]);
+  }, [fetchNotifications]);
 
   const handleMarkRead = async (id: string) => {
     try {

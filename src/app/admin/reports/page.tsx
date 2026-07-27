@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle } from "lucide-react";
@@ -15,11 +15,9 @@ interface Report {
 
 export default function AdminReports() {
   const [reports, setReports] = useState<Report[]>([]);
-  const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const fetchReports = async () => {
-    setLoading(true);
+  const fetchReports = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/reports");
       if (res.ok) {
@@ -28,14 +26,12 @@ export default function AdminReports() {
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, [fetchReports]);
 
   const handleResolve = async (id: string, status: "resolved" | "dismissed") => {
     setActionLoading(id);
@@ -82,9 +78,7 @@ export default function AdminReports() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {loading ? (
-                  <tr><td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">Loading reports...</td></tr>
-                ) : reports.length > 0 ? (
+                {reports.length > 0 ? (
                   reports.map((report) => (
                     <tr key={report._id} className="hover:bg-muted/30">
                       <td className="px-4 py-3 capitalize font-medium">{report.targetType}</td>

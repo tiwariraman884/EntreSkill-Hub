@@ -56,7 +56,7 @@ export async function POST(request: Request) {
       { userId: user._id, emailVerificationRequired: true },
       { status: 201 }
     );
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Registration error:", error);
     if (error instanceof z.ZodError) {
       const fieldErrors = error.issues.map((issue) => ({

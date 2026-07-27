@@ -1,33 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { User } from "next-auth";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import { ALL_IDEAS } from "@/data/mock-ideas";
-import { MOCK_ROADMAPS } from "@/data/mock-roadmaps";
 import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { useIsClient } from "@/lib/use-is-client";
 import { 
-  BellIcon, BookmarkIcon, MapIcon, PlayIcon, CheckCircle2Icon, BookOpenIcon, 
+  BellIcon, BookmarkIcon, MapIcon, CheckCircle2Icon, BookOpenIcon, 
   VideoIcon, ActivityIcon, ClockIcon, AwardIcon,
-  FlameIcon, MessageSquareIcon, ArrowRightIcon, BrainCircuitIcon, PlayCircleIcon,
+  FlameIcon, MessageSquareIcon, BrainCircuitIcon, PlayCircleIcon,
   TrendingUp, GraduationCap
 } from "lucide-react";
 
 export default function DashboardClient({ user }: { user: User }) {
-  const { stats, bookmarks, completedResources, assessmentScores } = useGlobalState();
-  const [mounted, setMounted] = useState(false);
+  const { stats, bookmarks, assessmentScores } = useGlobalState();
+  const isClient = useIsClient();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   // Derive Business Readiness Score
   const hasTakenAssessment = assessmentScores !== null;

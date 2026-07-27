@@ -4,7 +4,7 @@ import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 import {
   Sparkles, Target, Eye, Heart, Users, BookOpen, Rocket, Globe,
   ArrowRight, CheckCircle2, Zap, BarChart3, Star, TrendingUp,
-  Code2, Megaphone, Lightbulb
+  Lightbulb
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -151,7 +151,7 @@ export default function AboutPage() {
                 </span>
               </h1>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                EntreSkill Hub started with a simple frustration: millions of people have real, valuable skills but no clear path from "I can do this" to "I built a business doing this." We exist to close that gap — with AI, mentorship, and community.
+                EntreSkill Hub started with a simple frustration: millions of people have real, valuable skills but no clear path from &quot;I can do this&quot; to &quot;I built a business doing this.&quot; We exist to close that gap — with AI, mentorship, and community.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
@@ -312,7 +312,7 @@ export default function AboutPage() {
               href="/careers"
               className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
             >
-              We're hiring — view open roles <ArrowRight className="h-4 w-4" />
+              We&apos;re hiring — view open roles <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>

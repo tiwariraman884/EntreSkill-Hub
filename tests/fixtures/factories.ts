@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { User, Skill, BusinessIdea, Roadmap, LearningResource, MentorProfile, UserProgress, MentorSession, Feedback, Notification, AuditLog } from "@/models";
 
 export async function connectTestDb() {
   if (mongoose.connection.readyState === 0) {

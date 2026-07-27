@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
+import path from "path";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.join(process.cwd()),
+  },
   images: {
     remotePatterns: [
       {
@@ -32,8 +36,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig, {
-  silent: true,
-  org: "entreskillhub",
-  project: "entre-skill-hub",
-});
+export default process.env.NODE_ENV === "production"
+  ? withSentryConfig(nextConfig, {
+      silent: true,
+      org: "entreskillhub",
+      project: "entre-skill-hub",
+    })
+  : nextConfig;

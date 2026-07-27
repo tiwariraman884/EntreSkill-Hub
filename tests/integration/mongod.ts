@@ -1,3 +1,1 @@
-const { MongoMemoryServer } = require("mongodb-memory-server");
-
-exports.mongod = null;
+export const mongod = null;

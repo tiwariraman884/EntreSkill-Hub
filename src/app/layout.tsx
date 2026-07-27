@@ -8,8 +8,6 @@ import { Toaster } from "@/components/ui/sonner";
 import * as Sentry from "@sentry/nextjs";
 import { GlobalStateProvider } from "@/context/GlobalStateContext";
 
-export const dynamic = "force-dynamic";
-
 const fontSans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -23,6 +21,11 @@ const fontHeading = Roboto_Slab({
 export const metadata: Metadata = {
   title: "EntreSkill Hub — Skill-to-Startup Enablement Platform",
   description: "Convert your skills into structured paths toward micro-entrepreneurship. Discover business ideas, access roadmaps, and connect with mentors.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

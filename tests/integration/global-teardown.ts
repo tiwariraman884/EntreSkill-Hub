@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-module.exports = async () => {
+const teardown = async () => {
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
   }
@@ -8,3 +8,5 @@ module.exports = async () => {
     await global.__MONGO_SERVER__.stop();
   }
 };
+
+export default teardown;

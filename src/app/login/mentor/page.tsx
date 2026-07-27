@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import {
-  BookOpen, ShieldCheck, Users, MessageCircle, Star, Rocket, HelpCircle,
+  ShieldCheck, Users, MessageCircle, Star, Rocket, HelpCircle,
 } from "lucide-react";
 import AuthLoginForm from "@/components/auth/auth-login-form";
 
@@ -32,9 +33,7 @@ export default function LoginMentorPage() {
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
-              <BookOpen className="size-5 text-primary" />
-            </div>
+            <Image src="/logo.png" alt="EntreSkill Hub Logo" width={40} height={40} className="object-contain select-none shrink-0" />
             <span className="font-bold text-xl">EntreSkill Hub</span>
           </Link>
         </div>
@@ -109,7 +108,7 @@ export default function LoginMentorPage() {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <BookOpen className="size-6 text-primary" />
+            <Image src="/logo.png" alt="EntreSkill Hub Logo" width={40} height={40} className="object-contain select-none shrink-0" />
             <span className="font-bold text-lg">EntreSkill Hub</span>
           </div>
 

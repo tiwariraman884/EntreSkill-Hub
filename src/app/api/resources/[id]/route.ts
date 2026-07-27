@@ -31,7 +31,7 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       const userRec = await User.findById(session.user.id).select("bookmarks").lean();
       if (userRec?.bookmarks) {
         isBookmarked = userRec.bookmarks.some(
-          (b: any) => b.targetType === "resource" && b.targetId.toString() === id
+          (b: { targetType: string; targetId: string }) => b.targetType === "resource" && b.targetId.toString() === id
         );
       }
       

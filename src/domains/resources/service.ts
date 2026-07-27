@@ -1,5 +1,6 @@
 import { connectToDatabase } from "@/lib/mongoose";
 import { LearningResource, Feedback } from "@/models";
+import type { SortOrder } from "mongoose";
 
 export async function getResources(options: {
   type?: string;
@@ -27,7 +28,7 @@ export async function getResources(options: {
   }
 
   const skip = (page - 1) * limit;
-  let sortOption: any = { createdAt: -1 };
+  let sortOption: Record<string, SortOrder> = { createdAt: -1 };
   
   if (sort === "popular") sortOption = { views: -1 };
   else if (sort === "rating") sortOption = { rating: -1 };

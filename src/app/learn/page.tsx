@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { MOCK_LEARNING_RESOURCES, LearningResource } from "@/data/mock-learning";
+import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

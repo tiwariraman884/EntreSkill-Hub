@@ -25,29 +25,41 @@ export default function AssessmentWizard() {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
   const [isStarted, setIsStarted] = useState(false);
 
-  // Timer logic
-  useEffect(() => {
-    if (!isStarted) return;
-    
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleSubmit();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isStarted]);
-
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const handleSubmit = () => {
+    toast.loading("Analyzing your profile...");
+    
+    const scores: Partial<Record<AssessmentDomain, number>> = {};
+    const domainCounts: Partial<Record<AssessmentDomain, number>> = {};
+
+    selectedQuestions.forEach(q => {
+      const selectedOptionId = answers[q.id];
+      const option = q.options.find(o => o.id === selectedOptionId);
+      
+      const score = option ? option.score : 0;
+      
+      scores[q.domain] = (scores[q.domain] || 0) + score;
+      domainCounts[q.domain] = (domainCounts[q.domain] || 0) + 10;
+    });
+
+    const normalizedScores: Record<string, number> = {};
+    Object.keys(scores).forEach(domain => {
+      const d = domain as AssessmentDomain;
+      const maxPossible = domainCounts[d] || 1;
+      normalizedScores[d] = Math.round((Math.max(scores[d] || 0, 0) / maxPossible) * 100);
+    });
+
+    setTimeout(() => {
+      setAssessmentScores(normalizedScores);
+      toast.dismiss();
+      toast.success("Analysis complete!");
+      router.push("/assessment/results");
+    }, 1500);
   };
 
   const handleSelectOption = (optionId: string) => {
@@ -77,38 +89,23 @@ export default function AssessmentWizard() {
     }
   };
 
-  const handleSubmit = () => {
-    toast.loading("Analyzing your profile...");
+  useEffect(() => {
+    if (!isStarted) return;
     
-    // Calculate scores per domain
-    const scores: Partial<Record<AssessmentDomain, number>> = {};
-    const domainCounts: Partial<Record<AssessmentDomain, number>> = {};
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-    selectedQuestions.forEach(q => {
-      const selectedOptionId = answers[q.id];
-      const option = q.options.find(o => o.id === selectedOptionId);
-      
-      const score = option ? option.score : 0; // 0 if skipped or incorrect
-      
-      scores[q.domain] = (scores[q.domain] || 0) + score;
-      domainCounts[q.domain] = (domainCounts[q.domain] || 0) + 10; // Assuming 10 is max score per question
-    });
-
-    // Normalize scores to percentage per domain
-    const normalizedScores: any = {};
-    Object.keys(scores).forEach(domain => {
-      const d = domain as AssessmentDomain;
-      const maxPossible = domainCounts[d] || 1;
-      normalizedScores[d] = Math.round((Math.max(scores[d]!, 0) / maxPossible) * 100);
-    });
-
-    setTimeout(() => {
-      setAssessmentScores(normalizedScores);
-      toast.dismiss();
-      toast.success("Analysis complete!");
-      router.push("/assessment/results");
-    }, 1500);
-  };
+    return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isStarted]);
 
   if (!isStarted) {
     return (

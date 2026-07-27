@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongoose";
 import { Skill, BusinessIdea, Roadmap, LearningResource, MentorProfile, User } from "@/models";
 
@@ -13,7 +12,7 @@ const seed = async () => {
     { name: "Product Design", category: "Design" },
   ]);
 
-  const user = await User.create({
+  const _user = await User.create({
     name: "Test User",
     email: "test-user@example.com",
     passwordHash: "stub",
@@ -53,13 +52,13 @@ const seed = async () => {
     isActive: true,
   });
 
-  const roadmap = await Roadmap.create({
+  const _roadmap = await Roadmap.create({
     title: "Local Delivery Roadmap",
     businessIdeaId: idea._id,
     steps: [],
   });
 
-  const resource1 = await LearningResource.create({
+  const _resource1 = await LearningResource.create({
     title: "How to Start a Delivery Business",
     type: "article",
     url: "https://example.com/delivery-business",
@@ -68,7 +67,7 @@ const seed = async () => {
     tags: ["logistics", "startup"],
   });
 
-  const resource2 = await LearningResource.create({
+  const _resource2 = await LearningResource.create({
     title: "Marketing for Local Businesses",
     type: "video",
     url: "https://example.com/marketing-local",

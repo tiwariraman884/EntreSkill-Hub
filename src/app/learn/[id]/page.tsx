@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronLeft, PlayCircle, BookOpen, CheckSquare, Star, Clock, User, Bookmark, TrendingUp } from "lucide-react";
+import { ChevronLeft, PlayCircle, CheckSquare, Star, Clock, User, Bookmark, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 

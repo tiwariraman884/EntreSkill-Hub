@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     });
 
     const session = await getServerSession(authOptions);
-    const progressMap: Record<string, any> = {};
+    const progressMap: Record<string, { progressPercent: number; isCompleted: boolean }> = {};
     let bookmarks: string[] = [];
 
     if (session?.user?.id) {
@@ -38,12 +38,12 @@ export async function GET(request: Request) {
       const userRec = await User.findById(session.user.id).select("bookmarks").lean();
       if (userRec?.bookmarks) {
         bookmarks = userRec.bookmarks
-          .filter((b: any) => b.targetType === "resource")
-          .map((b: any) => b.targetId.toString());
+          .filter((b: { targetType: string; targetId: string }) => b.targetType === "resource")
+          .map((b: { targetId: string }) => b.targetId.toString());
       }
       
       const progresses = await LearningProgress.find({ userId: session.user.id }).lean();
-      progresses.forEach((p: any) => {
+      progresses.forEach((p: { resourceId: string; progressPercent: number; isCompleted: boolean }) => {
         progressMap[p.resourceId.toString()] = {
           progressPercent: p.progressPercent,
           isCompleted: p.isCompleted
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
       });
     }
 
-    const dataWithProgress = result.data.map((r: any) => ({
+    const dataWithProgress = result.data.map((r) => ({
       ...r.toJSON(),
       isBookmarked: bookmarks.includes(r._id.toString()),
       progress: progressMap[r._id.toString()] || { progressPercent: 0, isCompleted: false }
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ resource }, { status: 201 });
-  } catch (error: z.ZodError | Error | unknown) {
+  } catch (error: unknown) {
     console.error("Resource creation error:", error);
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

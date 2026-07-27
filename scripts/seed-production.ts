@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongoose";
 import { Skill, BusinessIdea, Roadmap, User } from "@/models";
 
