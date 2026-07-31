@@ -178,6 +178,34 @@ export const MOCK_IDEAS: BusinessIdea[] = [
   }
 ];
 
+// Curated real Unsplash photo IDs for each generated business idea title
+const IDEA_COVER_IMAGES: Record<string, string> = {
+  "Tuition Center": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80&w=800",
+  "Handmade Soap Business": "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&q=80&w=800",
+  "Car Washing Service": "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&q=80&w=800",
+  "Fitness Coaching": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=800",
+  "Pet Grooming": "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&q=80&w=800",
+  "Event Planning": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800",
+  "Dropshipping Store": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&q=80&w=800",
+  "Content Creation/Vlogging": "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&q=80&w=800",
+  "Interior Design Consultation": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800",
+  "Translation Services": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=800",
+  "Virtual Assistant": "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=800",
+  "App Development Agency": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&q=80&w=800",
+  "Home Cleaning Services": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800",
+  "Catering Service": "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=800",
+  "Yoga Studio": "https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&q=80&w=800",
+  "Podcast Production": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=800",
+  "Resume Writing Service": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=800",
+  "Social Media Management": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=800",
+  "Affiliate Marketing": "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&q=80&w=800",
+  "3D Printing Services": "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=800",
+  "Custom Apparel": "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=800",
+  "Tour Guide Services": "https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&q=80&w=800",
+  "Data Entry Services": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
+  "Photography Studio": "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80&w=800",
+};
+
 // Generate 24 more ideas programmatically to hit the 30 requirement efficiently for the demo
 const categories = ["Technology", "Education", "Health & Wellness", "E-commerce", "Local Services"];
 const difficulties: Array<"Beginner" | "Intermediate" | "Advanced"> = ["Beginner", "Intermediate", "Advanced"];
@@ -201,7 +229,7 @@ const generatedIdeas: BusinessIdea[] = sampleTitles.map((title, index) => ({
   aiMatchScore: Math.floor(Math.random() * (98 - 65 + 1)) + 65,
   shortDescription: `Start a successful ${title.toLowerCase()} business with the right strategy and execution. Tap into growing market demand.`,
   requiredSkills: ["Communication", "Basic Finance", "Sales"],
-  coverImage: `https://images.unsplash.com/photo-${1500000000000 + index}?auto=format&fit=crop&q=80&w=800`, // Placeholder Unsplash pattern
+  coverImage: IDEA_COVER_IMAGES[title] || "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800",
   overview: `The ${title.toLowerCase()} industry is seeing massive growth. This business involves providing high-quality services or products to a targeted local or online audience.`,
   whyThisBusiness: ["Scalable", "In-demand", "Low barrier to entry"],
   marketDemand: "Steady year-on-year growth driven by changing consumer behaviors.",

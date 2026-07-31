@@ -1,16 +1,23 @@
+"use client"
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { AlertCircle, CheckCircle2, Info, AlertTriangle, X } from "lucide-react"
 
 const alertVariants = cva(
-  "group/alert relative grid w-full gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*='size-'])]:size-4",
+  "relative grid w-full gap-1 rounded-xl border px-4 py-3 text-left text-sm transition-all duration-200",
   {
     variants: {
       variant: {
-        default: "bg-card text-card-foreground",
+        default: "bg-card text-card-foreground border-border/60",
         destructive:
-          "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
+          "bg-danger/5 text-danger-foreground border-danger/20 dark:bg-danger/10",
+        success:
+          "bg-success/5 text-success-foreground border-success/20 dark:bg-success/10",
+        warning:
+          "bg-warning/5 text-warning-foreground border-warning/20 dark:bg-warning/10",
       },
     },
     defaultVariants: {
@@ -19,18 +26,30 @@ const alertVariants = cva(
   }
 )
 
+const icons = {
+  default: Info,
+  destructive: AlertCircle,
+  success: CheckCircle2,
+  warning: AlertTriangle,
+}
+
 function Alert({
   className,
-  variant,
+  variant = "default",
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+  const Icon = icons[variant || "default"]
+
   return (
     <div
       data-slot="alert"
       role="alert"
       className={cn(alertVariants({ variant }), className)}
       {...props}
-    />
+    >
+      {Icon && <Icon className="size-4 shrink-0" aria-hidden="true" />}
+      {props.children}
+    </div>
   )
 }
 
@@ -38,10 +57,7 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="alert-title"
-      className={cn(
-        "font-medium group-has-[>svg]/alert:col-start-2 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
-        className
-      )}
+      className={cn("font-semibold leading-none tracking-tight", className)}
       {...props}
     />
   )
@@ -54,10 +70,7 @@ function AlertDescription({
   return (
     <div
       data-slot="alert-description"
-      className={cn(
-        "text-sm text-balance text-muted-foreground md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
-        className
-      )}
+      className={cn("text-sm text-muted-foreground md:text-pretty [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground", className)}
       {...props}
     />
   )
@@ -73,4 +86,20 @@ function AlertAction({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export { Alert, AlertTitle, AlertDescription, AlertAction }
+function AlertClose({ className, ...props }: React.ComponentProps<"button">) {
+  return (
+    <button
+      type="button"
+      aria-label="Dismiss alert"
+      className={cn(
+        "absolute top-2 right-2 inline-flex size-6 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors",
+        className
+      )}
+      {...props}
+    >
+      <X className="size-3.5" aria-hidden="true" />
+    </button>
+  )
+}
+
+export { Alert, AlertTitle, AlertDescription, AlertAction, AlertClose, alertVariants }

@@ -18,6 +18,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated / build artifacts
+    "coverage/**",
+    "lcov-report/**",
+    "dist/**",
     // Separate backend project with its own module system
     "server/**",
   ]),

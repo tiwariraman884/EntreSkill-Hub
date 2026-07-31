@@ -2,417 +2,913 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 
-  ArrowRight, BookOpen, Users, Compass,
-  LineChart, Sparkles, Star, Target, ShieldCheck,
-  MapIcon, Video, CheckSquare, Plus, Minus,
-  Scissors, Utensils, Laptop, Camera, Megaphone, Paintbrush
+import { motion, type Easing } from "framer-motion";
+import {
+  ArrowRight,
+  BookOpen,
+  Sparkles,
+  Star,
+  Target,
+  ShieldCheck,
+  CheckSquare,
+  Plus,
+  Minus,
+  Route,
+  Bot,
+  Lightbulb,
+  GraduationCap,
+  MessageSquare,
+  BarChart3,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CompanyLogos } from "@/components/ui/company-logos";
+import { MOCK_IDEAS } from "@/data/mock-ideas";
+import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 
-// --- Subcomponents for Sections ---
+const easeOut: Easing = "easeOut";
+
+const sectionVariants = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: easeOut },
+};
+
+const containerVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1, ease: easeOut } },
+};
+
+const cardVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: easeOut } },
+};
+
+const FEATURES = [
+  {
+    icon: Route,
+    title: "Structured Roadmaps",
+    description:
+      "Step-by-step guides from your first idea to your first paying customer. No guesswork, just a proven path.",
+  },
+  {
+    icon: Bot,
+    title: "AI Mentor",
+    description:
+      "Get personalized guidance, idea validation, and actionable next steps powered by intelligent analysis.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Curated Business Ideas",
+    description:
+      "Explore 200+ curated business ideas matched to your skills with real earning projections and startup costs.",
+  },
+  {
+    icon: BookOpen,
+    title: "Learning Resources",
+    description:
+      "50+ hands-on courses, videos, and checklists covering strategy, marketing, finance, and legal essentials.",
+  },
+  {
+    icon: MessageSquare,
+    title: "Mentor Community",
+    description:
+      "Book 1-on-1 sessions and learn from 500+ verified entrepreneurs who have built what you are building.",
+  },
+  {
+    icon: BarChart3,
+    title: "Progress Tracking",
+    description:
+      "Visual dashboards, XP streaks, and completion metrics that keep you accountable and moving forward.",
+  },
+];
+
+const STATS = [
+  { value: "50+", label: "Courses & Learning Paths" },
+  { value: "200+", label: "Curated Business Ideas" },
+  { value: "500+", label: "Verified Mentors" },
+  { value: "94%", label: "Course Completion Rate" },
+];
+
+const TESTIMONIALS = [
+  {
+    quote:
+      "The structured roadmap showed me exactly what steps to take next. I went from a graphic design hobby to a ₹60K/month business within 3 months.",
+    name: "Priya Sharma",
+    role: "Home Bakery Founder",
+    initials: "PS",
+  },
+  {
+    quote:
+      "Connecting with a mentor who had built an agency gave me the confidence to quit my job and freelance full-time. The community here is genuinely supportive.",
+    name: "Rohit Verma",
+    role: "Web Developer & Agency Owner",
+    initials: "RV",
+  },
+  {
+    quote:
+      "I had no idea how to price products or market them online. The business model canvas and pricing guide changed everything for my boutique.",
+    name: "Ananya Iyer",
+    role: "Boutique Store Owner",
+    initials: "AI",
+  },
+];
+
+const AVATARS = [47, 12, 5, 60, 68];
 
 function HeroSection() {
   return (
-    <section className="relative pt-32 pb-20 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
-      {/* Background Gradients */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none -z-10" />
-      
-      <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-primary text-sm font-medium mb-8 hover:bg-primary/10 transition-colors cursor-default">
-          <Sparkles className="size-4" /> Introducing EntreSkill Hub 2.0
-        </div>
-        
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 max-w-4xl font-heading text-balance">
-          Convert your skills into a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">successful business.</span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl text-balance leading-relaxed">
-          The all-in-one platform for micro-entrepreneurs. Discover tailored business ideas, follow step-by-step roadmaps, and connect with industry mentors.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row items-center gap-4 mb-16 w-full sm:w-auto">
-          <Link href="/register" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto text-base h-14 px-8 rounded-full shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:-translate-y-0.5")}>
-            Start Your Journey <ArrowRight className="ml-2 size-5" />
-          </Link>
-          <Link href="#business-ideas" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full sm:w-auto text-base h-14 px-8 rounded-full border-2 hover:bg-muted/50 transition-all")}>
-            Explore Business Ideas
-          </Link>
-        </div>
+    <motion.section
+      {...sectionVariants}
+      className="relative pt-16 pb-16 lg:pt-24 lg:pb-24 overflow-hidden"
+      aria-labelledby="hero-heading"
+    >
+      <div className="absolute inset-0 -z-10" aria-hidden="true">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-225 h-125 bg-primary/[0.07] rounded-full blur-[120px]" />
+        <div className="absolute top-16 right-0 w-100 h-100 bg-accent/6 rounded-full blur-[100px]" />
+      </div>
 
-        <div className="flex flex-col items-center gap-3">
-          <div className="flex -space-x-3">
-            {[11,12,13,14,15].map(i => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={`https://i.pravatar.cc/100?img=${i}`} alt="Community member" className="w-10 h-10 rounded-full border-2 border-background shadow-sm" />
-            ))}
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="max-w-2xl">
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+              <Badge variant="default" className="mb-6">
+                <Sparkles className="size-3.5" aria-hidden="true" />
+                Skill-To-Startup Platform
+              </Badge>
+            </motion.div>
+
+            <h1
+              id="hero-heading"
+              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold font-heading tracking-tight mb-6 text-balance leading-hero"
+            >
+              Turn Your Skills Into a{" "}
+              <span className="bg-linear-to-r from-primary to-primary-light bg-clip-text text-transparent">
+                Profitable Business
+              </span>
+            </h1>
+
+            <p className="text-lg md:text-xl text-thread mb-10 max-w-xl text-balance leading-relaxed">
+              Route from skill to startup with curated ideas, structured roadmaps, AI guidance, and
+              access to 500+ industry mentors — all in one place.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-start gap-4 mb-10">
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+                <Link
+                  href="/register"
+                  className={cn(buttonVariants({ size: "xl" }), "w-full sm:w-auto")}
+                  aria-label="Start your entrepreneurial journey"
+                >
+                  Start Your Journey
+                  <ArrowRight className="ml-2 size-5" aria-hidden="true" />
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+                <Link
+                  href="#features"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "xl" }),
+                    "w-full sm:w-auto"
+                  )}
+                  aria-label="Explore roadmaps"
+                >
+                  Explore Roadmaps
+                </Link>
+              </motion.div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-sm text-thread font-medium">
+              <div className="flex -space-x-2" aria-label="Trusted by 10,000+ entrepreneurs">
+                {AVATARS.map((img) => (
+                  <div
+                    key={img}
+                    className="w-9 h-9 rounded-full bg-muted border-2 border-white overflow-hidden"
+                    style={{
+                      backgroundImage: `url(https://i.pravatar.cc/100?img=${img})`,
+                      backgroundSize: "cover",
+                    }}
+                  />
+                ))}
+              </div>
+              <span>Trusted by 10,000+ entrepreneurs worldwide</span>
+            </div>
+            <div className="mt-8">
+              <CompanyLogos />
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <div className="flex text-amber-500">
-              {[1,2,3,4,5].map(i => <Star key={i} className="size-4 fill-current" />)}
-            </div>
-            <span>Trusted by 2,500+ learners</span>
-          </div>
-        </div>
-      </div>
-      
-      {/* Floating Elements (Decorative) */}
-      <div className="hidden lg:flex absolute left-[10%] top-[30%] bg-card p-3 rounded-xl shadow-xl border animate-bounce" style={{ animationDuration: '4s' }}>
-        <Compass className="size-6 text-blue-500" />
-      </div>
-      <div className="hidden lg:flex absolute right-[12%] top-[25%] bg-card p-3 rounded-xl shadow-xl border animate-bounce" style={{ animationDuration: '5s', animationDelay: '1s' }}>
-        <Users className="size-6 text-emerald-500" />
-      </div>
-      <div className="hidden lg:flex absolute right-[20%] bottom-[20%] bg-card p-3 rounded-xl shadow-xl border animate-bounce" style={{ animationDuration: '4.5s', animationDelay: '0.5s' }}>
-        <MapIcon className="size-6 text-purple-500" />
-      </div>
-    </section>
-  );
-}
 
-function ProgressTimeline() {
-  const steps = ["Skill", "Idea", "Plan", "Learn", "Grow"];
-  return (
-    <section className="py-24 bg-muted/30 border-y relative overflow-hidden">
-      <div className="container mx-auto px-4 max-w-5xl text-center">
-        <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-12">The Path to Entrepreneurship</p>
-        
-        <div className="flex flex-col md:flex-row items-center justify-between relative z-10">
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-border -translate-y-1/2 -z-10"></div>
-          {steps.map((step, idx) => (
-            <div key={step} className="group relative flex flex-col items-center mb-8 md:mb-0 cursor-default">
-              <div className="w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-sm group-hover:border-primary group-hover:bg-primary/5 transition-colors duration-300 relative z-10">
-                <span className="text-xl font-bold text-muted-foreground group-hover:text-primary transition-colors">{idx + 1}</span>
-              </div>
-              <span className="mt-4 font-semibold text-lg">{step}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BusinessCategories() {
-  const categories = [
-    { icon: <Scissors className="size-6"/>, title: "Tailoring & Boutique", earning: "₹20K–₹90K/mo", cost: "₹5K", time: "2 Weeks", diff: "Easy", color: "text-pink-500 bg-pink-500/10 border-pink-500/20" },
-    { icon: <Utensils className="size-6"/>, title: "Cloud Kitchen", earning: "₹30K–₹1.5L/mo", cost: "₹10K", time: "3 Weeks", diff: "Medium", color: "text-orange-500 bg-orange-500/10 border-orange-500/20" },
-    { icon: <Laptop className="size-6"/>, title: "Digital Freelancing", earning: "₹25K–₹1L/mo", cost: "₹0", time: "1 Week", diff: "Easy", color: "text-blue-500 bg-blue-500/10 border-blue-500/20" },
-    { icon: <Camera className="size-6"/>, title: "Photography", earning: "₹15K–₹80K/mo", cost: "₹15K", time: "2 Weeks", diff: "Medium", color: "text-purple-500 bg-purple-500/10 border-purple-500/20" },
-    { icon: <Paintbrush className="size-6"/>, title: "Handmade Crafts", earning: "₹10K–₹50K/mo", cost: "₹2K", time: "1 Week", diff: "Easy", color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20" },
-    { icon: <Megaphone className="size-6"/>, title: "Social Media Agency", earning: "₹40K–₹2L/mo", cost: "₹0", time: "2 Weeks", diff: "Hard", color: "text-rose-500 bg-rose-500/10 border-rose-500/20" }
-  ];
-
-  return (
-    <section id="business-ideas" className="py-24">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-heading">Explore Business Opportunities</h2>
-          <p className="text-muted-foreground text-lg">Discover curated business ideas tailored to your existing skills. We break down the costs, time, and potential earnings.</p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((cat, i) => (
-            <div key={i} className="group bg-card border rounded-2xl p-6 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer">
-              <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center mb-6 border transition-colors", cat.color)}>
-                {cat.icon}
-              </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{cat.title}</h3>
-              <p className="text-sm text-muted-foreground mb-6 flex-1">Turn your passion into profit with step-by-step guidance tailored for this industry.</p>
-              
-              <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-6 bg-muted/50 p-4 rounded-xl">
-                <div>
-                  <div className="text-muted-foreground text-xs uppercase font-semibold mb-1">Potential Earnings</div>
-                  <div className="font-bold">{cat.earning}</div>
+          <div className="hidden lg:block relative h-140">
+            <motion.div
+              initial={{ opacity: 0, x: 40, y: 20 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: easeOut }}
+            >
+              <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-120 shadow-premium">
+                <div className="h-11 bg-linear-to-r from-indigo to-indigo-light rounded-t-2xl flex items-center px-5 gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-white/30" aria-hidden="true" />
+                  <div className="w-3 h-3 rounded-full bg-white/30" aria-hidden="true" />
+                  <div className="w-3 h-3 rounded-full bg-white/30" aria-hidden="true" />
+                  <span className="ml-4 text-white/90 text-sm font-medium">
+                    Entrepreneur Dashboard
+                  </span>
                 </div>
-                <div>
-                  <div className="text-muted-foreground text-xs uppercase font-semibold mb-1">Startup Cost</div>
-                  <div className="font-medium">{cat.cost}</div>
+                <div className="p-5 space-y-4">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="h-24 bg-linear-to-br from-indigo/10 to-indigo-light/5 rounded-xl border border-indigo/10" />
+                    <div className="h-24 bg-linear-to-br from-marigold/10 to-marigold-light/5 rounded-xl border border-marigold/10" />
+                    <div className="h-24 bg-surface-success/60 rounded-xl border border-success/15" />
+                  </div>
+                  <div className="h-28 bg-muted/40 rounded-xl border border-border/40" />
                 </div>
-                <div>
-                  <div className="text-muted-foreground text-xs uppercase font-semibold mb-1">Time to Launch</div>
-                  <div className="font-medium">{cat.time}</div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground text-xs uppercase font-semibold mb-1">Difficulty</div>
-                  <div className="font-medium">{cat.diff}</div>
-                </div>
-              </div>
-              
-              <Link href="/register" className="flex items-center justify-center w-full py-2.5 rounded-lg border-2 font-medium text-sm hover:bg-muted transition-colors group-hover:border-primary group-hover:text-primary">
-                Explore Roadmap
-              </Link>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+              </Card>
+            </motion.div>
 
-function WhySection() {
-  const features = [
-    { icon: <Target className="size-6 text-blue-500"/>, title: "AI Business Recommendations", desc: "Our intelligent engine matches your unique skills with the most viable business opportunities in your local market." },
-    { icon: <MapIcon className="size-6 text-emerald-500"/>, title: "Personalized Roadmaps", desc: "No more guessing. Follow a structured, step-by-step checklist from ideation to acquiring your first customer." },
-    { icon: <ShieldCheck className="size-6 text-purple-500"/>, title: "Verified Mentors", desc: "Connect with vetted industry experts who have walked the path before and can help you avoid costly mistakes." },
-    { icon: <LineChart className="size-6 text-amber-500"/>, title: "Progress Tracking", desc: "Stay motivated with an interactive dashboard that tracks your learning, roadmap completion, and overall growth." }
-  ];
-
-  return (
-    <section className="py-24 bg-primary/5">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 font-heading">Why thousands choose EntreSkill Hub</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {features.map((f, i) => (
-            <div key={i} className="flex gap-6 p-6 bg-card rounded-2xl border hover:border-primary/50 transition-colors shadow-sm">
-              <div className="w-14 h-14 shrink-0 bg-background rounded-xl border flex items-center justify-center shadow-sm">
-                {f.icon}
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2">{f.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{f.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FeatureShowcase() {
-  return (
-    <section className="py-24 overflow-hidden relative">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6 font-heading">A Workspace Built for Founders</h2>
-        <p className="text-lg text-muted-foreground mb-16 max-w-2xl mx-auto">
-          Everything you need to plan, learn, and grow is beautifully organized in one intuitive dashboard.
-        </p>
-        
-        {/* Abstract UI Mockup */}
-        <div className="relative mx-auto max-w-5xl rounded-2xl border border-border/50 bg-muted/30 p-2 shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10 rounded-2xl pointer-events-none h-full w-full" style={{ background: 'linear-gradient(to top, var(--background) 5%, transparent 40%)' }}></div>
-          <div className="rounded-xl overflow-hidden border bg-background flex flex-col md:flex-row h-[400px] md:h-[600px] relative">
-            
-            {/* Mock Sidebar */}
-            <div className="hidden md:flex w-64 border-r bg-muted/20 flex-col p-4 gap-2">
-              <div className="h-8 w-32 bg-primary/20 rounded mb-8"></div>
-              {[1,2,3,4,5].map(i => <div key={i} className="h-10 w-full bg-muted/50 rounded-lg"></div>)}
-            </div>
-            
-            {/* Mock Main Content */}
-            <div className="flex-1 p-6 flex flex-col gap-6">
-              <div className="flex justify-between items-center mb-4">
-                <div className="h-8 w-48 bg-muted rounded-md"></div>
-                <div className="h-10 w-10 bg-muted rounded-full"></div>
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                {[1,2,3].map(i => <div key={i} className="h-24 bg-primary/5 border rounded-xl"></div>)}
-              </div>
-              <div className="flex-1 bg-muted/20 border rounded-xl p-4">
-                <div className="h-6 w-32 bg-muted rounded mb-6"></div>
-                <div className="space-y-4">
-                  {[1,2,3,4].map(i => <div key={i} className="h-12 w-full bg-background border rounded-lg"></div>)}
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function SuccessStories() {
-  const stories = [
-    { name: "Priya Sharma", role: "Started Home Bakery", img: "https://i.pravatar.cc/150?img=47", text: "EntreSkill Hub helped me turn my weekend baking hobby into a profitable business. My income went from ₹8,000 to ₹45,000/month.", stars: 5 },
-    { name: "Rohit Verma", role: "Freelance Web Developer", img: "https://i.pravatar.cc/150?img=11", text: "The step-by-step roadmap gave me the confidence to start my own agency. The mentor connections were invaluable.", stars: 5 },
-    { name: "Ananya Iyer", role: "Boutique Owner", img: "https://i.pravatar.cc/150?img=5", text: "I didn't know how to price my products or market them. The learning resources here taught me exactly what I needed to succeed.", stars: 5 },
-    { name: "Karan Desai", role: "Tech Repair Shop", img: "https://i.pravatar.cc/150?img=60", text: "From knowing how to fix phones to running a legit registered business. Thank you for the legal and financial guidance!", stars: 5 }
-  ];
-
-  return (
-    <section className="py-24 bg-muted/30 border-y">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 font-heading">Real Founders, Real Growth</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {stories.map((s, i) => (
-            <div key={i} className="bg-background p-8 rounded-2xl border shadow-sm">
-              <div className="flex text-amber-500 mb-4">
-                {[1,2,3,4,5].map(star => <Star key={star} className="size-4 fill-current"/>)}
-              </div>
-              <p className="text-lg italic text-muted-foreground mb-6 leading-relaxed">&ldquo;{s.text}&rdquo;</p>
-              <div className="flex items-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.img} alt={s.name} className="w-12 h-12 rounded-full" />
-                <div>
-                  <h4 className="font-bold">{s.name}</h4>
-                  <p className="text-sm text-muted-foreground">{s.role}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PlatformMetrics() {
-  const metrics = [
-    { value: "10,000+", label: "Active Students" },
-    { value: "500+", label: "Business Roadmaps" },
-    { value: "150+", label: "Verified Mentors" },
-    { value: "95%", label: "Satisfaction Rate" }
-  ];
-
-  return (
-    <section className="py-24 bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {metrics.map((m, i) => (
-            <div key={i} className="flex flex-col items-center justify-center p-4">
-              <div className="text-4xl md:text-5xl font-bold font-heading mb-2">{m.value}</div>
-              <div className="text-primary-foreground/80 font-medium uppercase tracking-wider text-sm">{m.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function SneakPeeks() {
-  return (
-    <section className="py-24">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          
-          {/* Learning Resources Peek */}
-          <div>
-            <h2 className="text-3xl font-bold mb-4 font-heading">Bite-sized Learning</h2>
-            <p className="text-muted-foreground mb-8">Access premium resources curated for your specific business stage. No fluff, just actionable advice.</p>
-            <div className="space-y-4">
-              {[
-                { icon: <Video className="size-5 text-blue-500"/>, title: "How to price your services correctly", time: "10 min video" },
-                { icon: <BookOpen className="size-5 text-emerald-500"/>, title: "The ultimate guide to local marketing", time: "5 min read" },
-                { icon: <CheckSquare className="size-5 text-amber-500"/>, title: "Business Registration Checklist", time: "Interactive" }
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 rounded-xl border bg-card hover:border-primary/50 transition-colors shadow-sm">
-                  <div className="p-3 bg-muted rounded-lg">{item.icon}</div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
+            >
+              <Card className="absolute top-8 right-0 p-4 shadow-premium">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-linear-to-br from-success to-emerald-600 flex items-center justify-center shrink-0">
+                    <Target className="size-5 text-white" aria-hidden="true" />
+                  </div>
                   <div>
-                    <h4 className="font-semibold">{item.title}</h4>
-                    <p className="text-xs text-muted-foreground">{item.time}</p>
+                    <p className="text-sm font-bold text-foreground">Roadmap Active</p>
+                    <p className="text-xs text-thread">Cloud Kitchen Plan</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </Card>
+            </motion.div>
 
-          {/* Mentors Peek */}
-          <div>
-            <h2 className="text-3xl font-bold mb-4 font-heading">Expert Mentorship</h2>
-            <p className="text-muted-foreground mb-8">Don&apos;t do it alone. Book 1-on-1 sessions with founders who have built successful businesses.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { name: "Aarav Mehta", role: "SaaS Founder", img: "https://i.pravatar.cc/150?img=12" },
-                { name: "Priya Sharma", role: "D2C Expert", img: "https://i.pravatar.cc/150?img=5" }
-              ].map((m, i) => (
-                <div key={i} className="p-5 rounded-xl border bg-card text-center hover:shadow-md transition-shadow">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={m.img} alt={m.name} className="w-16 h-16 rounded-full mx-auto mb-3" />
-                  <h4 className="font-bold">{m.name}</h4>
-                  <p className="text-xs text-muted-foreground mb-4">{m.role}</p>
-                  <div className="w-full py-1.5 bg-primary/10 text-primary rounded-md text-xs font-semibold uppercase tracking-wider">Book Session</div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5, ease: easeOut }}
+            >
+              <Card className="absolute bottom-16 left-0 p-4 shadow-premium">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center shrink-0">
+                    <ShieldCheck className="size-5 text-white" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">Mentor Scheduled</p>
+                    <p className="text-xs text-thread">Tomorrow, 4:00 PM</p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              </Card>
+            </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.6, ease: easeOut }}
+            >
+              <Card className="absolute bottom-4 right-4 p-4 shadow-premium">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-linear-to-br from-marigold to-marigold-light flex items-center justify-center shrink-0">
+                    <GraduationCap className="size-5 text-white" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">Course Complete</p>
+                    <p className="text-xs text-thread">+120 XP earned</p>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
-function FAQ() {
-  const faqs = [
-    { q: "How are business recommendations generated?", a: "Our AI engine analyzes the skills, experience, and interests you provide during onboarding and matches them against proven micro-business models and market trends." },
-    { q: "Is this suitable for absolute beginners?", a: "Yes! EntreSkill Hub is specifically designed for people who have a practical skill but zero business experience. The roadmaps start from the very basics." },
-    { q: "Is the mentorship free?", a: "Many mentors offer free introductory sessions to give back to the community, while others charge a nominal fee for deep-dive strategy sessions. It's fully transparent upfront." },
-    { q: "Can I switch roadmaps if I change my mind?", a: "Absolutely. You can explore multiple roadmaps and pivot at any time. Entrepreneurship is all about finding what works best for you." }
-  ];
-
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
-
+function StatsSection() {
   return (
-    <section className="py-24 bg-muted/30 border-y">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 font-heading">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          {faqs.map((faq, i) => (
-            <div key={i} className="border rounded-xl bg-background overflow-hidden transition-all">
-              <button 
-                className="w-full px-6 py-4 flex justify-between items-center text-left font-semibold focus:outline-none"
-                onClick={() => setOpenIdx(openIdx === i ? null : i)}
-              >
-                {faq.q}
-                {openIdx === i ? <Minus className="size-5 text-muted-foreground shrink-0" /> : <Plus className="size-5 text-muted-foreground shrink-0" />}
-              </button>
-              <div className={cn("px-6 overflow-hidden transition-all duration-300", openIdx === i ? "max-h-40 pb-4 opacity-100" : "max-h-0 opacity-0")}>
-                <p className="text-muted-foreground">{faq.a}</p>
+    <motion.section
+      {...sectionVariants}
+      className="py-12 border-y border-border/40"
+      aria-label="Platform statistics"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <motion.div variants={containerVariants} initial="initial" animate="animate" className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {STATS.map((s) => (
+            <motion.div key={s.label} variants={cardVariants} className="text-center">
+              <div className="text-3xl md:text-4xl font-bold font-heading text-indigo mb-1">
+                {s.value}
+              </div>
+              <div className="text-sm text-thread font-medium">{s.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+function DashboardPreview() {
+  return (
+    <motion.section
+      {...sectionVariants}
+      className="py-20"
+      aria-labelledby="dashboard-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="text-center mb-12">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <Badge variant="outline" className="mb-4">
+              <Sparkles className="size-3.5" aria-hidden="true" />
+              Live Platform Preview
+            </Badge>
+          </motion.div>
+          <h2 id="dashboard-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
+            Your entrepreneurship workspace, built for founders
+          </h2>
+          <p className="text-thread text-lg max-w-2xl mx-auto">
+            Everything from idea exploration to progress tracking, organized cleanly in one
+            dashboard.
+          </p>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: easeOut }}
+          className="relative mx-auto max-w-5xl rounded-2xl border border-border/50 bg-white shadow-premium overflow-hidden"
+        >
+          <div className="flex items-center gap-2 px-5 h-12 border-b border-border/40">
+            <div className="w-3 h-3 rounded-full bg-danger/80" aria-hidden="true" />
+            <div className="w-3 h-3 rounded-full bg-marigold/80" aria-hidden="true" />
+            <div className="w-3 h-3 rounded-full bg-success/80" aria-hidden="true" />
+            <div className="ml-4 h-3 w-52 bg-muted rounded-md" />
+          </div>
+          <div className="flex min-h-90">
+            <div className="hidden sm:flex w-48 flex-col border-r border-border/40 p-4 gap-2 bg-surface">
+              <div className="h-8 w-28 rounded-lg bg-linear-to-r from-indigo to-indigo-light shadow-sm" />
+              {["Dashboard", "Ideas", "Roadmaps", "Learning", "Mentors"].map((label) => (
+                <div
+                  key={label}
+                  className="h-9 w-full rounded-lg hover:bg-muted transition-colors text-xs flex items-center px-3 text-thread"
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+            <div className="flex-1 p-5 lg:p-8 space-y-6 bg-white">
+              <div className="flex justify-between items-start gap-4">
+                <div>
+                  <div className="h-7 w-48 bg-indigo/10 rounded-lg mb-2" />
+                  <div className="h-4 w-64 bg-muted rounded-md" />
+                </div>
+                <div className="h-10 w-10 rounded-full bg-indigo/10 border border-indigo/20 shrink-0" />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: "Roadmaps", accent: "from-indigo/10 to-indigo-light/5" },
+                  { label: "Courses", accent: "from-marigold/10 to-marigold-light/5" },
+                  { label: "Mentors", accent: "from-success/10 to-emerald-100/50" },
+                  { label: "Progress", accent: "from-indigo/5 to-muted/20" },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className={`h-24 bg-linear-to-br ${item.accent} rounded-xl border border-border/40`}
+                    aria-label={item.label}
+                  />
+                ))}
+              </div>
+              <div className="space-y-3">
+                {MOCK_IDEAS.slice(0, 3).map((idea) => (
+                  <div
+                    key={idea.id}
+                    className="flex items-center gap-4 p-4 rounded-xl border border-border/40 bg-surface"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-indigo/10 flex items-center justify-center shrink-0">
+                      <Lightbulb className="size-5 text-indigo" aria-hidden="true" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-foreground truncate">{idea.title}</p>
+                      <p className="text-xs text-thread">{idea.category}</p>
+                    </div>
+                    <Badge variant="secondary" className="text-xs shrink-0">
+                      {idea.difficulty}
+                    </Badge>
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+function FeaturesSection() {
+  const iconColors = [
+    "from-indigo to-indigo-light",
+    "from-indigo to-indigo-light",
+    "from-marigold to-marigold-light",
+    "from-indigo to-indigo-light",
+    "from-marigold to-marigold-light",
+    "from-indigo to-indigo-light",
+  ];
+
+  return (
+    <motion.section
+      id="features"
+      {...sectionVariants}
+      aria-labelledby="features-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="text-center mb-12">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <Badge variant="secondary" className="mb-4">
+              <Target className="size-3.5" aria-hidden="true" />
+              Core Features
+            </Badge>
+          </motion.div>
+          <h2 id="features-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
+            Everything you need to launch with confidence
+          </h2>
+          <p className="text-thread text-lg max-w-2xl mx-auto">
+            From idea generation to revenue milestones, our platform provides structured support at
+            every stage of your founder journey.
+          </p>
+        </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {FEATURES.map((feature, i) => {
+            const Icon = feature.icon;
+            return (
+              <motion.div key={feature.title} variants={cardVariants}>
+                <Card
+                  hoverable
+                  className="group p-6 bg-white border-border/40"
+                  tabIndex={0}
+                  role="article"
+                  aria-label={feature.title}
+                >
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-linear-to-br ${iconColors[i]} flex items-center justify-center mb-5 shadow-lg`}
+                    aria-hidden="true"
+                  >
+                    <Icon className="size-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold font-heading mb-2 group-hover:text-indigo transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-thread leading-relaxed">{feature.description}</p>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+function TestimonialsSection() {
+  return (
+    <motion.section
+      {...sectionVariants}
+      className="py-20"
+      aria-labelledby="testimonials-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="text-center mb-12">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <Badge variant="outline" className="mb-4">
+              <Star className="size-3.5 fill-current" aria-hidden="true" />
+              Social Proof
+            </Badge>
+          </motion.div>
+          <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
+            Trusted by founders who started with a skill
+          </h2>
+        </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          {TESTIMONIALS.map((t) => (
+            <motion.div key={t.name} variants={cardVariants}>
+              <Card
+                hoverable
+                className="p-6 bg-white border-border/40 flex flex-col"
+                tabIndex={0}
+                role="article"
+                aria-label={`Testimonial from ${t.name}`}
+              >
+                <div className="flex gap-1 mb-4" aria-label="5 out of 5 stars">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} className="size-4 text-marigold fill-current" aria-hidden="true" />
+                  ))}
+                </div>
+                <p className="text-thread leading-relaxed flex-1 mb-6">&ldquo;{t.quote}&rdquo;</p>
+                <div className="flex items-center gap-3 pt-4 border-t border-border/40">
+                  <div
+                    className="w-10 h-10 rounded-full bg-indigo/10 flex items-center justify-center text-sm font-bold text-indigo shrink-0"
+                    aria-hidden="true"
+                  >
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-foreground">{t.name}</p>
+                    <p className="text-xs text-thread">{t.role}</p>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
           ))}
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+function LearningPreview() {
+  return (
+    <motion.section
+      {...sectionVariants}
+      className="py-20 bg-linear-to-b from-muted/20 via-muted/10 to-transparent"
+      aria-labelledby="learning-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+              <Badge variant="default" className="mb-4">
+                <BookOpen className="size-3.5" aria-hidden="true" />
+                Learning Resources
+              </Badge>
+            </motion.div>
+            <h2 id="learning-heading" className="text-3xl md:text-4xl font-bold font-heading mb-4 tracking-tight">
+              Structured learning for every stage
+            </h2>
+            <p className="text-thread text-lg mb-8 leading-relaxed">
+              Access 50+ courses, articles, and checklists spanning business strategy, marketing,
+              finance, and law — all curated for founders.
+            </p>
+
+            <motion.div variants={containerVariants} initial="initial" animate="animate" className="space-y-3">
+              {MOCK_LEARNING_RESOURCES.slice(0, 3).map((resource) => (
+                <motion.div
+                  key={resource.id}
+                  variants={cardVariants}
+                  className="flex items-center gap-4 p-4 rounded-xl border border-border/40 bg-white hover:shadow-premium transition-all duration-300"
+                  tabIndex={0}
+                  role="article"
+                  aria-label={resource.title}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                      resource.type === "video"
+                        ? "bg-linear-to-br from-indigo to-indigo-light"
+                        : resource.type === "checklist"
+                        ? "bg-linear-to-br from-success to-emerald-600"
+                        : "bg-linear-to-br from-marigold to-marigold-light"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    {resource.type === "video" ? (
+                      <BookOpen className="size-5 text-white" />
+                    ) : resource.type === "checklist" ? (
+                      <CheckSquare className="size-5 text-white" />
+                    ) : (
+                      <BookOpen className="size-5 text-white" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-foreground truncate">
+                      {resource.title}
+                    </p>
+                    <p className="text-xs text-thread">{resource.duration}</p>
+                  </div>
+                  <ArrowRight className="size-4 text-thread shrink-0" aria-hidden="true" />
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+
+          <div className="hidden lg:flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: easeOut }}
+            >
+              <Card className="p-6 shadow-premium">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-3 rounded-full bg-marigold shrink-0" aria-hidden="true" />
+                  <p className="text-xs font-semibold text-thread uppercase tracking-wider">
+                    Learning Progress
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3">
+                  {[
+                    { label: "Business Strategy", done: 8, total: 12, color: "bg-indigo" },
+                    { label: "Marketing", done: 5, total: 9, color: "bg-marigold" },
+                    { label: "Finance", done: 6, total: 8, color: "bg-success" },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <div className="flex justify-between text-xs mb-1.5">
+                        <span className="font-medium text-foreground">{item.label}</span>
+                        <span className="text-thread">{item.done}/{item.total}</span>
+                      </div>
+                      <div className="h-2 w-full bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={item.done} aria-valuemin={0} aria-valuemax={item.total} aria-label={`${item.label} progress: ${item.done} of ${item.total}`}>
+                        <div
+                          className={`h-full ${item.color} rounded-full`}
+                          style={{ width: `${(item.done / item.total) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <div className="mt-2 p-4 rounded-xl bg-surface border border-border/40">
+                    <p className="text-2xl font-bold font-heading text-indigo">94%</p>
+                    <p className="text-xs text-thread">Average completion rate</p>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          </div>
         </div>
       </div>
-    </section>
+    </motion.section>
+  );
+}
+
+function IdeasPreview() {
+  const ideas = MOCK_IDEAS.slice(0, 3);
+
+  return (
+    <motion.section
+      {...sectionVariants}
+      className="py-20"
+      aria-labelledby="ideas-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="text-center mb-12">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <Badge variant="secondary" className="mb-4">
+              <Lightbulb className="size-3.5" aria-hidden="true" />
+              Business Ideas
+            </Badge>
+          </motion.div>
+          <h2 id="ideas-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
+            Curated ideas matched to your skills
+          </h2>
+          <p className="text-thread text-lg max-w-2xl mx-auto">
+            Each idea includes real earning projections, startup cost estimates, and a step-by-step
+            roadmap to launch.
+          </p>
+        </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {ideas.map((idea) => (
+            <motion.div key={idea.id} variants={cardVariants}>
+              <Card
+                hoverable
+                className="overflow-hidden bg-white border-border/40"
+                tabIndex={0}
+                role="article"
+                aria-label={`Business idea: ${idea.title}`}
+              >
+                <div className="h-2 w-full bg-linear-to-r from-indigo via-indigo-light to-marigold" aria-hidden="true" />
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <h3 className="text-lg font-bold font-heading leading-snug">
+                      {idea.title}
+                    </h3>
+                    <Badge variant="secondary" className="text-xs shrink-0">
+                      {idea.difficulty}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-thread mb-5 leading-relaxed">
+                    {idea.shortDescription}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-y-2 gap-x-3 text-sm mb-5 bg-muted/40 rounded-xl p-4">
+                    <div>
+                      <p className="text-xs text-thread uppercase font-semibold tracking-wider mb-0.5">
+                        Investment
+                      </p>
+                      <p className="font-bold text-foreground">
+                        ₹{idea.investment.min.toLocaleString()} –{" "}
+                        {idea.investment.max.toLocaleString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-thread uppercase font-semibold tracking-wider mb-0.5">
+                        Income/mo
+                      </p>
+                      <p className="font-bold text-foreground">
+                        ₹{idea.expectedMonthlyIncome.min.toLocaleString()} –{" "}
+                        {idea.expectedMonthlyIncome.max.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={`/ideas/${idea.id}`}
+                    className={cn(
+                      "flex items-center justify-center w-full py-2.5 rounded-xl border border-indigo/20 text-sm font-semibold text-indigo hover:bg-indigo hover:text-white transition-all duration-300 focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-offset-2"
+                    )}
+                    aria-label={`View roadmap for ${idea.title}`}
+                  >
+                    View Roadmap
+                  </Link>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </motion.section>
   );
 }
 
 function FinalCTA() {
   return (
-    <section className="py-32 relative overflow-hidden flex items-center justify-center">
-      <div className="absolute inset-0 bg-primary/5 -z-10"></div>
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] -z-10 translate-x-1/3 -translate-y-1/3"></div>
-      
-      <div className="container mx-auto px-4 text-center max-w-3xl relative z-10">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 font-heading">Start Your Entrepreneurial Journey Today</h2>
-        <p className="text-lg md:text-xl text-muted-foreground mb-10">
-          Turn your existing skills into a profitable business with AI guidance, structured learning, and expert mentorship.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/register" className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto h-14 px-8 rounded-full shadow-lg text-base")}>
-            Create Free Account
-          </Link>
-          <Link href="#business-ideas" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full sm:w-auto h-14 px-8 rounded-full bg-background text-base border-2")}>
-            Explore Roadmaps
-          </Link>
+    <motion.section
+      {...sectionVariants}
+      className="py-20"
+      aria-labelledby="cta-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="relative bg-linear-to-br from-indigo via-indigo-light to-indigo-dark rounded-3xl overflow-hidden px-8 py-16 md:py-20 text-center">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(232,163,61,0.12),transparent)] pointer-events-none" aria-hidden="true" />
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+              <Badge variant="secondary" className="mb-6">
+                <Sparkles className="size-3.5" aria-hidden="true" />
+                Get Started Today
+              </Badge>
+            </motion.div>
+            <h2 id="cta-heading" className="text-3xl md:text-5xl font-bold font-heading mb-4 text-white tracking-tight">
+              Start Your Entrepreneurial Journey
+            </h2>
+            <p className="text-lg text-white/80 mb-10 leading-relaxed">
+              Join 10,000+ founders who turned their skills into thriving businesses. Create a free
+              account and get personalized recommendations in minutes.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+                <Link
+                  href="/register"
+                  className={cn(
+                    buttonVariants({ variant: "secondary", size: "xl" }),
+                    "w-full sm:w-auto"
+                  )}
+                  aria-label="Create your free account"
+                >
+                  Create Free Account
+                  <ArrowRight className="ml-2 size-5" aria-hidden="true" />
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+                <Link
+                  href="#features"
+                  className={cn(buttonVariants({ variant: "outline", size: "xl" }), "w-full sm:w-auto border-white/40 text-white hover:bg-white/10")}
+                  aria-label="See how it works"
+                >
+                  See How It Works
+                </Link>
+              </motion.div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
-// Footer is rendered globally via src/app/layout.tsx
+function Accordion({ items }: { items: { q: string; a: string }[] }) {
+  const [openIdx, setOpenIdx] = useState<number | null>(0);
 
-// --- Main Page Component ---
+  return (
+    <div className="space-y-3" role="list">
+      {items.map((item, i) => (
+        <div
+          key={i}
+          className="bg-white rounded-2xl border border-border/40 hover:border-indigo/30 transition-all duration-300 overflow-hidden"
+          role="listitem"
+        >
+          <h3>
+            <button
+              className="w-full px-6 py-5 flex justify-between items-center text-left font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:ring-inset rounded-2xl"
+              onClick={() => setOpenIdx(openIdx === i ? null : i)}
+              aria-expanded={openIdx === i}
+              aria-controls={`faq-answer-${i}`}
+              id={`faq-question-${i}`}
+            >
+              <span className="text-base pr-4">{item.q}</span>
+              {openIdx === i ? (
+                <Minus className="size-5 text-indigo shrink-0" aria-hidden="true" />
+              ) : (
+                <Plus className="size-5 text-thread shrink-0" aria-hidden="true" />
+              )}
+            </button>
+          </h3>
+          <div
+            id={`faq-answer-${i}`}
+            role="region"
+            aria-labelledby={`faq-question-${i}`}
+            hidden={openIdx !== i}
+            className={cn(
+              "px-6 overflow-hidden transition-all duration-300 ease-out",
+              openIdx === i ? "max-h-40 pb-5 opacity-100" : "max-h-0 opacity-0"
+            )}
+          >
+            <p className="text-thread leading-relaxed">{item.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const FAQS = [
+  {
+    q: "Who is this platform designed for?",
+    a: "Aspirational entrepreneurs, students, and working professionals who have a practical skill and want to turn it into a real business — but don't know where to start.",
+  },
+  {
+    q: "Do I need prior business experience?",
+    a: "No. Our roadmaps start from absolute basics. Whether you are a complete beginner or have some exposure, the platform adapts to your readiness.",
+  },
+  {
+    q: "How are business ideas personalized?",
+    a: "After onboarding, our AI engine analyzes your skills, interests, and local market context to surface ideas with the highest match score for you.",
+  },
+  {
+    q: "Is mentor access included free?",
+    a: "Many mentors offer free introductory sessions as part of our community program. Premium sessions are available separately with transparent upfront pricing.",
+  },
+];
+
+function FAQSection() {
+  return (
+    <motion.section
+      {...sectionVariants}
+      className="py-20"
+      aria-labelledby="faq-heading"
+    >
+      <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+              <Badge variant="outline" className="mb-4">
+                <CheckSquare className="size-3.5" aria-hidden="true" />
+                FAQ
+              </Badge>
+            </motion.div>
+            <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold font-heading tracking-tight">
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: easeOut }}
+          >
+            <Accordion items={FAQS} />
+          </motion.div>
+        </div>
+      </div>
+    </motion.section>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen selection:bg-primary/20">
-      <HeroSection />
-      <ProgressTimeline />
-      <BusinessCategories />
-      <WhySection />
-      <FeatureShowcase />
-      <SuccessStories />
-      <PlatformMetrics />
-      <SneakPeeks />
-      <FAQ />
-      <FinalCTA />
+    <div className="flex flex-col min-h-screen selection:bg-indigo/10">
+      <main>
+        <HeroSection />
+        <StatsSection />
+        <DashboardPreview />
+        <FeaturesSection />
+        <TestimonialsSection />
+        <LearningPreview />
+        <IdeasPreview />
+        <FAQSection />
+        <FinalCTA />
+      </main>
     </div>
   );
 }

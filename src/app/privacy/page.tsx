@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
+import { cn } from '@/lib/utils'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { buttonVariants } from '@/components/ui/button'
 import { Shield, ArrowRight, Mail } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -161,7 +165,7 @@ Despite our best efforts, no system is 100% secure. Please report any suspected 
   },
   {
     id: 'children',
-    title: '12. Children\'s Privacy',
+    title: "12. Children's Privacy",
     content: `Our Service is not directed to individuals under the age of 16. We do not knowingly collect personal data from children. If you are a parent or guardian and believe your child has provided us with personal data, please contact us at privacy@entreskillhub.com and we will delete the information within 7 days.`,
   },
   {
@@ -186,13 +190,12 @@ We aim to respond to all privacy inquiries within 48 hours.`,
 export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero */}
       <section className="relative pt-24 pb-16 border-b overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background pointer-events-none" />
         <div className="container mx-auto px-4 max-w-4xl relative z-10">
           <BreadcrumbNav items={[{ label: 'Privacy Policy' }]} />
-          <div className="flex items-start gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 mt-1">
+          <div className="flex items-start gap-5 animate-fade-in-up">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 mt-1 hover:scale-[1.08] hover:rotate-[-4deg] transition-transform duration-300 ease-out">
               <Shield className="h-7 w-7 text-primary" aria-hidden="true" />
             </div>
             <div>
@@ -200,9 +203,9 @@ export default function PrivacyPolicyPage() {
               <p className="text-muted-foreground leading-relaxed max-w-2xl">
                 We are committed to being transparent about how we collect and use data. This document tells you everything — no legalese designed to obscure what we actually do.
               </p>
-              <div className="flex flex-wrap gap-4 mt-4 text-sm text-muted-foreground">
-                <span><strong className="text-foreground">Effective:</strong> {EFFECTIVE_DATE}</span>
-                <span><strong className="text-foreground">Last Updated:</strong> {LAST_UPDATED}</span>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <Badge variant="outline">Effective: {EFFECTIVE_DATE}</Badge>
+                <Badge variant="ghost">Last Updated: {LAST_UPDATED}</Badge>
               </div>
             </div>
           </div>
@@ -211,13 +214,14 @@ export default function PrivacyPolicyPage() {
 
       <div className="container mx-auto px-4 max-w-4xl py-16">
         <div className="grid lg:grid-cols-4 gap-12">
-          {/* TOC */}
           <aside className="hidden lg:block">
             <nav aria-label="Table of contents" className="sticky top-24">
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4">Contents</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-4 animate-fade-in-up">
+                Contents
+              </p>
               <ul className="space-y-2">
-                {SECTIONS.map(({ id, title }) => (
-                  <li key={id}>
+                {SECTIONS.map(({ id, title }, index) => (
+                  <li key={id} className="animate-fade-in-up" style={{ animationDelay: `${index * 60}ms` }}>
                     <a
                       href={`#${id}`}
                       className="text-sm text-muted-foreground hover:text-primary transition-colors block py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
@@ -230,48 +234,58 @@ export default function PrivacyPolicyPage() {
             </nav>
           </aside>
 
-          {/* Content */}
-          <div className="lg:col-span-3 space-y-10">
-            {SECTIONS.map(({ id, title, content }) => (
-              <section key={id} id={id}>
-                <h2 className="text-xl font-bold font-heading mb-4">{title}</h2>
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  {content.split('\n\n').map((para, i) => (
-                    <p key={i} className="text-muted-foreground leading-relaxed mb-3 text-sm">
-                      {para.split('\n').map((line, j) => (
-                        <span key={j}>
-                          {line.startsWith('- ') ? (
-                            <span className="block pl-4 before:content-['•'] before:mr-2 before:text-primary">
+          <div className="lg:col-span-3 space-y-6">
+            {SECTIONS.map(({ id, title, content }, index) => (
+              <section key={id} id={id} className="animate-fade-in-up" style={{ animationDelay: `${index * 40}ms` }}>
+                <Card size="sm">
+                  <CardHeader>
+                    <CardTitle>{title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {content.split('\n\n').map((para, i) => (
+                        <div key={i}>
+                          {para.split('\n').map((line, j) => (
+                            <p
+                              key={j}
+                              className={`text-sm leading-relaxed ${
+                                line.startsWith('- ')
+                                  ? 'text-muted-foreground pl-4 relative before:absolute before:left-0 before:content-["•"] before:text-primary ml-2'
+                                  : line.startsWith('**')
+                                  ? 'font-semibold text-foreground mt-2'
+                                  : 'text-muted-foreground'
+                              }`}
+                            >
                               {line.replace(/^- /, '').replace(/\*\*(.*?)\*\*/g, '$1')}
-                            </span>
-                          ) : (
-                            <span className={line.startsWith('**') ? 'font-semibold text-foreground' : ''}>
-                              {line.replace(/\*\*(.*?)\*\*/g, '$1')}
-                            </span>
-                          )}
-                          {j < para.split('\n').length - 1 && <br />}
-                        </span>
+                            </p>
+                          ))}
+                        </div>
                       ))}
-                    </p>
-                  ))}
-                </div>
-                <div className="mt-4 border-b border-border/50" />
+                    </div>
+                  </CardContent>
+                </Card>
               </section>
             ))}
 
-            {/* Contact CTA */}
-            <div className="rounded-xl bg-primary/5 border border-primary/15 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Mail className="h-8 w-8 text-primary shrink-0" aria-hidden="true" />
-              <div className="flex-1">
-                <p className="font-semibold mb-1">Questions about your privacy?</p>
-                <p className="text-sm text-muted-foreground">Our Data Protection team responds to all inquiries within 48 hours.</p>
-              </div>
-              <Link
-                href="mailto:privacy@entreskillhub.com"
-                className="inline-flex items-center gap-2 h-10 px-5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring whitespace-nowrap"
-              >
-                Email Us <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="animate-fade-in-up">
+              <Card glow className="overflow-hidden">
+                <CardContent className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <Mail className="h-8 w-8 text-primary shrink-0" aria-hidden="true" />
+                  <div className="flex-1">
+                    <p className="font-semibold mb-1">Questions about your privacy?</p>
+                    <p className="text-sm text-muted-foreground">Our Data Protection team responds to all inquiries within 48 hours.</p>
+                  </div>
+                  <Link
+                    href="mailto:privacy@entreskillhub.com"
+                    className={cn(
+                      "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all duration-300 ease-out outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px active:scale-[0.98]",
+                      buttonVariants({ variant: 'default', size: 'default' })
+                    )}
+                  >
+                    Email Us <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

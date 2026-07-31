@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Edit, CheckCircle, XCircle } from "lucide-react";
 
@@ -60,7 +63,7 @@ export default function AdminContent() {
       const res = await fetch(`/api/admin/content/${id}/approve`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ decision })
+        body: JSON.stringify({ decision }),
       });
       if (res.ok) {
         alert(`Resource ${decision}`);
@@ -74,11 +77,16 @@ export default function AdminContent() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4"
+      >
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Content Curation</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-4xl font-bold tracking-tight font-heading">Content Curation</h1>
+          <p className="text-muted-foreground text-lg mt-2">
             Manage business ideas, roadmaps, and learning resources.
           </p>
         </div>
@@ -86,7 +94,7 @@ export default function AdminContent() {
           <Plus className="mr-2 h-4 w-4" />
           Add Content
         </Button>
-      </div>
+      </motion.div>
 
       <Tabs defaultValue="ideas" value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-8">
@@ -94,107 +102,181 @@ export default function AdminContent() {
           <TabsTrigger value="roadmaps">Roadmaps</TabsTrigger>
           <TabsTrigger value="resources">Learning Resources (Pending)</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="ideas">
-          <Card>
-            <CardHeader>
-              <CardTitle>Business Ideas Catalog</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-muted/50 text-muted-foreground">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Business Ideas Catalog</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
                     <tr>
-                      <th className="px-4 py-3 font-medium">Title</th>
-                      <th className="px-4 py-3 font-medium">Difficulty</th>
-                      <th className="px-4 py-3 font-medium">Status</th>
-                      <th className="px-4 py-3 font-medium text-right">Actions</th>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Difficulty</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y">
+                  </TableHeader>
+                  <TableBody className="divide-y">
                     {loading ? (
-                      <tr><td colSpan={4} className="px-4 py-8 text-center">Loading...</td></tr>
+                      <tr>
+                        <TableCell colSpan={4} className="px-4 py-12 text-center text-muted-foreground">
+                          Loading...
+                        </TableCell>
+                      </tr>
                     ) : ideas.length > 0 ? (
                       ideas.map((idea) => (
-                        <tr key={(idea as { _id: string })._id} className="hover:bg-muted/30">
-                          <td className="px-4 py-3 font-medium">{(idea as { title: string }).title}</td>
-                          <td className="px-4 py-3 text-muted-foreground capitalize">{(idea as { difficultyLevel: string }).difficultyLevel}</td>
-                          <td className="px-4 py-3">
-                            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${(idea as { isActive: boolean }).isActive ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                        <TableRow key={(idea as { _id: string })._id}>
+                          <TableCell className="font-medium">
+                            {(idea as { title: string }).title}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground capitalize">
+                            {(idea as { difficultyLevel: string }).difficultyLevel}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                (idea as { isActive: boolean }).isActive
+                                  ? "default"
+                                  : "outline"
+                              }
+                            >
                               {(idea as { isActive: boolean }).isActive ? "Published" : "Draft"}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-right">
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
                             <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon"><Edit className="h-4 w-4" /></Button>
+                              <Button variant="ghost" size="icon">
+                                <Edit className="h-4 w-4" />
+                              </Button>
                             </div>
-                          </td>
-                        </tr>
+                          </TableCell>
+                        </TableRow>
                       ))
                     ) : (
-                      <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No ideas found.</td></tr>
+                      <tr>
+                        <TableCell colSpan={4} className="px-4 py-12 text-center text-muted-foreground">
+                          No ideas found.
+                        </TableCell>
+                      </tr>
                     )}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </motion.div>
         </TabsContent>
-        
+
         <TabsContent value="roadmaps">
           <Card>
             <CardHeader>
               <CardTitle>Learning Roadmaps</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">Roadmaps are managed under their corresponding Business Idea.</p>
+              <p className="text-sm text-muted-foreground">
+                Roadmaps are managed under their corresponding Business Idea.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="resources">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pending Learning Resources</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-muted/50 text-muted-foreground">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Pending Learning Resources</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
                     <tr>
-                      <th className="px-4 py-3 font-medium">Title</th>
-                      <th className="px-4 py-3 font-medium">Type</th>
-                      <th className="px-4 py-3 font-medium">URL</th>
-                      <th className="px-4 py-3 font-medium text-right">Actions</th>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>URL</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y">
+                  </TableHeader>
+                  <TableBody className="divide-y">
                     {loading ? (
-                      <tr><td colSpan={4} className="px-4 py-8 text-center">Loading...</td></tr>
+                      <tr>
+                        <TableCell colSpan={4} className="px-4 py-12 text-center text-muted-foreground">
+                          Loading...
+                        </TableCell>
+                      </tr>
                     ) : resources.length > 0 ? (
                       resources.map((res) => (
-                        <tr key={(res as { _id: string })._id} className="hover:bg-muted/30">
-                          <td className="px-4 py-3 font-medium">{(res as { title: string }).title}</td>
-                          <td className="px-4 py-3 text-muted-foreground capitalize">{(res as { type: string }).type}</td>
-                          <td className="px-4 py-3 text-blue-500 underline">
-                            <a href={(res as { url: string }).url} target="_blank" rel="noreferrer">View</a>
-                          </td>
-                          <td className="px-4 py-3 text-right">
+                        <TableRow key={(res as { _id: string })._id}>
+                          <TableCell className="font-medium">
+                            {(res as { title: string }).title}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground capitalize">
+                            {(res as { type: string }).type}
+                          </TableCell>
+                          <TableCell className="text-primary underline">
+                            <a
+                              href={(res as { url: string }).url}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              View
+                            </a>
+                          </TableCell>
+                          <TableCell className="text-right">
                             <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon" className="text-green-600" onClick={() => handleResourceApproval((res as { _id: string })._id, "approved")} disabled={actionLoading === (res as { _id: string })._id}><CheckCircle className="h-4 w-4" /></Button>
-                              <Button variant="ghost" size="icon" className="text-red-600" onClick={() => handleResourceApproval((res as { _id: string })._id, "rejected")} disabled={actionLoading === (res as { _id: string })._id}><XCircle className="h-4 w-4" /></Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-green-600"
+                                onClick={() =>
+                                  handleResourceApproval(
+                                    (res as { _id: string })._id,
+                                    "approved",
+                                  )
+                                }
+                                disabled={actionLoading === (res as { _id: string })._id}
+                              >
+                                <CheckCircle className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-red-600"
+                                onClick={() =>
+                                  handleResourceApproval(
+                                    (res as { _id: string })._id,
+                                    "rejected",
+                                  )
+                                }
+                                disabled={actionLoading === (res as { _id: string })._id}
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </Button>
                             </div>
-                          </td>
-                        </tr>
+                          </TableCell>
+                        </TableRow>
                       ))
                     ) : (
-                      <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">No pending resources.</td></tr>
+                      <tr>
+                        <TableCell colSpan={4} className="px-4 py-12 text-center text-muted-foreground">
+                          No pending resources.
+                        </TableCell>
+                      </tr>
                     )}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </motion.div>
         </TabsContent>
       </Tabs>
     </div>

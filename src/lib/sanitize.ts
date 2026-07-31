@@ -29,6 +29,11 @@ function stripDisallowedAttributes(html: string): string {
   );
 }
 
+export function sanitize(dirty: string): string {
+  if (!dirty) return "";
+  return dirty.replace(/<[^>]*>/g, "").trim().slice(0, 10000);
+}
+
 export function sanitizeHtml(dirty: string): string {
   if (!dirty) return "";
   let cleaned = stripDisallowedTags(dirty);

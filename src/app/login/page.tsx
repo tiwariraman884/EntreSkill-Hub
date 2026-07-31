@@ -4,12 +4,26 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertClose } from "@/components/ui/alert";
 import { loginSchema } from "@/domains/auth/schema";
 import { z } from "zod";
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon, UserIcon, ArrowRightIcon, Loader2Icon } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  LockIcon,
+  MailIcon,
+  UserIcon,
+  ArrowRightIcon,
+  Loader2Icon,
+  ShieldCheckIcon,
+  XIcon,
+} from "lucide-react";
 
 type FormState = z.infer<typeof loginSchema>;
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -136,201 +150,259 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
-      <div
-        className="w-full max-w-md animate-in fade-in zoom-in-95 duration-300"
-        style={{ animationFillMode: "both" }}
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col lg:flex-row">
+      {/* Left decorative panel - desktop only */}
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="hidden lg:flex lg:w-5/12 xl:w-1/2 relative overflow-hidden items-center justify-center bg-gradient-to-br from-indigo to-indigo-dark"
       >
-        <div className="rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm shadow-lg shadow-black/5 p-8">
-          {/* Header */}
-          <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-              <UserIcon className="size-5 text-primary" />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.03] rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative z-10 text-center px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <Badge variant="secondary" className="mb-6 text-xs">
+              <ShieldCheckIcon className="size-3.5" />
+              Secure Authentication
+            </Badge>
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="text-4xl xl:text-5xl font-heading font-bold text-white leading-tight"
+          >
+            Welcome back
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mt-4 text-white/70 text-lg leading-relaxed max-w-sm mx-auto"
+          >
+            Continue your entrepreneurship journey with AI-powered mentorship and resources.
+          </motion.p>
+        </div>
+      </motion.div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-gradient-to-br from-background to-muted/20">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 24 }}
+          className="w-full max-w-md"
+        >
+          {/* Mobile header */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:hidden text-center mb-6"
+          >
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo to-indigo-light shadow-lg shadow-indigo/25">
+              <UserIcon className="size-6 text-white" />
             </div>
-            <h1 className="text-2xl font-heading font-semibold text-foreground">Welcome back</h1>
-            <p className="text-sm text-muted-foreground mt-2">
+            <h1 className="text-2xl font-heading font-bold text-foreground">Welcome back</h1>
+            <p className="text-sm text-thread mt-1">
               Enter your credentials to access your account
             </p>
-          </div>
+          </motion.div>
 
-          {/* Messages */}
-          {error && (
-            <div
-              ref={errorRef}
-              role="alert"
-              aria-live="assertive"
-              tabIndex={-1}
-              className="mb-6 flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/8 text-destructive px-3 py-2.5 text-sm animate-in slide-in-from-top-2 duration-200"
-            >
-              <svg className="mt-0.5 size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              <span>{error}</span>
-              <button
-                type="button"
-                onClick={() => setError("")}
-                className="ml-auto shrink-0 rounded-md p-0.5 text-destructive/60 hover:text-destructive hover:bg-destructive/10 transition-colors"
-                aria-label="Dismiss error"
+          <Card className="glass-card w-full max-w-md dark:bg-ink/80 dark:border-white/10" glow>
+            <div className="p-6 sm:p-8 space-y-6">
+              {/* Desktop header */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="mb-8 text-center hidden lg:block"
               >
-                <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} noValidate className="space-y-5">
-            {/* Email */}
-            <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-              <div className="relative">
-                <MailIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-                <Input
-                  ref={emailRef}
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(""); validateField("email", e.target.value); }}
-                  onBlur={(e) => validateField("email", e.target.value)}
-                  aria-invalid={!!errors.email}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                  disabled={loading}
-                  className="pl-9 h-10"
-                  spellCheck={false}
-                  inputMode="email"
-                />
-              </div>
-              {errors.email && (
-                <p id="email-error" className="text-xs text-destructive flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150" role="alert">
-                  <svg className="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.email}
+                <h1 className="text-2xl font-heading font-bold text-foreground mb-2">Sign in to your account</h1>
+                <p className="text-sm text-thread">
+                  Enter your credentials to continue
                 </p>
-              )}
-            </div>
+              </motion.div>
 
-            {/* Password */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-                <Link href="/forgot-password" className="text-xs font-medium text-primary hover:underline">
-                  Forgot password?
-                </Link>
-              </div>
-              <div className="relative">
-                <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-                <Input
-                  ref={passwordRef}
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => { setPassword(e.target.value); setError(""); validateField("password", e.target.value); }}
-                  onKeyUp={handleCapsLock}
-                  onKeyDown={handleCapsLock}
-                  aria-invalid={!!errors.password}
-                  aria-describedby={errors.password ? "password-error" : undefined}
-                  disabled={loading}
-                  className="pl-9 pr-9 h-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-0.5 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  aria-pressed={showPassword}
-                  disabled={loading}
+              {/* Error Alert */}
+              {error && (
+                <Alert
+                  ref={errorRef}
+                  tabIndex={-1}
+                  variant="destructive"
+                  className="mb-5 grid-cols-[auto_1fr]"
                 >
-                  {showPassword ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
-                </button>
+                  <span>{error}</span>
+                  <AlertClose onClick={() => setError("")}>
+                    <XIcon className="size-3.5" />
+                  </AlertClose>
+                </Alert>
+              )}
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                {/* Email */}
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-semibold">Email</Label>
+                  <div className="relative">
+                    <MailIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-thread pointer-events-none" />
+                    <Input
+                      ref={emailRef}
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setError(""); validateField("email", e.target.value); }}
+                      onBlur={(e) => validateField("email", e.target.value)}
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "email-error" : undefined}
+                      disabled={loading}
+                      className="pl-10 h-11"
+                      spellCheck={false}
+                      inputMode="email"
+                    />
+                  </div>
+                  {errors.email && (
+                    <p id="email-error" className="text-xs text-danger flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150" role="alert">
+                      <svg className="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Password */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
+                    <Link href="/forgot-password" className="text-xs font-medium text-indigo hover:text-indigo-light">
+                      Forgot password?
+                    </Link>
+                  </div>
+                  <div className="relative">
+                    <LockIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-thread pointer-events-none" />
+                    <Input
+                      ref={passwordRef}
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => { setPassword(e.target.value); setError(""); validateField("password", e.target.value); }}
+                      onKeyUp={handleCapsLock}
+                      onKeyDown={handleCapsLock}
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? "password-error" : undefined}
+                      disabled={loading}
+                      className="pl-10 pr-10 h-11"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md p-0.5 text-thread hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo/50"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-pressed={showPassword}
+                      disabled={loading}
+                    >
+                      {showPassword ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p id="password-error" className="text-xs text-danger flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150" role="alert">
+                      <svg className="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
+                      {errors.password}
+                    </p>
+                  )}
+                  {capsLockOn && (
+                    <p className="text-xs text-amber-600 dark:text-amber-500 flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150" role="alert">
+                      <svg className="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      Caps Lock is on
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit */}
+                <Button
+                  type="submit"
+                  className="w-full h-11 text-sm font-semibold group"
+                  disabled={loading}
+                  aria-busy={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Spinner />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRightIcon className="ml-1.5 size-4 transition-transform group-hover:translate-x-0.5" />
+                    </>
+                  )}
+                </Button>
+              </form>
+
+              {/* Divider */}
+              <div className="mt-7 flex items-center gap-3">
+                <div className="h-px flex-1 bg-border/60" />
+                <span className="text-xs text-thread uppercase tracking-wide shrink-0 font-medium">Or continue with</span>
+                <div className="h-px flex-1 bg-border/60" />
               </div>
-              {errors.password && (
-                <p id="password-error" className="text-xs text-destructive flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150" role="alert">
-                  <svg className="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.password}
-                </p>
-              )}
-              {capsLockOn && (
-                <p className="text-xs text-amber-600 dark:text-amber-500 flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-150" role="alert">
-                  <svg className="size-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                  Caps Lock is on
-                </p>
-              )}
-            </div>
 
-            {/* Submit */}
-            <Button
-              type="submit"
-              className="w-full h-10 text-sm font-medium group"
-              disabled={loading}
-              aria-busy={loading}
-            >
-              {loading ? (
-                <>
-                  <Spinner />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  Sign In
-                  <ArrowRightIcon className="ml-1.5 size-4 transition-transform group-hover:translate-x-0.5" />
-                </>
-              )}
-            </Button>
-          </form>
-
-          {/* Divider */}
-          <div className="mt-7 flex items-center gap-3">
-            <div className="h-px flex-1 bg-border/60" />
-            <span className="text-xs text-muted-foreground uppercase tracking-wide shrink-0">Or continue with</span>
-            <div className="h-px flex-1 bg-border/60" />
-          </div>
-
-          {/* Google Sign In */}
-          <Button
-            variant="outline"
-            className="w-full h-10 mt-4"
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={googleLoading || loading}
-            aria-busy={googleLoading}
-          >
-            {googleLoading ? <Spinner /> : <GoogleIcon />}
-            {googleLoading ? "Connecting..." : "Google"}
-          </Button>
-
-          {/* Footer */}
-          <div className="mt-7">
-            <p className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/register"
-                className="font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 rounded px-1 -mx-1"
+              {/* Google Sign In */}
+              <Button
+                variant="outline"
+                className="w-full h-11 mt-4 border-2 border-indigo/20 hover:bg-indigo/5 hover:border-indigo/40 transition-all"
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={googleLoading || loading}
+                aria-busy={googleLoading}
               >
-                Sign up
-              </Link>
-            </p>
-          </div>
-        </div>
+                {googleLoading ? <Spinner /> : <GoogleIcon />}
+                {googleLoading ? "Connecting..." : "Google"}
+              </Button>
+
+              {/* Footer */}
+              <div className="mt-7">
+                <p className="text-center text-sm text-thread">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    href="/register"
+                    className="font-semibold text-indigo hover:text-indigo-light transition-colors"
+                  >
+                    Sign up
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <p className="mt-6 text-center text-xs text-thread/70">
+            By signing in, you agree to our Terms of Service and Privacy Policy.
+          </p>
+        </motion.div>
       </div>
     </div>
   );

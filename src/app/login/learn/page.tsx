@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import {
   BookOpen, Map, Video, CheckSquare, BarChart2, Bookmark, Lightbulb,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import AuthLoginForm from "@/components/auth/auth-login-form";
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function LoginLearnPage() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Logo */}
-        <div className="relative z-10">
+        <div className="relative z-10 animate-in fade-in slide-in-from-bottom-3 duration-600 ease-out">
           <Link href="/" className="flex items-center gap-3 group">
             <Image src="/logo.png" alt="EntreSkill Hub Logo" width={40} height={40} className="object-contain select-none shrink-0" />
             <span className="font-bold text-xl">EntreSkill Hub</span>
@@ -40,33 +41,33 @@ export default function LoginLearnPage() {
 
         {/* Main copy */}
         <div className="relative z-10 space-y-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 text-sm font-medium mb-6">
-              <BookOpen className="size-4" />
+          <div className="animate-in fade-in slide-in-from-bottom-3 duration-600 ease-out delay-100">
+            <Badge variant="outline" className="gap-1.5 border-white/20 bg-white/15 text-white hover:bg-white/25 hover:border-white/30 mb-6">
+              <BookOpen className="size-3.5" aria-hidden="true" />
               Learning Platform
-            </div>
+            </Badge>
             <h1 className="text-3xl xl:text-4xl font-bold font-heading leading-tight mb-4">
               Continue Your<br />Learning Journey
             </h1>
-            <p className="text-primary-foreground/80 leading-relaxed">
+            <p className="text-primary-foreground/80 leading-relaxed text-base">
               Access personalized learning resources, AI-powered business roadmaps, videos, articles, checklists, and track your entrepreneurial progress.
             </p>
           </div>
 
           <ul className="space-y-3" aria-label="Platform features">
             {FEATURES.map(({ icon: Icon, label }) => (
-              <li key={label} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
-                  <Icon className="size-3.5 text-white" aria-hidden="true" />
+              <li key={label} className="flex items-center gap-3 animate-in fade-in slide-in-from-left-2 duration-500 ease-out">
+                <div className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+                  <Icon className="size-4 text-white" aria-hidden="true" />
                 </div>
-                <span className="text-sm text-primary-foreground/90">{label}</span>
+                <span className="text-sm text-primary-foreground/90 font-medium">{label}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {/* Bottom quote */}
-        <div className="relative z-10 border-t border-white/20 pt-8">
+        <div className="relative z-10 border-t border-white/20 pt-8 animate-in fade-in duration-500 ease-out">
           <blockquote className="text-sm text-primary-foreground/70 italic leading-relaxed">
             &ldquo;EntreSkill Hub gave me a clear roadmap to launch my catering business. The learning content is genuinely practical.&rdquo;
           </blockquote>
@@ -85,34 +86,36 @@ export default function LoginLearnPage() {
       <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 py-12">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2 mb-8">
+          <div className="lg:hidden flex items-center gap-2 mb-8 animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out">
             <Image src="/logo.png" alt="EntreSkill Hub Logo" width={40} height={40} className="object-contain select-none shrink-0" />
             <span className="font-bold text-lg">EntreSkill Hub</span>
           </div>
 
           {/* Heading */}
-          <div className="mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/15 text-primary text-sm font-medium mb-4">
-              <BookOpen className="size-4" aria-hidden="true" />
+          <div className="mb-8 animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out">
+            <Badge variant="outline" className="gap-1.5 border-primary/15 bg-primary/8 text-primary hover:bg-primary/10 hover:border-primary/25 mb-4">
+              <BookOpen className="size-3.5" aria-hidden="true" />
               Learning Platform
-            </div>
+            </Badge>
             <h2 className="text-2xl sm:text-3xl font-bold font-heading mb-2">
               Sign in to learn
             </h2>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Access your personalized dashboard and continue where you left off.
             </p>
           </div>
 
           {/* Form */}
-          <Suspense fallback={<div className="h-80 rounded-2xl bg-muted/30 animate-pulse" />}>
-            <AuthLoginForm
-              ctaLabel="Continue Learning"
-              defaultRedirect="/learn"
-              registerHref="/register"
-              registerLabel="Create free account"
-            />
-          </Suspense>
+          <div className="animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out">
+            <Suspense fallback={<div className="h-80 rounded-2xl bg-muted/30 animate-pulse" />}>
+              <AuthLoginForm
+                ctaLabel="Continue Learning"
+                defaultRedirect="/learn"
+                registerHref="/register"
+                registerLabel="Create free account"
+              />
+            </Suspense>
+          </div>
         </div>
       </main>
     </div>

@@ -9,6 +9,7 @@ import {
   CheckCircle2, Building, Clock, ArrowRight, Share2 
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import React from "react";
 
 export function generateStaticParams() {
   return ALL_IDEAS.map((idea) => ({
@@ -16,8 +17,9 @@ export function generateStaticParams() {
   }));
 }
 
-export default function IdeaDetailsPage({ params }: { params: { id: string } }) {
-  const idea = ALL_IDEAS.find((i) => i.id === params.id);
+export default function IdeaDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = React.use(params);
+  const idea = ALL_IDEAS.find((i) => i.id === id);
 
   if (!idea) {
     notFound();

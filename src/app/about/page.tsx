@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 import {
   Sparkles, Target, Eye, Heart, Users, BookOpen, Rocket, Globe,
   ArrowRight, CheckCircle2, Zap, BarChart3, Star, TrendingUp,
-  Lightbulb
+  Lightbulb, Plus, Minus
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -132,37 +136,37 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative pt-24 pb-20 overflow-hidden border-b">
+      <section className="relative pt-24 pb-20 overflow-hidden border-b animate-fade-in">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-secondary/5 pointer-events-none" />
         <div className="absolute top-32 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" aria-hidden="true" />
-        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        <div className="container-content relative z-10">
           <BreadcrumbNav items={[{ label: 'About Us' }]} />
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/15 text-primary text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/15 text-primary text-sm font-medium mb-6 animate-fade-in-up stagger-1">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 Our Story
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-6 leading-tight text-balance">
+              <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-6 leading-tight text-balance animate-fade-in-up stagger-2">
                 We believe anyone can build a business{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
                   from their skills
                 </span>
               </h1>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              <p className="text-lg text-muted-foreground mb-8 leading-relaxed animate-fade-in-up stagger-3">
                 EntreSkill Hub started with a simple frustration: millions of people have real, valuable skills but no clear path from &quot;I can do this&quot; to &quot;I built a business doing this.&quot; We exist to close that gap — with AI, mentorship, and community.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 animate-fade-in-up stagger-4">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={cn(buttonVariants({ size: "lg" }))}
                 >
                   Start Your Journey <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl border-2 border-border font-semibold hover:bg-muted/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
                 >
                   Talk to the Team
                 </Link>
@@ -172,10 +176,12 @@ export default function AboutPage() {
             {/* Stats grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {STATS.map(({ value, label }) => (
-                <div key={label} className="bg-card rounded-xl border p-5 text-center hover:shadow-md transition-shadow">
-                  <p className="text-3xl font-bold font-heading text-primary">{value}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{label}</p>
-                </div>
+                <Card key={label} className="text-center elevation-1 animate-fade-in-up" hoverable>
+                  <CardContent className="p-5">
+                    <p className="text-3xl font-bold font-heading text-primary">{value}</p>
+                    <p className="text-sm text-muted-foreground mt-1">{label}</p>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
@@ -183,30 +189,38 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="py-20 animate-fade-in-up">
+        <div className="container-content">
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-gradient-to-br from-primary/10 to-blue-600/5 rounded-2xl border border-primary/20 p-8">
-              <Target className="h-8 w-8 text-primary mb-4" aria-hidden="true" />
-              <h2 className="text-2xl font-bold font-heading mb-3">Our Mission</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                To empower 10 million people to launch sustainable businesses from their existing skills by 2030 — with AI-powered guidance, world-class mentorship, and a global community of builders who support each other.
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-secondary/15 to-secondary/5 rounded-2xl border border-secondary/20 p-8">
-              <Eye className="h-8 w-8 text-secondary-foreground mb-4" aria-hidden="true" />
-              <h2 className="text-2xl font-bold font-heading mb-3">Our Vision</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                A world where geographic location, economic background, and educational pedigree are no longer barriers to entrepreneurship. Where the most important ingredient is your skill, drive, and access to the right guidance at the right moment.
-              </p>
-            </div>
+            <Card className="animate-fade-in-up stagger-1 elevation-1" hoverable>
+              <CardContent className="p-8">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                  <Target className="h-5 w-5 text-primary" aria-hidden="true" />
+                </div>
+                <h2 className="text-2xl font-bold font-heading mb-3">Our Mission</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  To empower 10 million people to launch sustainable businesses from their existing skills by 2030 — with AI-powered guidance, world-class mentorship, and a global community of builders who support each other.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="animate-fade-in-up stagger-2 elevation-1" hoverable>
+              <CardContent className="p-8">
+                <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center mb-4">
+                  <Eye className="h-5 w-5 text-secondary-foreground" aria-hidden="true" />
+                </div>
+                <h2 className="text-2xl font-bold font-heading mb-3">Our Vision</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  A world where geographic location, economic background, and educational pedigree are no longer barriers to entrepreneurship. Where the most important ingredient is your skill, drive, and access to the right guidance at the right moment.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Values */}
-      <section className="py-20 bg-muted/30 border-y">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="py-20 bg-muted/30 border-y animate-fade-in-up">
+        <div className="container-content">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-3">What we stand for</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -214,22 +228,24 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {VALUES.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="group bg-card rounded-xl border p-6 hover:border-primary/30 hover:shadow-md transition-all">
-                <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                  <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
-                </div>
-                <h3 className="font-bold mb-2">{title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-              </div>
+            {VALUES.map(({ icon: Icon, title, desc }, i) => (
+              <Card key={title} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="p-6">
+                  <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                    <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-bold mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* How Platform Works */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="py-20 animate-fade-in-up">
+        <div className="container-content">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-3">How it works</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -237,25 +253,27 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {HOW_IT_WORKS.map(({ icon: Icon, step, title, desc }) => (
-              <div key={step} className="relative p-6 rounded-xl border bg-card hover:shadow-md transition-all group">
-                <div className="text-4xl font-bold font-heading text-muted-foreground/10 absolute top-4 right-5 select-none" aria-hidden="true">
-                  {step}
-                </div>
-                <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                  <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
-                </div>
-                <h3 className="font-bold mb-2">{title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-              </div>
+            {HOW_IT_WORKS.map(({ icon: Icon, step, title, desc }, i) => (
+              <Card key={step} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="p-6 relative">
+                  <div className="text-4xl font-bold font-heading text-muted-foreground/10 absolute top-4 right-5 select-none" aria-hidden="true">
+                    {step}
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
+                    <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-bold mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* Timeline */}
-      <section className="py-20 bg-muted/30 border-y">
-        <div className="container mx-auto px-4 max-w-4xl">
+      <section className="py-20 bg-muted/30 border-y animate-fade-in-up">
+        <div className="mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-3">Our story, in milestones</h2>
           </div>
@@ -269,11 +287,13 @@ export default function AboutPage() {
                 >
                   {/* Content */}
                   <div className={`flex-1 ml-16 md:ml-0 ${i % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
-                    <div className={`inline-block bg-card rounded-xl border p-5 shadow-sm text-left max-w-sm ${i % 2 === 0 ? 'md:ml-auto' : ''}`}>
-                      <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">{year}</p>
-                      <h3 className="font-bold mb-1">{title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-                    </div>
+                    <Card className={`inline-block max-w-sm animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                      <CardContent className="p-5">
+                        <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">{year}</p>
+                        <h3 className="font-bold mb-1">{title}</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                      </CardContent>
+                    </Card>
                   </div>
                   {/* Dot */}
                   <div className="absolute left-6 md:left-1/2 top-5 w-4 h-4 rounded-full bg-primary border-2 border-background md:-translate-x-1/2 z-10" aria-hidden="true" />
@@ -285,8 +305,8 @@ export default function AboutPage() {
       </section>
 
       {/* Team */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="py-20 animate-fade-in-up">
+        <div className="container-content">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-3">Meet the team</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -294,23 +314,25 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TEAM.map(({ name, role, bg: background, color }) => (
-              <div key={name} className="group bg-card rounded-xl border p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col gap-4">
-                <div className={`w-14 h-14 rounded-2xl ${color} flex items-center justify-center text-xl font-bold font-heading`} aria-hidden="true">
-                  {name.charAt(0)}
-                </div>
-                <div>
-                  <h3 className="font-bold">{name}</h3>
-                  <p className="text-sm text-muted-foreground">{role}</p>
-                  <p className="text-xs text-muted-foreground/70 mt-1">{background}</p>
-                </div>
-              </div>
+            {TEAM.map(({ name, role, bg: background, color }, i) => (
+              <Card key={name} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="p-6 flex flex-col gap-4">
+                  <div className={`w-14 h-14 rounded-2xl ${color} flex items-center justify-center text-xl font-bold font-heading`} aria-hidden="true">
+                    {name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="font-bold">{name}</h3>
+                    <p className="text-sm text-muted-foreground">{role}</p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">{background}</p>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
           <div className="text-center mt-10">
             <Link
               href="/careers"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline animate-fade-in-up"
             >
               We&apos;re hiring — view open roles <ArrowRight className="h-4 w-4" />
             </Link>
@@ -319,8 +341,8 @@ export default function AboutPage() {
       </section>
 
       {/* Future Vision */}
-      <section className="py-20 bg-muted/30 border-y">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
+      <section className="py-20 bg-muted/30 border-y animate-fade-in-up">
+        <div className="container-content max-w-4xl text-center">
           <TrendingUp className="h-10 w-10 text-primary mx-auto mb-5" aria-hidden="true" />
           <h2 className="text-3xl font-bold font-heading mb-5">Where we&apos;re going</h2>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl mx-auto mb-8">
@@ -332,59 +354,81 @@ export default function AboutPage() {
               ['50+', 'Languages'],
               ['150+', 'Countries'],
               ['10k', 'Mentor Partners'],
-            ].map(([num, label]) => (
-              <div key={label} className="bg-card rounded-xl border px-6 py-4 text-center hover:shadow-sm transition-shadow">
-                <p className="text-2xl font-bold font-heading text-primary">{num}</p>
-                <p className="mt-1">{label}</p>
-              </div>
+            ].map(([num, label], i) => (
+              <Card key={label} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="px-6 py-4 text-center">
+                  <p className="text-2xl font-bold font-heading text-primary">{num}</p>
+                  <p className="mt-1">{label}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-24">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="rounded-2xl bg-gradient-to-br from-primary to-blue-700 p-10 md:p-16 text-center text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.1),_transparent)] pointer-events-none" />
-            <Star className="h-10 w-10 mx-auto mb-5 fill-white/30 text-white" aria-hidden="true" />
-            <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">
-              Ready to build something real?
-            </h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              Join 50,000+ learners who are turning their skills into businesses right now. Free to start, no credit card required.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/register"
-                className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-white text-primary font-semibold hover:bg-white/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                Get Started Free <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl border-2 border-white/40 text-white font-semibold hover:bg-white/10 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                Talk to Us
-              </Link>
-            </div>
-          </div>
+      <section className="py-24 animate-fade-in-up">
+        <div className="container-content max-w-4xl">
+          <Card className="relative overflow-hidden bg-gradient-to-br from-primary to-blue-700 animate-fade-in-up">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.1),_transparent)] pointer-events-none" aria-hidden="true" />
+            <CardContent className="p-10 md:p-16 text-center text-white relative z-10">
+              <Star className="h-10 w-10 mx-auto mb-5 fill-white/30 text-white" aria-hidden="true" />
+              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">
+                Ready to build something real?
+              </h2>
+              <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+                Join 50,000+ learners who are turning their skills into businesses right now. Free to start, no credit card required.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href="/register"
+                  className={cn(buttonVariants({ size: "lg" }))}
+                >
+                  Get Started Free <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-white/40 text-white hover:bg-white/10")}
+                >
+                  Talk to Us
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="py-20 border-t">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-bold font-heading text-center mb-12">Frequently asked questions</h2>
-          <div className="divide-y divide-border">
-            {FAQS.map(({ q, a }) => (
-              <div key={q} className="py-6">
-                <h3 className="font-semibold mb-2 flex items-start gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                  {q}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed pl-7">{a}</p>
-              </div>
+      <section className="py-20 border-t animate-fade-in-up">
+        <div className="container-content max-w-3xl">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">
+              <CheckCircle2 className="size-3.5" aria-hidden="true" />
+              FAQ
+            </Badge>
+            <h2 className="text-3xl font-bold font-heading">Frequently asked questions</h2>
+          </div>
+          <div className="space-y-4">
+            {FAQS.map(({ q, a }, i) => (
+              <Card key={q} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="p-0">
+                  <details className="group">
+                    <summary className="flex items-center justify-between p-5 cursor-pointer list-none font-semibold text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl">
+                      <span className="pr-4 flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-primary shrink-0" aria-hidden="true" />
+                        {q}
+                      </span>
+                      <span className="relative flex-shrink-0 ml-2">
+                        <Plus className="h-5 w-5 text-muted-foreground group-open:hidden" aria-hidden="true" />
+                        <Minus className="h-5 w-5 text-primary hidden group-open:block" aria-hidden="true" />
+                      </span>
+                    </summary>
+                    <div className="px-5 pb-5 pt-0 text-muted-foreground text-sm leading-relaxed">
+                      {a}
+                    </div>
+                  </details>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

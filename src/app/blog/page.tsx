@@ -3,8 +3,12 @@ import Link from 'next/link'
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 import {
   Clock, ArrowRight, TrendingUp, Search,
-  Tag, Rss, CheckCircle2, BookOpen, Star, Sparkles
+  Tag, Rss, CheckCircle2, BookOpen, Star, Sparkles, UserRound
 } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { EmptyState } from '@/components/ui/empty-state'
 
 export const metadata: Metadata = {
   title: 'Blog — EntreSkill Hub',
@@ -47,7 +51,7 @@ const POSTS = [
   },
   {
     title: 'The Skills Gap No One Talks About in Startup Failure',
-    excerpt: 'Technical execution isn\'t why most startups fail. We analyzed 300 failed startups and found three skill gaps that almost always predict failure.',
+    excerpt: "Technical execution isn't why most startups fail. We analyzed 300 failed startups and found three skill gaps that almost always predict failure.",
     author: 'Ravi Patel',
     date: 'July 20, 2026',
     readTime: '8 min read',
@@ -83,7 +87,7 @@ const POSTS = [
   },
   {
     title: 'The Mentor Multiplier: Why 1 Session Can Compress 6 Months of Learning',
-    excerpt: 'We tracked outcomes from 5,000 mentor sessions on our platform. Users who booked one session in their first month progressed 4× faster. Here\'s why.',
+    excerpt: "We tracked outcomes from 5,000 mentor sessions on our platform. Users who booked one session in their first month progressed 4× faster. Here's why.",
     author: 'Vikram Mehta',
     date: 'July 6, 2026',
     readTime: '6 min read',
@@ -119,242 +123,425 @@ const FAQS = [
   },
 ]
 
+const ANIMATED_SECTION_CLS =
+  'animate-fade-in-up opacity-0'
+
 export default function BlogPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero */}
       <section className="relative pt-24 pb-16 overflow-hidden border-b">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-background to-secondary/4 pointer-events-none" />
-        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        <div className="container-content relative z-10">
           <BreadcrumbNav items={[{ label: 'Blog' }]} />
 
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/15 text-primary text-sm font-medium mb-6">
+          <div
+            className={`max-w-3xl ${ANIMATED_SECTION_CLS}`}
+            style={{ animationDelay: '0s', animationFillMode: 'forwards' }}
+          >
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold mb-6 animate-scale-in"
+                  style={{ animationDelay: '0.05s', animationFillMode: 'forwards' }}>
               <Rss className="h-4 w-4" aria-hidden="true" />
               Founder Insights
-            </div>
+            </span>
+
             <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-5 leading-tight">
               Ideas, playbooks &amp; stories for{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 animate-shimmer"
+                    style={{ backgroundSize: '200% 100%' }}>
                 ambitious builders
               </span>
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-pretty max-w-2xl">
               Practical insights from founders who have done it — covering startup validation, AI-powered workflows, skill-building, and the honest realities of building a business from scratch.
             </p>
 
-            {/* Search UI */}
-            <div className="relative max-w-lg">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            <div className="relative max-w-lg group">
+              <Search
+                className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors duration-200"
+                aria-hidden="true"
+              />
               <input
                 type="search"
                 placeholder="Search articles, topics, authors…"
                 aria-label="Search blog articles"
-                className="w-full h-12 pl-11 pr-4 rounded-xl border bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full h-12 pl-11 pr-4 rounded-xl border bg-background text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring hover:border-primary/30 transition-all duration-200"
               />
             </div>
           </div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 max-w-6xl py-16">
-        <div className="grid lg:grid-cols-3 gap-12">
+      <div className="container-content py-12 md:py-16">
+        <div className="grid lg:grid-cols-3 gap-10 lg:gap-12">
           {/* Main content */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-10">
+
             {/* Featured post */}
-            <div className="mb-12">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2">
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}
+            >
+              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-5 flex items-center gap-2">
                 <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" aria-hidden="true" />
                 Featured Article
               </h2>
-              <article className="bg-card rounded-2xl border hover:shadow-xl transition-all hover:-translate-y-0.5 overflow-hidden">
-                <div className="bg-gradient-to-br from-primary/15 to-blue-600/10 p-8">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-primary">{FEATURED_POST.category}</span>
-                  <h3 className="text-2xl font-bold font-heading mt-3 mb-4 leading-snug">
+
+              <Card hoverable glow size="default" className="overflow-hidden">
+                <div className="bg-gradient-to-br from-primary/15 via-primary/5 to-blue-600/8 p-8 md:p-10">
+                  <Badge variant="secondary" className="mb-4">
+                    {FEATURED_POST.category}
+                  </Badge>
+
+                  <h3 className="text-2xl md:text-[1.75rem] font-bold font-heading mt-3 mb-4 leading-snug tracking-tight">
                     {FEATURED_POST.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">{FEATURED_POST.excerpt}</p>
 
-                  <div className="flex flex-wrap items-center gap-3 mt-6 mb-6">
+                  <p className="text-muted-foreground leading-relaxed text-[0.95rem]">
+                    {FEATURED_POST.excerpt}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2 mt-6 mb-6">
                     {FEATURED_POST.tags.map((t) => (
-                      <span key={t} className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">{t}</span>
+                      <Badge key={t} variant="outline" className="text-xs">
+                        {t}
+                      </Badge>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-center gap-3 text-sm">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-indigo-light flex items-center justify-center text-white font-bold text-sm shadow-md shadow-primary/20 shrink-0">
                         {FEATURED_POST.author.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-medium text-foreground">{FEATURED_POST.author}</p>
-                        <p className="text-xs">{FEATURED_POST.authorRole}</p>
+                        <p className="font-semibold text-foreground leading-tight">
+                          {FEATURED_POST.author}
+                        </p>
+                        <p className="text-xs text-muted-foreground leading-tight">
+                          {FEATURED_POST.authorRole}
+                        </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span>{FEATURED_POST.date}</span>
-                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{FEATURED_POST.readTime}</span>
+
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span className="font-medium">{FEATURED_POST.date}</span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                        {FEATURED_POST.readTime}
+                      </span>
                     </div>
                   </div>
                 </div>
-                <div className="px-8 pb-6">
-                  <Link
-                    href="/blog"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline mt-4"
-                  >
-                    Read full article <ArrowRight className="h-4 w-4" />
-                  </Link>
+
+                <div className="px-8 md:px-10 pb-8 pt-2">
+                  <Button variant="default" size="default" asChild>
+                    <Link href="/blog" className="gap-2">
+                      Read full article
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </Link>
+                  </Button>
                 </div>
-              </article>
+              </Card>
             </div>
 
             {/* Category filter */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {CATEGORIES.map(({ name, count }) => (
-                <button
-                  key={name}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                    name === 'All'
-                      ? 'bg-primary text-primary-foreground border-primary'
-                      : 'bg-card text-muted-foreground hover:border-primary hover:text-primary'
-                  }`}
-                >
-                  {name} <span className="text-xs opacity-70 ml-1">({count})</span>
-                </button>
-              ))}
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
+            >
+              <div className="flex flex-wrap gap-2">
+                {CATEGORIES.map(({ name, count }) => (
+                  <button
+                    key={name}
+                    className={`
+                      h-9 px-4 rounded-full text-sm font-semibold border
+                      transition-all duration-200 ease-out
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                      hover:translate-y-[-1px] hover:shadow-md
+                      ${
+                        name === 'All'
+                          ? 'bg-gradient-to-r from-indigo to-indigo-light text-white border-transparent shadow-md shadow-indigo/20'
+                          : 'bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-primary hover:shadow-md'
+                      }
+                    `}
+                  >
+                    {name}
+                    <span className="text-xs opacity-70 ml-1.5 font-medium">({count})</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Latest posts */}
-            <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">Latest Posts</h2>
-            <div className="space-y-6">
-              {POSTS.map((post) => (
-                <article
-                  key={post.title}
-                  className="group bg-card rounded-xl border p-6 hover:shadow-md hover:border-primary/30 transition-all"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-primary">{post.category}</span>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" aria-hidden="true" />
-                      {post.readTime}
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
+            >
+              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-5">
+                Latest Posts
+              </h2>
+
+              <div className="space-y-5">
+                {POSTS.map((post, index) => (
+                  <Card
+                    key={post.title}
+                    hoverable
+                    glow
+                    size="default"
+                    className="group/card relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 border-border/50 hover:border-primary/20 bg-gradient-to-br from-card via-card to-muted/5"
+                    style={{ animationDelay: `${0.22 + index * 0.06}s`, animationFillMode: 'forwards' }}
+                  >
+                    {/* Hover Accent Bar */}
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-indigo-light to-blue-500 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
+                    
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                      <Badge variant="secondary" className="self-start text-[0.7rem] font-bold uppercase tracking-wider bg-primary/10 text-primary border-primary/20 group-hover/card:bg-primary group-hover/card:text-primary-foreground transition-colors">
+                        {post.category}
+                      </Badge>
+                      <span className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium shrink-0 bg-muted/30 px-2 py-1 rounded-md">
+                        <Clock className="h-3.5 w-3.5 text-primary/70" aria-hidden="true" />
+                        {post.readTime}
+                      </span>
                     </div>
-                  </div>
-                  <h3 className="font-bold text-lg leading-snug mb-2 group-hover:text-primary transition-colors">
-                    <Link href="/blog" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
-                      {post.title}
-                    </Link>
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">{post.excerpt}</p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{post.author} · {post.date}</span>
-                    <Link href="/blog" className="flex items-center gap-1 font-medium text-primary hover:underline">
-                      Read more <ArrowRight className="h-3 w-3" />
-                    </Link>
-                  </div>
-                </article>
-              ))}
+
+                    <h3 className="font-bold text-xl font-heading leading-snug mb-3 group-hover/card:text-primary transition-colors duration-200">
+                      <Link
+                        href="/blog"
+                        className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm before:absolute before:inset-0"
+                      >
+                        {post.title}
+                      </Link>
+                    </h3>
+
+                    <p className="text-sm text-muted-foreground/90 leading-relaxed mb-6 text-pretty line-clamp-2 group-hover/card:text-muted-foreground transition-colors">
+                      {post.excerpt}
+                    </p>
+
+                    <div className="flex items-center justify-between text-xs border-t border-border/40 pt-4 mt-auto">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-indigo-light flex items-center justify-center text-white font-bold text-[10px] shadow-sm shadow-primary/20 shrink-0">
+                          {post.author.charAt(0)}
+                        </div>
+                        <span className="text-muted-foreground font-medium flex flex-col sm:flex-row sm:items-center sm:gap-1.5">
+                          <span className="text-foreground font-semibold">{post.author}</span>
+                          <span className="hidden sm:inline opacity-40">•</span>
+                          <span>{post.date}</span>
+                        </span>
+                      </div>
+                      <Button variant="ghost" size="xs" className="gap-1 -mr-2 text-primary font-semibold relative z-10 group-hover/card:bg-primary/10 transition-colors">
+                        Read more
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/card:translate-x-1" aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="mt-8 text-center">
+                <Button variant="outline" size="default" className="gap-2">
+                  Load More Articles
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
             </div>
           </div>
 
           {/* Sidebar */}
           <aside className="space-y-8">
+
             {/* Newsletter */}
-            <div className="bg-gradient-to-br from-primary/10 to-blue-600/5 rounded-xl border border-primary/20 p-6">
-              <BookOpen className="h-7 w-7 text-primary mb-3" aria-hidden="true" />
-              <h3 className="font-bold font-heading mb-2">The Founder Weekly</h3>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                 One email every Saturday. Curated founder stories, AI tools, and the week&apos;s best reads — never spam.
-              </p>
-              <form aria-label="Blog newsletter signup" className="space-y-2">
-                <input
-                  type="email"
-                  required
-                  placeholder="your@email.com"
-                  aria-label="Email address"
-                  className="w-full h-10 rounded-lg border bg-background px-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-                <button
-                  type="submit"
-                  className="w-full h-10 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  Join 8,000+ Readers
-                </button>
-              </form>
-              <p className="text-xs text-muted-foreground mt-2">No spam. Unsubscribe any time.</p>
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
+            >
+              <Card hoverable glow className="!bg-gradient-to-br from-primary/8 via-primary/3 to-blue-600/5 border-primary/15">
+                <CardContent>
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo to-indigo-light flex items-center justify-center text-white shadow-lg shadow-indigo/25 mb-4">
+                    <BookOpen className="h-5 w-5" aria-hidden="true" />
+                  </div>
+
+                  <h3 className="font-bold font-heading text-lg mb-1.5 tracking-tight">
+                    The Founder Weekly
+                  </h3>
+
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-5 text-pretty">
+                    One email every Saturday. Curated founder stories, AI tools, and the week&apos;s best reads — never spam.
+                  </p>
+
+                  <form aria-label="Blog newsletter signup" className="space-y-3">
+                    <input
+                      type="email"
+                      required
+                      placeholder="your@email.com"
+                      aria-label="Email address"
+                      className="w-full h-11 rounded-xl border bg-background px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring hover:border-primary/30 transition-all duration-200"
+                    />
+                    <Button variant="default" size="default" type="submit" className="w-full gap-2">
+                      <UserRound className="h-4 w-4" aria-hidden="true" />
+                      Join 8,000+ Readers
+                    </Button>
+                  </form>
+
+                  <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3 w-3 text-success shrink-0" aria-hidden="true" />
+                    No spam. Unsubscribe any time.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Trending */}
-            <div className="bg-card rounded-xl border p-6">
-              <h3 className="font-bold font-heading mb-4 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" aria-hidden="true" />
-                Trending Topics
-              </h3>
-              <div className="space-y-3">
-                {TRENDING_TOPICS.map(({ title, views }, i) => (
-                  <Link
-                    key={title}
-                    href="/blog"
-                    className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-                  >
-                    <span className="text-2xl font-bold text-muted-foreground/20 font-heading w-6 shrink-0">
-                      {i + 1}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium group-hover:text-primary transition-colors leading-snug">{title}</p>
-                      <p className="text-xs text-muted-foreground">{views} views</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
+            >
+              <Card hoverable size="sm">
+                <CardHeader>
+                  <h3 className="font-bold font-heading text-base flex items-center gap-2 tracking-tight">
+                    <TrendingUp className="h-4 w-4 text-primary" aria-hidden="true" />
+                    Trending Topics
+                  </h3>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {TRENDING_TOPICS.map(({ title, views }, i) => (
+                      <Link
+                        key={title}
+                        href="/blog"
+                        className="flex items-center gap-3.5 group/link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl px-2 -mx-2 hover:bg-muted/50 transition-all duration-200"
+                      >
+                        <span className="text-xl font-bold text-muted-foreground/25 font-heading w-7 shrink-0 tabular-nums">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold group-hover/link:text-primary transition-colors duration-200 leading-snug text-pretty">
+                            {title}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-0.5 font-medium">
+                            {views} views
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Popular Tags */}
-            <div className="bg-card rounded-xl border p-6">
-              <h3 className="font-bold font-heading mb-4 flex items-center gap-2">
-                <Tag className="h-4 w-4 text-primary" aria-hidden="true" />
-                Popular Tags
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {POPULAR_TAGS.map((tag) => (
-                  <Link
-                    key={tag}
-                    href="/blog"
-                    className="px-3 py-1 rounded-full border text-xs font-medium hover:border-primary hover:text-primary hover:bg-primary/5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    {tag}
-                  </Link>
-                ))}
-              </div>
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
+            >
+              <Card hoverable size="sm">
+                <CardHeader>
+                  <h3 className="font-bold font-heading text-base flex items-center gap-2 tracking-tight">
+                    <Tag className="h-4 w-4 text-primary" aria-hidden="true" />
+                    Popular Tags
+                  </h3>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {POPULAR_TAGS.map((tag) => (
+                      <Link
+                        key={tag}
+                        href="/blog"
+                        className="
+                          px-3 py-1.5 rounded-full border text-xs font-semibold
+                          hover:border-primary hover:text-primary hover:bg-primary/5
+                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring
+                          transition-all duration-200 hover:translate-y-[-1px]
+                        "
+                      >
+                        {tag}
+                      </Link>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Sparkles — AI pick */}
-            <div className="bg-amber-50 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-800 p-6">
-              <Sparkles className="h-6 w-6 text-amber-600 mb-3" aria-hidden="true" />
-              <h3 className="font-bold font-heading mb-2 text-amber-900 dark:text-amber-100">AI Editor&apos;s Pick</h3>
-              <p className="text-sm font-medium mb-1">10 AI Tools Every Solo Founder Should Have in 2026</p>
-              <p className="text-xs text-muted-foreground mb-3">Curated by our recommendation engine based on what founders are bookmarking most.</p>
-              <Link href="/blog" className="text-xs font-semibold text-amber-700 dark:text-amber-400 hover:underline">
-                Read now →
-              </Link>
+            {/* AI Editor's Pick */}
+            <div
+              className={ANIMATED_SECTION_CLS}
+              style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}
+            >
+              <Card hoverable glow size="sm" className="!bg-amber-50/60 dark:!bg-amber-950/15 !border-amber-200/60 dark:!border-amber-800/40">
+                <CardContent>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-marigold to-marigold-light flex items-center justify-center text-ink shadow-md shadow-marigold/20 mb-4">
+                    <Sparkles className="h-5 w-5" aria-hidden="true" />
+                  </div>
+
+                  <Badge variant="secondary" className="mb-3 text-[0.7rem] font-bold uppercase tracking-wider">
+                    AI Editor&apos;s Pick
+                  </Badge>
+
+                  <p className="text-sm font-semibold mb-1.5 leading-snug text-foreground">
+                    10 AI Tools Every Solo Founder Should Have in 2026
+                  </p>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed mb-4 text-pretty">
+                    Curated by our recommendation engine based on what founders are bookmarking most.
+                  </p>
+
+                  <Button variant="ghost" size="xs" asChild className="gap-1 -ml-2 text-amber-700 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300">
+                    <Link href="/blog" className="font-semibold">
+                      Read now
+                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </aside>
         </div>
       </div>
 
       {/* FAQ */}
-      <section className="py-20 border-t bg-muted/30">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-bold font-heading text-center mb-12">Frequently asked questions</h2>
-          <div className="divide-y divide-border">
-            {FAQS.map(({ q, a }) => (
-              <div key={q} className="py-6">
-                <h3 className="font-semibold mb-2 flex items-start gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                  {q}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed pl-7">{a}</p>
-              </div>
-            ))}
+      <section className="py-16 md:py-20 border-t bg-muted/25">
+        <div className="container-content max-w-3xl">
+          <div
+            className={ANIMATED_SECTION_CLS}
+            style={{ animationDelay: '0.05s', animationFillMode: 'forwards' }}
+          >
+            <h2 className="text-3xl font-bold font-heading text-center mb-12 tracking-tight">
+              Frequently asked questions
+            </h2>
+
+            <div className="space-y-0 divide-y divide-border/80">
+              {FAQS.map(({ q, a }, i) => (
+                <div
+                  key={q}
+                  className={ANIMATED_SECTION_CLS}
+                  style={{ animationDelay: `${0.1 + i * 0.08}s`, animationFillMode: 'forwards' }}
+                >
+                  <div className="py-7 group/faq">
+                    <h3 className="font-semibold mb-2 flex items-start gap-3 text-base leading-snug">
+                      <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 group-hover/faq:bg-primary/20 transition-colors duration-200">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" aria-hidden="true" />
+                      </span>
+                      {q}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed pl-9 text-pretty">
+                      {a}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-14 text-center">
+              <EmptyState
+                icon="book"
+                title="Still have questions?"
+                description="Our team is happy to help. Reach out and we'll get back to you within 24 hours."
+                actionLabel="Contact Support"
+                actionHref="/contact"
+                className="animate-fade-in-up border-border/60 bg-card/60"
+              />
+            </div>
           </div>
         </div>
       </section>

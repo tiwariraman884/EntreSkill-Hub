@@ -1,240 +1,717 @@
+import React from 'react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { MOCK_ROADMAPS, Roadmap, RoadmapStep } from '@/data/mock-roadmaps'
+import { EmptyState } from '@/components/ui/empty-state'
+import { MOCK_ROADMAPS, Roadmap } from '@/data/mock-roadmaps'
 import {
-  Map, Clock, Target, ArrowRight, PlayCircle, CheckCircle2, Trophy,
-  Brain, Code2, Shield, Smartphone, Cloud, BarChart3, Bitcoin,
-  Palette, Terminal, Rocket, Megaphone, PenTool, TrendingUp,
-  Sparkles, Star, Award, Flag
+  Route,
+  Target,
+  Flag,
+  Compass,
+  ArrowRight,
+  CheckCircle2,
+  Trophy,
+  Map,
+  Sparkles,
+  Clock,
+  Users,
+  Star,
+  Zap,
+  Layers,
 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'AI Learning Roadmaps — EntreSkill Hub',
-  description: 'Personalized AI-generated learning roadmaps from beginner to startup founder. Track progress, earn certificates, and follow structured paths across 13 tech and business domains.',
+  title: 'Learning Roadmaps — MentorHub',
+  description: 'Structured learning paths from beginner to founder. Track milestones, earn XP, and unlock achievements.',
 }
 
-const ROADMAP_CATEGORIES = [
-  { name: 'AI & ML', icon: Brain, color: 'text-violet-600', bg: 'bg-violet-50 dark:bg-violet-950/30', duration: '6–9 months' },
-  { name: 'Web Development', icon: Code2, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30', duration: '5–7 months' },
-  { name: 'Cybersecurity', icon: Shield, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-950/30', duration: '6–8 months' },
-  { name: 'App Development', icon: Smartphone, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-950/30', duration: '5–7 months' },
-  { name: 'Cloud Computing', icon: Cloud, color: 'text-cyan-600', bg: 'bg-cyan-50 dark:bg-cyan-950/30', duration: '4–6 months' },
-  { name: 'Data Science', icon: BarChart3, color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-950/30', duration: '6–9 months' },
-  { name: 'Blockchain', icon: Bitcoin, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/30', duration: '4–6 months' },
-  { name: 'UI/UX Design', icon: Palette, color: 'text-pink-600', bg: 'bg-pink-50 dark:bg-pink-950/30', duration: '4–6 months' },
-  { name: 'DevOps', icon: Terminal, color: 'text-slate-600', bg: 'bg-slate-50 dark:bg-slate-950/30', duration: '5–7 months' },
-  { name: 'Startup Founder', icon: Rocket, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-950/30', duration: '8–12 months' },
-  { name: 'Digital Marketing', icon: Megaphone, color: 'text-teal-600', bg: 'bg-teal-50 dark:bg-teal-950/30', duration: '3–5 months' },
-  { name: 'Content Writing', icon: PenTool, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/30', duration: '2–4 months' },
-  { name: 'Finance', icon: TrendingUp, color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-950/30', duration: '4–6 months' },
+const ROADMAP_ICONS: Record<string, typeof Route> = {
+  'rm-cloud-kitchen': Route,
+  'rm-freelance': Target,
+}
+
+const DIFFICULTY_CONFIG: Record<
+  string,
+  { variant: 'default' | 'secondary' | 'outline' }
+> = {
+  Beginner: { variant: 'secondary' },
+  Intermediate: { variant: 'default' },
+  Advanced: { variant: 'outline' },
+}
+
+const STATS = [
+  { label: 'Roadmaps', value: '12' },
+  { label: 'Milestones', value: '45+' },
+  { label: 'Resources', value: '500+' },
+  { label: 'XP earned', value: '2,400+' },
 ]
 
-const ROADMAP_FEATURES = [
-  { icon: Sparkles, title: 'AI-Generated & Personalized', desc: 'Your roadmap is built around your skill level, timeline, and specific goal — not a one-size-fits-all template.' },
-  { icon: Flag, title: 'Clear Milestones', desc: 'Every roadmap breaks down into achievable milestones with clear success criteria and estimated completion times.' },
-  { icon: Star, title: 'Skill Assessment', desc: 'Start with a quick diagnostic so the AI knows exactly where to begin — skipping what you already know.' },
-  { icon: Award, title: 'Earn Certificates', desc: 'Complete a roadmap and earn a shareable, blockchain-backed certificate for your portfolio and LinkedIn.' },
-  { icon: Target, title: 'Progress Tracking', desc: 'Visual progress indicators, weekly check-ins, and milestone celebrations keep you moving forward consistently.' },
-  { icon: Clock, title: 'Time Estimates', desc: 'Every resource and milestone shows estimated completion time so you can plan your learning schedule realistically.' },
+const WEEKLY_GOALS = [
+  { id: 'wg-1', text: 'Complete 2 roadmap tasks', done: true },
+  { id: 'wg-2', text: 'Review 1 resource article', done: false },
+  { id: 'wg-3', text: 'Update milestone notes', done: false },
+  { id: 'wg-4', text: 'Earn 100 XP this week', done: false },
 ]
 
-export default function RoadmapsDashboard() {
+const ACHIEVEMENTS = [
+  { label: 'First Step', variant: 'default' as const },
+  { label: 'Streak 3d', variant: 'secondary' as const },
+  { label: 'Explorer', variant: 'outline' as const },
+]
+
+const RECOMMENDED_ROADMAPS = [
+  {
+    id: "rec-1",
+    title: "SaaS Indie Hacker",
+    overview: "From first line of code to profitable subscription product. Master MVP building, micro-SaaS strategies, and Stripe billing integrations.",
+    difficulty: "Intermediate",
+    estimatedDuration: "6 months",
+    stepsCount: 12,
+  },
+  {
+    id: "rec-2",
+    title: "AI Product Creator",
+    overview: "Design and ship intelligence-powered applications. Learn prompt engineering, LangChain workflows, and vector databases.",
+    difficulty: "Advanced",
+    estimatedDuration: "4 months",
+    stepsCount: 8,
+  },
+  {
+    id: "rec-3",
+    title: "Full-Stack Growth Marketer",
+    overview: "Combine engineering skills with user acquisition. Master analytics setups, automated funnel building, and programmatic SEO.",
+    difficulty: "Beginner",
+    estimatedDuration: "3 months",
+    stepsCount: 6,
+  },
+]
+
+export default function RoadmapsPage() {
   const activeRoadmaps = MOCK_ROADMAPS.filter(r => r.progressPercent < 100)
   const completedRoadmaps = MOCK_ROADMAPS.filter(r => r.progressPercent === 100)
+  const totalXP = 2400
+  const currentLevel = 8
+
+  if (MOCK_ROADMAPS.length === 0) {
+    return (
+      <main className="min-h-screen bg-canvas">
+        <EmptyState
+          icon="map"
+          title="No roadmaps yet"
+          description="Start your first roadmap to begin your entrepreneurial journey"
+          actionLabel="Browse Roadmaps"
+          actionHref="/roadmaps"
+        />
+      </main>
+    )
+  }
 
   return (
-    <>
-      {/* Public marketing section — shown to all visitors */}
-      <section className="relative border-b bg-gradient-to-br from-primary/6 via-background to-secondary/4 pt-20 pb-16 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px]" />
-        </div>
-        <div className="container mx-auto px-4 max-w-6xl relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/15 text-primary text-sm font-medium mb-6">
-              <Sparkles className="h-4 w-4" aria-hidden="true" />
-              AI-Powered Roadmaps
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-5 text-balance">
-              Your personalized path from{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
-                learner to founder
-              </span>
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              AI-generated learning roadmaps that adapt to your skill level, goals, and timeline. Choose a domain, set your target, and follow a structured path with milestones, resources, and certificates.
-            </p>
-          </div>
+    <main className="min-h-screen bg-canvas">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <HeroSection stats={STATS} />
 
-          {/* Popular categories */}
-          <div className="mb-12">
-            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground text-center mb-6">
-              Popular Roadmap Categories
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-              {ROADMAP_CATEGORIES.map(({ name, icon: Icon, color, bg, duration }) => (
-                <Link
-                  key={name}
-                  href="/register"
-                  className={`group flex flex-col items-center text-center gap-2 p-4 rounded-xl border hover:border-primary/40 hover:shadow-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${bg}`}
-                >
-                  <div className={`p-2.5 rounded-xl bg-white/60 dark:bg-black/20 ${color} group-hover:scale-110 transition-transform`}>
-                    <Icon className="h-4 w-4" aria-hidden="true" />
-                  </div>
-                  <p className="text-xs font-semibold leading-tight">{name}</p>
-                  <p className="text-[10px] text-muted-foreground">{duration}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Features row */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-            {ROADMAP_FEATURES.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="flex items-start gap-3 p-4 rounded-xl border bg-card/60 hover:bg-card hover:shadow-sm transition-all">
-                <div className="w-8 h-8 rounded-lg bg-primary/8 flex items-center justify-center shrink-0 mt-0.5">
-                  <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 pt-6 pb-20">
+          <div className="flex-1 min-w-0 space-y-12 lg:space-y-14">
+            {activeRoadmaps.length > 0 && (
+              <section className="animate-reveal">
+                <SectionHeading label="Active" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {activeRoadmaps.map((roadmap, i) => (
+                    <div
+                      key={roadmap.id}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${0.05 + i * 0.08}s` }}
+                    >
+                      <RoadmapCard roadmap={roadmap} />
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <p className="text-sm font-semibold">{title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 h-12 px-8 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              Generate My Roadmap <ArrowRight className="h-4 w-4" />
-            </Link>
-            <p className="text-xs text-muted-foreground mt-3">Free forever · No credit card needed</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Authenticated dashboard section */}
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold font-heading mb-3 flex items-center gap-3">
-              <Map className="size-8 text-primary" aria-hidden="true" /> My Roadmaps
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Track your progress and continue building your businesses.
-            </p>
-          </div>
-          <Link href="/ideas">
-            <Button variant="outline">Explore New Ideas</Button>
-          </Link>
-        </div>
-
-        <div className="space-y-12">
-          <section>
-            <h2 className="text-2xl font-bold font-heading mb-6 flex items-center gap-2">
-              <PlayCircle className="size-5 text-primary" aria-hidden="true" /> Active Roadmaps
-            </h2>
-            {activeRoadmaps.length === 0 ? (
-              <div className="text-center py-16 border rounded-xl bg-muted/20">
-                <Map className="size-12 text-muted-foreground mx-auto mb-4 opacity-50" aria-hidden="true" />
-                <p className="text-muted-foreground font-medium text-lg mb-2">No active roadmaps</p>
-                <p className="text-muted-foreground text-sm mb-6 max-w-md mx-auto">
-                  You haven&apos;t started any business roadmaps yet. Find an idea you love and get your personalized plan.
-                </p>
-                <Link href="/ideas">
-                  <Button>Browse Business Ideas</Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {activeRoadmaps.map(roadmap => (
-                  <RoadmapCard key={roadmap.id} roadmap={roadmap} />
-                ))}
-              </div>
+              </section>
             )}
-          </section>
 
-          {completedRoadmaps.length > 0 && (
-            <section>
-              <h2 className="text-2xl font-bold font-heading mb-6 flex items-center gap-2">
-                <Trophy className="size-5 text-amber-500" aria-hidden="true" /> Completed
-              </h2>
+            {completedRoadmaps.length > 0 && (
+              <section className="animate-reveal">
+                <SectionHeading label="Completed" icon={Trophy} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {completedRoadmaps.map((roadmap, i) => (
+                    <div
+                      key={roadmap.id}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${0.05 + i * 0.08}s` }}
+                    >
+                      <RoadmapCard roadmap={roadmap} isCompleted />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Recommended Roadmaps — fills lower-left gap */}
+            <section className="animate-reveal">
+              <SectionHeading label="Recommended for You" icon={Sparkles} />
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {completedRoadmaps.map(roadmap => (
-                  <RoadmapCard key={roadmap.id} roadmap={roadmap} isCompleted />
+                {RECOMMENDED_ROADMAPS.map((r, i) => (
+                  <div
+                    key={r.id}
+                    className="animate-fade-in-up"
+                    style={{ animationDelay: `${0.05 + i * 0.1}s` }}
+                  >
+                    <RecommendedRoadmapCard roadmap={r} />
+                  </div>
                 ))}
               </div>
             </section>
-          )}
+          </div>
+
+          <aside className="w-full lg:w-[340px] shrink-0 space-y-6">
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: '0.1s' }}
+            >
+              <XPSummaryCard xp={totalXP} level={currentLevel} />
+            </div>
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: '0.18s' }}
+            >
+              <WeeklyGoalsCard goals={WEEKLY_GOALS} />
+            </div>
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: '0.26s' }}
+            >
+              <AchievementsCard achievements={ACHIEVEMENTS} />
+            </div>
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: '0.34s' }}
+            >
+              <CalendarHintCard />
+            </div>
+          </aside>
         </div>
       </div>
-    </>
+    </main>
   )
 }
 
-function RoadmapCard({ roadmap, isCompleted = false }: { roadmap: Roadmap, isCompleted?: boolean }) {
-  const currentStep = roadmap.steps.find((s: RoadmapStep) => s.status === 'Current') || roadmap.steps[0]
-  const completedSteps = roadmap.steps.filter((s: RoadmapStep) => s.status === 'Completed').length
-  const totalSteps = roadmap.steps.length
-
+function HeroSection({ stats }: { stats: { label: string; value: string }[] }) {
   return (
-    <Card className={`flex flex-col h-full hover:shadow-md transition-shadow ${isCompleted ? 'bg-muted/30 border-dashed' : ''}`}>
-      <CardHeader>
-        <div className="flex justify-between items-start mb-2">
-          <Badge variant={roadmap.difficulty === 'Beginner' ? 'default' : roadmap.difficulty === 'Intermediate' ? 'secondary' : 'outline'}>
-            {roadmap.difficulty}
-          </Badge>
-          <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
-            <Clock className="size-3" aria-hidden="true" /> {roadmap.estimatedDuration}
+    <section className="relative py-16 md:py-24 overflow-hidden rounded-b-3xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo via-indigo-dark to-surface-sunken" />
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 60% 50% at 20% 25%, rgba(129,140,248,0.4), transparent 60%),
+            radial-gradient(ellipse 50% 40% at 80% 75%, rgba(99,102,241,0.3), transparent 55%)
+          `,
+        }}
+      />
+      <div
+        className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-indigo/20 blur-3xl animate-float"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-marigold/10 blur-3xl animate-float-delayed"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 max-w-3xl mx-auto text-center px-4 pt-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/8 border border-white/10 backdrop-blur-md mb-7 animate-scale-in">
+          <span className="w-1.5 h-1.5 rounded-full bg-marigold animate-pulse" aria-hidden="true" />
+          <span className="text-[0.65rem] font-bold text-white/80 tracking-[0.15em] uppercase">
+            Your Learning Journey
           </span>
         </div>
-        <CardTitle className="text-xl">{roadmap.title}</CardTitle>
-      </CardHeader>
 
-      <CardContent className="flex-1 space-y-6">
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {roadmap.overview}
+        <h1 className="font-heading text-4xl md:text-5xl lg:text-[3.5rem] text-white leading-[1.08] tracking-tight mb-5 text-balance">
+          Skills built through
+          <span className="block bg-gradient-to-r from-marigold via-marigold-light to-white bg-clip-text text-transparent mt-1">
+            structured roadmaps
+          </span>
+        </h1>
+        <p className="text-base md:text-lg text-white/70 max-w-2xl mx-auto leading-relaxed text-pretty">
+          Step-by-step paths guided by industry mentors. Track milestones, earn XP, and unlock achievements on your path to mastery.
         </p>
 
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm font-medium">
-            <span className={isCompleted ? 'text-amber-600' : 'text-primary'}>
-              {isCompleted ? 'Completed' : 'Progress'}
-            </span>
-            <span>{roadmap.progressPercent}%</span>
-          </div>
-          <Progress value={roadmap.progressPercent} className={`h-2 ${isCompleted ? '[&>div]:bg-amber-500' : ''}`} />
-          <p className="text-xs text-muted-foreground text-right">
-            {completedSteps} of {totalSteps} milestones completed
-          </p>
+        <div className="flex justify-center mt-8">
+          <Link
+            href="/roadmaps"
+            className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold bg-gradient-to-r from-marigold to-marigold-light text-ink shadow-lg shadow-marigold/25 hover:shadow-xl hover:shadow-marigold/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Explore all roadmaps
+            <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </Link>
         </div>
 
-        {!isCompleted && currentStep && (
-          <div className="bg-primary/5 border border-primary/10 rounded-lg p-3 flex items-start gap-3">
-            <Target className="size-4 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-            <div>
-              <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Current Milestone</p>
-              <p className="text-sm font-medium text-foreground">{currentStep.title}</p>
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-10">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="animate-scale-in flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/8 border border-white/10 backdrop-blur-md"
+              style={{ animationDelay: '0.25s' }}
+            >
+              <span className="font-heading font-bold text-white text-sm tracking-tight">
+                {stat.value}
+              </span>
+              <span
+                className="w-px h-3.5 bg-white/20 rounded-full"
+                aria-hidden="true"
+              />
+              <span className="text-white/55 text-[0.65rem] font-sans tracking-wide uppercase">
+                {stat.label}
+              </span>
             </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function SectionHeading({
+  label,
+  icon: Icon,
+}: {
+  label: string
+  icon?: React.ComponentType<{ className?: string }>
+}) {
+  return (
+    <div className="flex items-center gap-4 mb-7">
+      <h2 className="font-heading text-2xl font-semibold text-ink tracking-tight">
+        {label}
+      </h2>
+      <div
+        className="flex-1 h-px bg-gradient-to-r from-border via-border/60 to-transparent"
+        aria-hidden="true"
+      />
+      {Icon && <Icon className="w-5 h-5 text-marigold shrink-0" aria-hidden="true" />}
+    </div>
+  )
+}
+
+function RoadmapCard({
+  roadmap,
+  isCompleted = false,
+}: {
+  roadmap: Roadmap
+  isCompleted?: boolean
+}) {
+  const completedSteps = roadmap.steps.filter(s => s.status === 'Completed').length
+  const totalSteps = roadmap.steps.length
+  const IconComp = ROADMAP_ICONS[roadmap.id] || Compass
+  const diffConfig = DIFFICULTY_CONFIG[roadmap.difficulty] || {
+    variant: 'default' as const,
+  }
+
+  return (
+    <Card
+      hoverable
+      glow={!isCompleted}
+      className={cn(
+        'flex flex-col h-full bg-surface-elevated rounded-2xl',
+        isCompleted && 'opacity-80',
+      )}
+    >
+      <CardHeader className="pb-4">
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                'flex items-center justify-center rounded-xl size-10 shrink-0',
+                isCompleted
+                  ? 'bg-marigold/10 text-marigold'
+                  : 'bg-indigo/10 text-indigo',
+              )}
+            >
+              <IconComp className="w-5 h-5" aria-hidden="true" />
+            </div>
+            <h3 className="font-heading font-semibold text-ink text-lg leading-snug line-clamp-1">
+              {roadmap.title}
+            </h3>
           </div>
-        )}
+          <ProgressBadge percent={roadmap.progressPercent} completed={isCompleted} />
+        </div>
+        <CardDescription className="line-clamp-2">
+          {roadmap.overview}
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex-1 space-y-5">
+        <div className="space-y-2.5">
+          <div className="flex justify-between items-center text-xs">
+            <span
+              className={cn(
+                'text-[0.65rem] font-bold uppercase tracking-[0.12em]',
+                isCompleted ? 'text-marigold' : 'text-indigo',
+              )}
+            >
+              {isCompleted ? 'Completed' : 'Progress'}
+            </span>
+            <span className="text-ink tabular-nums font-semibold">{roadmap.progressPercent}%</span>
+          </div>
+          <Progress value={roadmap.progressPercent} className="h-2" />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <MetaPill icon={Flag} text={`${totalSteps} Steps`} />
+          <MetaPill icon={Target} text={roadmap.estimatedDuration} />
+          <Badge variant={diffConfig.variant} className="text-[0.7rem] font-semibold rounded-lg">
+            {roadmap.difficulty}
+          </Badge>
+        </div>
+
+        <MilestoneDots total={totalSteps} completed={completedSteps} />
       </CardContent>
 
-      <CardFooter>
-        <Link href={`/roadmaps/${roadmap.id}`} className="w-full">
-          <Button className={`w-full group ${isCompleted ? 'bg-background text-foreground border shadow-none hover:bg-muted' : ''}`}>
-            {isCompleted ? (
-              <>Review Roadmap <CheckCircle2 className="ml-2 size-4 text-amber-500" aria-hidden="true" /></>
-            ) : (
-              <>Resume Roadmap <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" /></>
+      <CardFooter className="pt-3">
+        <Link
+          href={`/roadmaps/${roadmap.id}`}
+          className={cn(
+            'inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            isCompleted
+              ? 'border-2 border-indigo/20 bg-surface-sunken text-indigo hover:bg-indigo/5 hover:border-indigo/30'
+              : 'bg-gradient-to-r from-indigo to-indigo-light text-white shadow-lg shadow-indigo/25 hover:shadow-xl hover:shadow-indigo/30 hover:-translate-y-0.5 active:translate-y-0',
+          )}
+        >
+          {isCompleted ? (
+            <>
+              Restart
+              <CheckCircle2 className="w-4 h-4 ml-2" aria-hidden="true" />
+            </>
+          ) : (
+            <>
+              Continue
+              <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+            </>
+          )}
+        </Link>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function ProgressBadge({ percent, completed }: { percent: number; completed: boolean }) {
+  if (completed) {
+    return (
+      <span className="inline-flex items-center gap-1 text-[0.6rem] font-bold uppercase tracking-[0.12em] px-3 py-1 rounded-full bg-marigold/10 text-marigold border border-marigold/20">
+        <CheckCircle2 className="w-3 h-3" aria-hidden="true" />
+        Done
+      </span>
+    )
+  }
+  if (percent > 0) {
+    return (
+      <span className="text-[0.6rem] font-bold uppercase tracking-[0.12em] px-3 py-1 rounded-full bg-indigo/10 text-indigo border border-indigo/15 tabular-nums">
+        {percent}%
+      </span>
+    )
+  }
+  return (
+    <span className="text-[0.6rem] font-semibold px-3 py-1 rounded-full bg-muted text-muted-foreground border border-border tabular-nums">
+      New
+    </span>
+  )
+}
+
+function MetaPill({
+  icon: Icon,
+  text,
+}: {
+  icon: React.ComponentType<{ className?: string }>
+  text: string
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+      <Icon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+      {text}
+    </span>
+  )
+}
+
+function MilestoneDots({
+  total,
+  completed,
+}: {
+  total: number
+  completed: number
+}) {
+  const displayCount = Math.min(5, total)
+  const filled = Math.min(completed, displayCount)
+
+  return (
+    <div className="flex items-center gap-1.5 pt-1">
+      {Array.from({ length: displayCount }).map((_, i) => (
+        <div
+          key={i}
+          className={cn(
+            'rounded-full transition-all duration-500',
+            i < filled
+              ? 'bg-indigo w-2.5 h-2.5 shadow-sm shadow-indigo/30'
+              : 'bg-surface-sunken border border-border/60 w-2.5 h-2.5',
+          )}
+          aria-hidden="true"
+        />
+      ))}
+      {total > 5 && (
+        <span className="text-[0.65rem] text-muted-foreground ml-1.5 font-medium">
+          +{total - 5}
+        </span>
+      )}
+      <span className="text-[0.65rem] text-muted-foreground ml-auto font-medium tabular-nums">
+        {completed}/{total}
+      </span>
+    </div>
+  )
+}
+
+function XPSummaryCard({ xp, level }: { xp: number; level: number }) {
+  return (
+    <Card glow className="rounded-2xl overflow-hidden">
+      <div className="bg-gradient-to-br from-indigo via-indigo-dark to-surface-sunken p-5 relative overflow-hidden">
+        <div
+          className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-indigo-light/20 blur-2xl"
+          aria-hidden="true"
+        />
+        <div className="relative z-10">
+          <p className="text-[0.65rem] text-white/50 uppercase tracking-[0.15em] font-sans mb-1 font-semibold">
+            Total XP
+          </p>
+          <p className="font-heading font-bold text-4xl text-white mb-3 tracking-tight">
+            {xp.toLocaleString()}
+          </p>
+          <div className="flex items-center gap-2.5">
+            <Badge variant="secondary" className="text-[0.65rem] font-bold rounded-lg">
+              Level {level}
+            </Badge>
+            <span className="text-xs text-white/50 font-medium">Next: Level {level + 1}</span>
+          </div>
+        </div>
+      </div>
+      <CardContent className="pt-4 pb-5">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>{xp % 1000} XP this week</span>
+          <span>{1000 - (xp % 1000)} XP to next level</span>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function WeeklyGoalsCard({
+  goals,
+}: {
+  goals: { id: string; text: string; done: boolean }[]
+}) {
+  const doneCount = goals.filter(g => g.done).length
+  const percent = Math.round((doneCount / goals.length) * 100)
+
+  return (
+    <Card className="rounded-2xl">
+      <CardHeader className="pb-3">
+        <CardTitle className="font-heading text-base font-semibold text-ink flex items-center gap-2">
+          <Trophy className="w-4 h-4 text-marigold shrink-0" aria-hidden="true" />
+          Weekly Goals
+        </CardTitle>
+        <CardDescription className="text-xs">
+          {doneCount} of {goals.length} completed · {percent}%
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {goals.map(goal => (
+          <label
+            key={goal.id}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <input
+              type="checkbox"
+              checked={goal.done}
+              readOnly
+              className="w-4 h-4 rounded border-2 border-border accent-indigo cursor-pointer shrink-0"
+            />
+            <span
+              className={cn(
+                'text-sm transition-all duration-200 group-hover:text-ink',
+                goal.done ? 'text-muted-foreground line-through' : 'text-ink',
+              )}
+            >
+              {goal.text}
+            </span>
+          </label>
+        ))}
+        <div className="pt-3">
+          <Progress value={percent} className="h-1.5" />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function AchievementsCard({
+  achievements,
+}: {
+  achievements: { label: string; variant: 'default' | 'secondary' | 'outline' }[]
+}) {
+  return (
+    <Card className="rounded-2xl">
+      <CardHeader className="pb-3">
+        <CardTitle className="font-heading text-base font-semibold text-ink flex items-center gap-2">
+          <Trophy className="w-4 h-4 text-marigold shrink-0" aria-hidden="true" />
+          Achievement Unlocks
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-2">
+          {achievements.map(achievement => (
+            <Badge
+              key={achievement.label}
+              variant={achievement.variant}
+              className="rounded-lg text-xs font-medium"
+            >
+              {achievement.label}
+            </Badge>
+          ))}
+          <Badge
+            variant="outline"
+            className="text-xs text-muted-foreground rounded-lg"
+          >
+            +3 more
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function CalendarHintCard() {
+  return (
+    <Card className="rounded-2xl border-dashed border-border bg-surface-sunken/50">
+      <CardContent className="p-5 flex flex-col items-center text-center gap-2.5">
+        <div className="rounded-xl bg-indigo/8 p-2.5 text-indigo">
+          <Map className="w-5 h-5" aria-hidden="true" />
+        </div>
+        <p className="text-sm font-semibold text-ink">Sync with your calendar</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Schedule your roadmaps and get reminders on Google Calendar.
+        </p>
+        <Link
+          href="/settings"
+          className="text-xs font-semibold text-indigo hover:text-indigo-light transition-colors mt-1"
+        >
+          Set up in Settings
+        </Link>
+      </CardContent>
+    </Card>
+  )
+}
+
+const DIFFICULTY_COLORS: Record<string, { badge: string; icon: string; glow: string }> = {
+  Beginner: {
+    badge: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
+    icon: 'bg-emerald-500/10 text-emerald-600',
+    glow: 'hover:shadow-emerald-500/10',
+  },
+  Intermediate: {
+    badge: 'bg-indigo/10 text-indigo border-indigo/20',
+    icon: 'bg-indigo/10 text-indigo',
+    glow: 'hover:shadow-indigo/10',
+  },
+  Advanced: {
+    badge: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
+    icon: 'bg-rose-500/10 text-rose-600',
+    glow: 'hover:shadow-rose-500/10',
+  },
+}
+
+const DIFFICULTY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Beginner: Star,
+  Intermediate: Zap,
+  Advanced: Layers,
+}
+
+function RecommendedRoadmapCard({
+  roadmap,
+}: {
+  roadmap: {
+    id: string
+    title: string
+    overview: string
+    difficulty: string
+    estimatedDuration: string
+    stepsCount: number
+  }
+}) {
+  const colors = DIFFICULTY_COLORS[roadmap.difficulty] ?? DIFFICULTY_COLORS['Intermediate']
+  const DiffIcon = DIFFICULTY_ICONS[roadmap.difficulty] ?? Zap
+
+  return (
+    <Card
+      hoverable
+      className={cn(
+        'flex flex-col h-full rounded-2xl bg-surface-elevated border border-border/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+        colors.glow,
+      )}
+    >
+      {/* Top accent bar */}
+      <div className="h-1 w-full rounded-t-2xl bg-gradient-to-r from-indigo via-indigo-light to-marigold" />
+
+      <CardHeader className="pb-3 pt-5">
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div
+            className={cn(
+              'flex items-center justify-center rounded-xl size-10 shrink-0',
+              colors.icon,
             )}
-          </Button>
+          >
+            <DiffIcon className="w-5 h-5" aria-hidden="true" />
+          </div>
+          <span
+            className={cn(
+              'inline-flex items-center text-[0.6rem] font-bold uppercase tracking-[0.12em] px-2.5 py-1 rounded-full border',
+              colors.badge,
+            )}
+          >
+            {roadmap.difficulty}
+          </span>
+        </div>
+        <CardTitle className="font-heading font-semibold text-ink text-lg leading-snug">
+          {roadmap.title}
+        </CardTitle>
+        <CardDescription className="line-clamp-3 text-sm leading-relaxed mt-1">
+          {roadmap.overview}
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex-1 pt-0 space-y-4">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+            <Flag className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            {roadmap.stepsCount} Steps
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+            <Clock className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            {roadmap.estimatedDuration}
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+            <Users className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            2.4k enrolled
+          </span>
+        </div>
+      </CardContent>
+
+      <CardFooter className="pt-0 pb-5">
+        <Link
+          href={`/roadmaps/${roadmap.id}`}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring border-2 border-indigo/20 bg-transparent text-indigo hover:bg-indigo/5 hover:border-indigo/40 hover:-translate-y-0.5 active:translate-y-0"
+        >
+          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+          Start Roadmap
         </Link>
       </CardFooter>
     </Card>

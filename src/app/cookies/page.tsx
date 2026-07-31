@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
 import { Cookie, CheckCircle2, ArrowRight, Shield, BarChart3, Settings, Megaphone, XCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -88,13 +92,12 @@ const FAQS = [
 export default function CookiePolicyPage() {
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero */}
       <section className="relative pt-24 pb-16 border-b overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-background to-background pointer-events-none" />
         <div className="container mx-auto px-4 max-w-4xl relative z-10">
           <BreadcrumbNav items={[{ label: 'Cookie Policy' }]} />
-          <div className="flex items-start gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-950/30 flex items-center justify-center shrink-0 mt-1">
+          <div className="flex items-start gap-5 animate-fade-in-up">
+            <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-950/30 flex items-center justify-center shrink-0 mt-1 hover:scale-[1.08] hover:rotate-[-4deg] transition-transform duration-300 ease-out">
               <Cookie className="h-7 w-7 text-amber-600" aria-hidden="true" />
             </div>
             <div>
@@ -102,17 +105,16 @@ export default function CookiePolicyPage() {
               <p className="text-muted-foreground leading-relaxed max-w-2xl">
                 We believe in total transparency about what cookies we use and why. This page explains every cookie on EntreSkill Hub — no hidden trackers, no advertising networks.
               </p>
-              <p className="text-sm text-muted-foreground mt-4">
-                <strong className="text-foreground">Last Updated:</strong> July 1, 2026
-              </p>
+              <div className="mt-4">
+                <Badge variant="outline">Last Updated: July 1, 2026</Badge>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <div className="container mx-auto px-4 max-w-4xl py-16 space-y-16">
-        {/* What are cookies */}
-        <section>
+        <section className="animate-fade-in-up">
           <h2 className="text-2xl font-bold font-heading mb-4">What are cookies?</h2>
           <p className="text-muted-foreground text-sm leading-relaxed mb-3">
             Cookies are small text files that a website stores on your device when you visit. They are widely used to make websites work efficiently, remember your preferences, and provide usage information to the site operators.
@@ -122,145 +124,168 @@ export default function CookiePolicyPage() {
           </p>
         </section>
 
-        {/* Cookie types */}
-        <section>
+        <section className="animate-fade-in-up">
           <h2 className="text-2xl font-bold font-heading mb-8">Cookies we use</h2>
-          <div className="space-y-8">
+          <div className="grid gap-6">
             {COOKIE_TYPES.map(({ icon: Icon, title, required, color, bg, desc, examples }) => (
-              <div key={title} className={`rounded-xl border p-6 ${bg}`}>
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl bg-white/60 dark:bg-black/20 flex items-center justify-center ${color}`}>
-                      <Icon className="h-5 w-5" aria-hidden="true" />
+              <div key={title} className="animate-fade-in-up">
+                <Card className={`overflow-hidden ${bg}`}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl bg-white/60 dark:bg-black/20 flex items-center justify-center ${color}`}>
+                          <Icon className="h-5 w-5" aria-hidden="true" />
+                        </div>
+                        <CardTitle className="text-lg">{title}</CardTitle>
+                      </div>
+                      <Badge variant={required ? 'default' : 'secondary'}>
+                        {required ? (
+                          <>
+                            <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+                            Always Active
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="h-3 w-3" aria-hidden="true" />
+                            Optional
+                          </>
+                        )}
+                      </Badge>
                     </div>
-                    <div>
-                      <h3 className="font-bold">{title}</h3>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium">
-                    {required ? (
-                      <>
-                        <CheckCircle2 className="h-4 w-4 text-blue-600" aria-hidden="true" />
-                        <span className="text-blue-600">Always Active</span>
-                      </>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">{desc}</p>
+
+                    {examples.length > 0 ? (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-xs" aria-label={`${title} cookies list`}>
+                          <thead>
+                            <tr className="border-b border-border/40">
+                              <th className="text-left py-2 pr-4 font-semibold text-foreground w-48">Cookie Name</th>
+                              <th className="text-left py-2 pr-4 font-semibold text-foreground">Purpose</th>
+                              <th className="text-left py-2 font-semibold text-foreground w-24">Duration</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-border/30">
+                            {examples.map(({ name, purpose, duration }) => (
+                              <tr key={name}>
+                                <td className="py-2 pr-4 font-mono text-foreground">{name}</td>
+                                <td className="py-2 pr-4 text-muted-foreground">{purpose}</td>
+                                <td className="py-2 text-muted-foreground">{duration}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     ) : (
-                      <>
-                        <XCircle className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                        <span className="text-muted-foreground">Optional</span>
-                      </>
+                      <p className="text-sm text-muted-foreground italic">No marketing cookies currently in use.</p>
                     )}
-                  </div>
-                </div>
-
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">{desc}</p>
-
-                {examples.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs" aria-label={`${title} cookies list`}>
-                      <thead>
-                        <tr className="border-b border-border/40">
-                          <th className="text-left py-2 pr-4 font-semibold text-foreground w-48">Cookie Name</th>
-                          <th className="text-left py-2 pr-4 font-semibold text-foreground">Purpose</th>
-                          <th className="text-left py-2 font-semibold text-foreground w-24">Duration</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border/30">
-                        {examples.map(({ name, purpose, duration }) => (
-                          <tr key={name}>
-                            <td className="py-2 pr-4 font-mono text-foreground">{name}</td>
-                            <td className="py-2 pr-4 text-muted-foreground">{purpose}</td>
-                            <td className="py-2 text-muted-foreground">{duration}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">No marketing cookies currently in use.</p>
-                )}
+                  </CardContent>
+                </Card>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Consent */}
-        <section>
-          <h2 className="text-2xl font-bold font-heading mb-4">Your consent</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-            When you first visit EntreSkill Hub, we display a cookie consent banner. You can:
-          </p>
-          <ul className="space-y-3 text-sm text-muted-foreground">
-            {[
-              'Accept all cookies (including optional analytics and preference cookies)',
-              'Reject optional cookies (only strictly necessary cookies will be set)',
-              'Customize your preferences by category',
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
-          <p className="text-sm text-muted-foreground mt-4">
-            Your consent is recorded and tied to your browser. If you clear your cookies, you will be prompted again on your next visit. You can update your preferences at any time from{' '}
-            <strong className="text-foreground">Account Settings → Privacy → Cookie Preferences</strong>.
-          </p>
+        <section className="animate-fade-in-up">
+          <Card size="sm">
+            <CardHeader>
+              <CardTitle>Your consent</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                When you first visit EntreSkill Hub, we display a cookie consent banner. You can:
+              </p>
+              <ul className="space-y-3 text-sm text-muted-foreground">
+                {[
+                  'Accept all cookies (including optional analytics and preference cookies)',
+                  'Reject optional cookies (only strictly necessary cookies will be set)',
+                  'Customize your preferences by category',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 animate-fade-in-up">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm text-muted-foreground mt-4">
+                Your consent is recorded and tied to your browser. If you clear your cookies, you will be prompted again on your next visit. You can update your preferences at any time from{' '}
+                <strong className="text-foreground">Account Settings → Privacy → Cookie Preferences</strong>.
+              </p>
+            </CardContent>
+          </Card>
         </section>
 
-        {/* Browser settings */}
-        <section>
-          <h2 className="text-2xl font-bold font-heading mb-4">Managing cookies in your browser</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-            All modern browsers give you control over cookies. You can block all cookies, block third-party cookies only, or delete existing cookies. Instructions vary by browser — click the links below for specific guidance:
-          </p>
-          <div className="grid sm:grid-cols-2 gap-3">
-            {BROWSER_GUIDES.map(({ name, url }) => (
-              <a
-                key={name}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-4 rounded-xl border bg-card hover:border-primary/40 hover:shadow-sm transition-all text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
-              >
-                <span>{name}</span>
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" aria-hidden="true" />
-              </a>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground mt-4">
-            Note: disabling all cookies may significantly impact your ability to use EntreSkill Hub. Authentication requires session cookies to function.
-          </p>
-        </section>
-
-        {/* FAQ */}
-        <section>
-          <h2 className="text-2xl font-bold font-heading mb-8">Frequently asked questions</h2>
-          <div className="divide-y divide-border">
-            {FAQS.map(({ q, a }) => (
-              <div key={q} className="py-6">
-                <h3 className="font-semibold mb-2 flex items-start gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                  {q}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed pl-7">{a}</p>
+        <section className="animate-fade-in-up">
+          <Card size="sm">
+            <CardHeader>
+              <CardTitle>Managing cookies in your browser</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                All modern browsers give you control over cookies. You can block all cookies, block third-party cookies only, or delete existing cookies. Instructions vary by browser — click the links below for specific guidance:
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {BROWSER_GUIDES.map(({ name, url }) => (
+                  <a
+                    key={name}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-4 rounded-xl border bg-card hover:border-primary/40 hover:shadow-sm transition-all text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
+                  >
+                    <span>{name}</span>
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" aria-hidden="true" />
+                  </a>
+                ))}
               </div>
-            ))}
-          </div>
+              <p className="text-xs text-muted-foreground mt-4">
+                Note: disabling all cookies may significantly impact your ability to use EntreSkill Hub. Authentication requires session cookies to function.
+              </p>
+            </CardContent>
+          </Card>
         </section>
 
-        {/* Contact CTA */}
-        <div className="rounded-xl bg-primary/5 border border-primary/15 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <Cookie className="h-8 w-8 text-primary shrink-0" aria-hidden="true" />
-          <div className="flex-1">
-            <p className="font-semibold mb-1">Cookie questions?</p>
-            <p className="text-sm text-muted-foreground">Contact our Privacy team at privacy@entreskillhub.com — we respond within 48 hours.</p>
-          </div>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 h-10 px-5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring whitespace-nowrap"
-          >
-            Contact Us <ArrowRight className="h-4 w-4" />
-          </Link>
+        <section className="animate-fade-in-up">
+          <Card size="sm">
+            <CardHeader>
+              <CardTitle>Frequently asked questions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="divide-y divide-border">
+                {FAQS.map(({ q, a }, index) => (
+                  <div key={q} className="py-6 animate-fade-in-up" style={{ animationDelay: `${index * 60}ms` }}>
+                    <h3 className="font-semibold mb-2 flex items-start gap-2">
+                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+                      {q}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed pl-7">{a}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
+        <div className="animate-fade-in-up">
+          <Card glow className="overflow-hidden">
+            <CardContent className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <Cookie className="h-8 w-8 text-primary shrink-0" aria-hidden="true" />
+              <div className="flex-1">
+                <p className="font-semibold mb-1">Cookie questions?</p>
+                <p className="text-sm text-muted-foreground">Contact our Privacy team at privacy@entreskillhub.com — we respond within 48 hours.</p>
+              </div>
+                <Link
+                  href="/contact"
+                  className={cn(
+                    "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all duration-300 ease-out outline-none select-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px active:scale-[0.98]",
+                    buttonVariants({ variant: 'default', size: 'default' })
+                  )}
+                >
+                  Contact Us <ArrowRight className="h-4 w-4" />
+                </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </main>

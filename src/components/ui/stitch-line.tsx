@@ -37,7 +37,7 @@ export function StitchLine({
               />
               {/* Label */}
               <span className={cn(
-                "text-xs font-medium absolute top-6 text-center w-24 -ml-[2.5rem]",
+                "text-xs font-medium absolute top-6 text-center w-24 -ml-10",
                 isCompleted && "text-primary",
                 isActive && "text-foreground font-bold",
                 isUpcoming && "text-muted-foreground"
@@ -53,8 +53,8 @@ export function StitchLine({
                   className={cn(
                     "w-full transition-all duration-400 ease-out",
                     index < currentStepIndex 
-                      ? "h-[2px] bg-primary" 
-                      : "border-b-[2px] border-dashed border-muted-foreground h-0"
+                      ? "h-0.5 bg-primary" 
+                      : "border-b-2 border-dashed border-muted-foreground h-0"
                   )}
                 />
               </div>

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 import {
   Users, Globe, Heart, Zap, Coffee, Laptop, Shield,
   ArrowRight, CheckCircle2, Briefcase, Clock, MapPin,
-  Star, GraduationCap, Sparkles, Building2
+  Star, GraduationCap, Sparkles, Building2, Plus, Minus
 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -85,42 +89,39 @@ export default function CareersPage() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative pt-24 pb-20 overflow-hidden border-b">
+      <section className="relative pt-24 pb-20 overflow-hidden border-b animate-fade-in">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-background to-secondary/5 pointer-events-none" />
-        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        <div className="container-content relative z-10">
           <BreadcrumbNav items={[{ label: 'Careers' }]} />
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true" />
+              <Badge variant="secondary" className="mb-6 animate-fade-in-up stagger-1 text-sm">
+                <span className="relative flex h-2 w-2" aria-hidden="true">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
                 We are hiring — 7 open roles
-              </div>
+              </Badge>
 
-              <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-5 leading-tight text-balance">
+              <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight mb-6 leading-tight text-balance animate-fade-in-up stagger-2">
                 Help us build the world&apos;s best{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
                   founder education platform
                 </span>
               </h1>
 
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-lg">
+              <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-lg animate-fade-in-up stagger-3">
                 We are a small team obsessed with one idea: anyone with a skill and the drive to build should have access to the tools, knowledge, and mentors to launch a real business. Come help us make that true.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 mb-10">
-                <a
-                  href="#open-roles"
-                  className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
+              <div className="flex flex-col sm:flex-row gap-3 mb-10 animate-fade-in-up stagger-4">
+                <Link href="#open-roles" className={cn(buttonVariants({ size: "lg" }))}>
                   View Open Roles <ArrowRight className="h-4 w-4" />
-                </a>
-                <a
-                  href="#culture"
-                  className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl border-2 border-border font-semibold hover:bg-muted/50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
+                </Link>
+                <Link href="#culture" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
                   <Heart className="h-4 w-4" /> Life at EntreSkill
-                </a>
+                </Link>
               </div>
 
               <div className="flex items-center gap-6 text-sm text-muted-foreground">
@@ -134,24 +135,24 @@ export default function CareersPage() {
             </div>
 
             {/* Values visual */}
-            <div className="hidden lg:block" aria-hidden="true">
-              <div className="grid grid-cols-2 gap-4">
-                {VALUES.map(({ title, desc }) => (
-                  <div key={title} className="bg-card rounded-xl border p-5 hover:shadow-md transition-shadow">
+            <div className="hidden lg:grid grid-cols-2 gap-4 animate-fade-in" aria-hidden="true">
+              {VALUES.map(({ title, desc }, i) => (
+                <Card key={title} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                  <CardContent className="p-5">
                     <Star className="h-5 w-5 text-secondary fill-secondary mb-3" />
                     <p className="font-semibold text-sm mb-1">{title}</p>
                     <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
-                  </div>
-                ))}
-              </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Benefits */}
-      <section id="culture" className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section id="culture" className="py-20 animate-fade-in-up">
+        <div className="container-content">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-3">What we offer</h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
@@ -159,22 +160,24 @@ export default function CareersPage() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {BENEFITS.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="group p-6 rounded-xl border bg-card hover:border-primary/30 hover:shadow-md transition-all">
-                <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-                  <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
-                </div>
-                <h3 className="font-semibold mb-2">{title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-              </div>
+            {BENEFITS.map(({ icon: Icon, title, desc }, i) => (
+              <Card key={title} className={`animate-fade-in-up ${i < 6 ? `stagger-${i + 1}` : ''} elevation-1`} hoverable>
+                <CardContent className="p-6">
+                  <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center mb-4 transition-colors">
+                    <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-semibold mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* Open Roles */}
-      <section id="open-roles" className="py-20 bg-muted/30 border-y">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section id="open-roles" className="py-20 bg-muted/30 border-y animate-fade-in-up">
+        <div className="container-content">
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-3xl font-bold font-heading mb-2">Open positions</h2>
@@ -185,42 +188,38 @@ export default function CareersPage() {
 
           <div className="space-y-3">
             {OPEN_ROLES.map(({ title, dept, type, location, level, posted }) => (
-              <div
-                key={title}
-                className="group bg-card rounded-xl border p-5 md:p-6 hover:border-primary/40 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center gap-4"
-              >
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-primary">{dept}</span>
-                    <span className="text-xs text-muted-foreground">· {posted}</span>
+              <Card key={title} className="animate-fade-in-up elevation-1" hoverable>
+                <CardContent className="p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-primary">{dept}</span>
+                      <span className="text-xs text-muted-foreground">· {posted}</span>
+                    </div>
+                    <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{title}</h3>
                   </div>
-                  <h3 className="font-bold text-lg group-hover:text-primary transition-colors">{title}</h3>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{location}</span>
-                  <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{type}</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-primary/8 text-primary text-xs font-medium">{level}</span>
-                </div>
-                <Link
-                  href="/contact"
-                  className="flex items-center justify-center gap-1.5 h-9 px-5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring whitespace-nowrap"
-                >
-                  Apply <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{location}</span>
+                    <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{type}</span>
+                    <Badge variant="outline">{level}</Badge>
+                  </div>
+                  <Link href="/contact" className={cn(buttonVariants({ size: "sm" }))}>
+                    Apply <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* Internships */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="py-20 animate-fade-in-up">
+        <div className="container-content">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/20 border border-secondary/30 text-secondary-foreground text-sm font-medium mb-4">
+            <Badge variant="outline" className="mb-4 text-sm">
               <GraduationCap className="h-4 w-4" aria-hidden="true" />
               For Students & Fresh Grads
-            </div>
+            </Badge>
             <h2 className="text-3xl font-bold font-heading mb-3">Internship Program</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
               Our internship cohorts run quarterly. You work on real products, get structured mentorship, and have the opportunity to convert to a full-time role.
@@ -228,34 +227,35 @@ export default function CareersPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {INTERNSHIPS.map(({ title, dept, duration, stipend }) => (
-              <div key={title} className="bg-card rounded-xl border p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col gap-4">
-                <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center">
-                  <Building2 className="h-5 w-5 text-secondary-foreground" aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">{dept}</p>
-                  <h3 className="font-bold">{title}</h3>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span>{duration}</span>
-                  <span className="font-medium text-foreground">{stipend}</span>
-                </div>
-                <Link
-                  href="/contact"
-                  className="flex items-center justify-center h-9 rounded-lg border border-primary text-primary text-sm font-medium hover:bg-primary hover:text-primary-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  Express Interest
-                </Link>
-              </div>
+            {INTERNSHIPS.map(({ title, dept, duration, stipend }, i) => (
+              <Card key={title} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="p-6 flex flex-col gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center">
+                    <Building2 className="h-5 w-5 text-secondary-foreground" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">{dept}</p>
+                    <h3 className="font-bold">{title}</h3>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>{duration}</span>
+                    <span className="font-medium text-foreground">{stipend}</span>
+                  </div>
+                </CardContent>
+                <CardFooter className="border-t-0 px-6 pb-6 pt-0">
+                  <Link href="/contact" className={cn(buttonVariants({ variant: "outline", size: "sm" }), "w-full")}>
+                    Express Interest
+                  </Link>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </div>
       </section>
 
       {/* Hiring Process */}
-      <section className="py-20 bg-muted/30 border-y">
-        <div className="container mx-auto px-4 max-w-4xl">
+      <section className="py-20 bg-muted/30 border-y animate-fade-in-up">
+        <div className="container-content max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold font-heading mb-3">How we hire</h2>
             <p className="text-muted-foreground">Transparent, fast, and respectful of your time. No hidden stages.</p>
@@ -264,16 +264,20 @@ export default function CareersPage() {
           <div className="relative">
             <div className="absolute left-8 top-0 bottom-0 w-px bg-border hidden md:block" aria-hidden="true" />
             <div className="space-y-8">
-              {HIRING_STEPS.map(({ step, title, desc }) => (
-                <div key={step} className="flex gap-6">
+              {HIRING_STEPS.map(({ step, title, desc }, i) => (
+                <div key={step} className={`flex gap-6 animate-fade-in-up stagger-${i + 1}`}>
                   <div className="relative">
                     <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold font-heading shrink-0 z-10 relative">
                       {step}
                     </div>
                   </div>
-                  <div className="pt-3 pb-6">
-                    <h3 className="font-bold text-lg mb-1">{title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+                  <div className="pt-3 pb-6 flex-1">
+                    <Card className="shadow-sm border-border/60" hoverable>
+                      <CardContent className="p-5">
+                        <h3 className="font-bold text-lg mb-1">{title}</h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{desc}</p>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               ))}
@@ -283,40 +287,57 @@ export default function CareersPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="rounded-2xl bg-gradient-to-br from-primary to-blue-700 p-10 md:p-16 text-center text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.1),_transparent)] pointer-events-none" />
-            <Sparkles className="h-10 w-10 mx-auto mb-5 opacity-80" aria-hidden="true" />
-            <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">
-              Don&apos;t see the right role?
-            </h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              We&apos;re growing fast and sometimes build roles around exceptional people. Send your details and tell us how you&apos;d contribute.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 h-12 px-8 rounded-xl bg-white text-primary font-semibold hover:bg-white/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-            >
-              Get in Touch <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+      <section className="py-24 animate-fade-in-up">
+        <div className="container-content max-w-4xl">
+          <Card className="relative overflow-hidden bg-gradient-to-br from-primary to-blue-700 animate-fade-in-up" hoverable>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.1),_transparent)] pointer-events-none" aria-hidden="true" />
+            <CardContent className="p-10 md:p-16 text-center text-white relative z-10">
+              <Sparkles className="h-10 w-10 mx-auto mb-5 opacity-80" aria-hidden="true" />
+              <h2 className="text-3xl md:text-4xl font-bold font-heading mb-4">
+                Don&apos;t see the right role?
+              </h2>
+              <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+                We&apos;re growing fast and sometimes build roles around exceptional people. Send your details and tell us how you&apos;d contribute.
+              </p>
+              <Link href="/contact" className={cn(buttonVariants({ size: "lg" }), "bg-white text-primary hover:bg-white/90 border-transparent shadow-lg")}>
+                Get in Touch <ArrowRight className="h-4 w-4" />
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="py-20 border-t">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <h2 className="text-3xl font-bold font-heading text-center mb-12">Frequently asked questions</h2>
-          <div className="divide-y divide-border">
-            {FAQS.map(({ q, a }) => (
-              <div key={q} className="py-6">
-                <h3 className="font-semibold mb-2 flex items-start gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                  {q}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed pl-7">{a}</p>
-              </div>
+      <section className="py-20 border-t animate-fade-in-up">
+        <div className="container-content max-w-3xl">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">
+              <CheckCircle2 className="size-3.5" aria-hidden="true" />
+              FAQ
+            </Badge>
+            <h2 className="text-3xl font-bold font-heading">Frequently asked questions</h2>
+          </div>
+          <div className="space-y-4">
+            {FAQS.map(({ q, a }, i) => (
+              <Card key={q} className={`animate-fade-in-up stagger-${i + 1} elevation-1`} hoverable>
+                <CardContent className="p-0">
+                  <details className="group">
+                    <summary className="flex items-center justify-between p-5 cursor-pointer list-none font-semibold text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-2xl">
+                      <span className="pr-4 flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-primary shrink-0" aria-hidden="true" />
+                        {q}
+                      </span>
+                      <span className="relative flex-shrink-0 ml-2">
+                        <Plus className="h-5 w-5 text-muted-foreground group-open:hidden" aria-hidden="true" />
+                        <Minus className="h-5 w-5 text-primary hidden group-open:block" aria-hidden="true" />
+                      </span>
+                    </summary>
+                    <div className="px-5 pb-5 pt-0 text-muted-foreground text-sm leading-relaxed">
+                      {a}
+                    </div>
+                  </details>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

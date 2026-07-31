@@ -23,6 +23,24 @@ export interface LearningResource {
 
 const CATEGORIES = ["Business Strategy", "Marketing", "Finance", "Sales", "Legal", "Product", "Leadership"];
 
+// Curated real Unsplash photo URLs for learning resource thumbnails (cycling)
+const LEARNING_THUMBNAILS = [
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800", // business meeting
+  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800", // analytics
+  "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800", // finance charts
+  "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&q=80&w=800", // startup office
+  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800", // laptop code
+  "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800", // business professional
+  "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=800", // marketing board
+  "https://images.unsplash.com/photo-1434626881859-194d67b2b86f?auto=format&fit=crop&q=80&w=800", // notebook planning
+  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800", // team collaboration
+  "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=800", // legal documents
+  "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=800", // ecommerce
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800", // professional woman
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800", // workshop
+  "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800", // team meeting
+];
+
 // Helper to generate multiple items rapidly
 const generateResources = (startIdx: number, count: number, template: Partial<LearningResource>): LearningResource[] => {
   return Array.from({ length: count }).map((_, i) => {
@@ -43,7 +61,7 @@ const generateResources = (startIdx: number, count: number, template: Partial<Le
       category: CATEGORIES[idNum % CATEGORIES.length],
       difficulty,
       duration: `${10 + (idNum % 20)} min`,
-      thumbnail: `https://images.unsplash.com/photo-${1550000000000 + (idNum * 1000)}?auto=format&fit=crop&q=80&w=800`,
+      thumbnail: LEARNING_THUMBNAILS[idNum % LEARNING_THUMBNAILS.length],
       description: `A comprehensive ${type} covering essential topics in ${CATEGORIES[idNum % CATEGORIES.length].toLowerCase()}. Perfect for ${difficulty.toLowerCase()} entrepreneurs.`,
       objectives: [
         "Understand core concepts",

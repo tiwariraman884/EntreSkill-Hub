@@ -3,10 +3,28 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LockIcon, ArrowRightIcon, Loader2Icon } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
 import { Suspense } from "react";
+
+function Spinner() {
+  return <Loader2Icon className="size-4 animate-spin" />;
+}
+
+const stagger = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.15, when: "beforeChildren" } },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
+};
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -26,7 +44,6 @@ function ResetPasswordContent() {
   }, [token]);
 
   useEffect(() => {
-    // avoid calling setState directly in effect
     setTimeout(() => {
       handleError();
     }, 0);
@@ -77,64 +94,113 @@ function ResetPasswordContent() {
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="border rounded-xl p-8 shadow-sm">
-          <div className="mb-6 text-center">
-            <h1 className="text-2xl font-bold">Reset your password</h1>
-            <p className="text-muted-foreground mt-2">Enter your new password below</p>
-          </div>
+      <motion.div
+        className="w-full max-w-md"
+        variants={stagger}
+        initial="hidden"
+        animate="visible"
+      >
+        <Card glow>
+          <CardHeader className="text-center pt-10 pb-2 px-8">
+            <motion.div
+              variants={fadeUp}
+              className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo to-indigo-light shadow-lg shadow-indigo/25"
+            >
+              <LockIcon className="size-6 text-white" />
+            </motion.div>
+            <CardTitle className="text-2xl font-heading font-bold">Reset your password</CardTitle>
+            <CardDescription className="text-base mt-1">
+              Enter your new password below
+            </CardDescription>
+          </CardHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">
-                {error}
-              </div>
-            )}
+          <CardContent className="px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {error && (
+                <motion.div variants={fadeUp}>
+                  <Alert variant="destructive">
+                    <AlertTitle>Something went wrong</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
 
-            {success && (
-              <div className="bg-green-50 text-green-700 text-sm p-3 rounded-md">
-                Your password has been reset. Redirecting to login...
-              </div>
-            )}
+              {success && (
+                <motion.div variants={fadeUp}>
+                  <Alert variant="success">
+                    <AlertTitle>Password reset successful</AlertTitle>
+                    <AlertDescription>
+                      Your password has been reset. Redirecting to login...
+                    </AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
 
-            <div className="space-y-2">
-              <Label htmlFor="password">New password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Minimum 8 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-              />
-            </div>
+              <motion.div variants={fadeUp} className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-semibold">New password</Label>
+                <div className="relative">
+                  <LockIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-thread pointer-events-none" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Minimum 8 characters"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={8}
+                    className="pl-10 h-11"
+                  />
+                </div>
+              </motion.div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm new password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Re-enter your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                minLength={8}
-              />
-            </div>
+              <motion.div variants={fadeUp} className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-sm font-semibold">Confirm new password</Label>
+                <div className="relative">
+                  <LockIcon className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-thread pointer-events-none" />
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Re-enter your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    minLength={8}
+                    className="pl-10 h-11"
+                  />
+                </div>
+              </motion.div>
 
-            <Button type="submit" className="w-full" disabled={loading || !token}>
-              {loading ? "Resetting password..." : "Reset password"}
-            </Button>
-          </form>
+              <motion.div variants={fadeUp}>
+                <Button
+                  type="submit"
+                  disabled={loading || !token}
+                >
+                  {loading ? (
+                    <>
+                      <Spinner />
+                      Resetting password...
+                    </>
+                  ) : (
+                    <>
+                      Reset password
+                      <ArrowRightIcon className="ml-1.5 size-4" />
+                    </>
+                  )}
+                </Button>
+              </motion.div>
+            </form>
+          </CardContent>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            <Link href="/login" className="text-primary font-medium hover:underline">
-              Back to login
-            </Link>
-          </p>
-        </div>
-      </div>
+          <CardFooter className="justify-center">
+            <p className="text-center text-sm text-thread">
+              Remember your password?{" "}
+              <Link href="/login" className="font-semibold text-indigo hover:text-indigo-light transition-colors">
+                Back to login
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </motion.div>
     </div>
   );
 }

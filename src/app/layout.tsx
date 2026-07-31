@@ -7,6 +7,11 @@ import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import * as Sentry from "@sentry/nextjs";
 import { GlobalStateProvider } from "@/context/GlobalStateContext";
+import { AppearanceProvider } from "@/context/AppearanceContext";
+import { ProfileProvider } from "@/context/ProfileContext";
+import { PageTransition } from "@/components/page-transition";
+import { SkipToContent } from "@/components/skip-to-content";
+import { Suspense } from "react";
 
 const fontSans = Inter({
   variable: "--font-sans",
@@ -39,14 +44,25 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontHeading.variable} font-sans h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <SkipToContent />
         <SessionProvider>
           <GlobalStateProvider>
-            <Header />
-            <Sentry.ErrorBoundary fallback={<p>Something went wrong</p>}>
-              <main className="flex-1">{children}</main>
-            </Sentry.ErrorBoundary>
-            <Footer />
-            <Toaster />
+            <AppearanceProvider>
+              <ProfileProvider>
+                <Header />
+                <Sentry.ErrorBoundary fallback={<p>Something went wrong</p>}>
+                  <Suspense fallback={<div className="flex-1 animate-pulse bg-muted/20 min-h-screen" />}>
+                    <PageTransition>
+                      <main id="main-content" className="flex-1">
+                        {children}
+                      </main>
+                    </PageTransition>
+                  </Suspense>
+                </Sentry.ErrorBoundary>
+                <Footer />
+                <Toaster />
+              </ProfileProvider>
+            </AppearanceProvider>
           </GlobalStateProvider>
         </SessionProvider>
       </body>
