@@ -215,7 +215,7 @@
   --spacing-unit: 1;
 
   --ink: #111827;
-  --thread: #4B5563;
+  --thread: #374151;
 }
 
 .dark {
@@ -257,7 +257,7 @@
   --sidebar-ring: #5B6CFF;
 
   --ink: #F9FAFB;
-  --thread: #D1D5DB;
+  --thread: #E5E7EB;
 }
 
 @layer base {
@@ -295,8 +295,13 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: smooth;
     font-size: var(--font-size-base);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    body {
+      scroll-behavior: smooth;
+    }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -319,16 +324,19 @@
     color: var(--ink);
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.015;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
+  @media (prefers-reduced-motion: no-preference) {
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.015;
+      contain: strict;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
   }
 }
 
@@ -654,10 +662,10 @@
 }
 
 @keyframes flamePulse {
-  0%, 100% { transform: scale(1) rotate(-3deg); filter: brightness(1); }
-  25% { transform: scale(1.15) rotate(3deg); filter: brightness(1.2); }
-  50% { transform: scale(1.05) rotate(-2deg); filter: brightness(1.1); }
-  75% { transform: scale(1.2) rotate(4deg); filter: brightness(1.3); }
+  0%, 100% { transform: scale(1) rotate(-3deg); opacity: 0.9; }
+  25% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  50% { transform: scale(1.05) rotate(-2deg); opacity: 0.95; }
+  75% { transform: scale(1.2) rotate(4deg); opacity: 1; }
 }
 
 @keyframes countUp {
@@ -666,8 +674,8 @@
 }
 
 @keyframes progressFill {
-  from { width: 0%; }
-  to { width: var(--progress-width); }
+  from { transform: scaleX(0); }
+  to { transform: scaleX(var(--progress-width-decimal, 1)); }
 }
 
 @keyframes cardGlow {
@@ -700,5 +708,14 @@
 @media print {
   .no-print {
     display: none !important;
+  }
+}
+
+
+@theme {
+  --animate-marquee: marquee 30s linear infinite;
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
   }
 }

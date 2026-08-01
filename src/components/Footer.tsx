@@ -4,7 +4,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import {
   Globe,
   Code2,
@@ -91,19 +90,19 @@ export default function Footer() {
               className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo rounded-xl"
               aria-label="EntreSkill Hub home"
             >
-              <motion.div
-                whileHover={{ scale: 1.05, rotate: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="relative h-10 w-10 md:h-12 md:w-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center shadow-lg shadow-indigo/25 group-hover:shadow-xl group-hover:shadow-indigo/30 transition-all duration-300"
+              <div
+                className="relative h-10 w-10 md:h-12 md:w-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center shadow-lg shadow-indigo/25 group-hover:shadow-xl group-hover:shadow-indigo/30 transition-all duration-200 group-hover:scale-105 active:scale-95"
               >
-                <Image 
-                  src="/logo.png" 
-                  alt="EntreSkill Hub Logo" 
-                  width={48} 
-                  height={48} 
+                <Image
+                  src="/logo.png"
+                  alt="EntreSkill Hub Logo"
+                  width={44}
+                  height={44}
+                  loading="lazy"
                   className="h-9 w-9 md:h-11 md:w-11 object-contain select-none shrink-0"
+                  sizes="44px"
                 />
-              </motion.div>
+              </div>
               <span className="font-bold text-xl font-heading bg-linear-to-r from-indigo to-indigo-light bg-clip-text text-transparent">
                 EntreSkill Hub
               </span>
@@ -115,18 +114,16 @@ export default function Footer() {
 
             <div className="flex items-center gap-3" aria-label="Social media links">
               {SOCIAL_LINKS.map(({ label, icon: Icon, href }) => (
-                <motion.a
+                <a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex items-center justify-center w-10 h-10 rounded-xl border-2 border-indigo/10 text-thread hover:text-indigo hover:border-indigo/40 hover:bg-indigo/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo"
-                  whileHover={{ y: -2, scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center w-10 h-10 rounded-xl border-2 border-indigo/10 text-thread hover:text-indigo hover:border-indigo/40 hover:bg-indigo/5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo active:scale-95"
                 >
                   <Icon className="h-4 w-4" aria-hidden="true" />
-                </motion.a>
+                </a>
               ))}
             </div>
 
@@ -195,14 +192,12 @@ export default function Footer() {
             </div>
 
             {subscribed ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex items-center gap-2 text-sm font-medium text-emerald-600 bg-emerald-50 px-5 py-3 rounded-xl border border-emerald-200"
+              <div
+                className="flex items-center gap-2 text-sm font-medium text-emerald-600 bg-emerald-50 px-5 py-3 rounded-xl border border-emerald-200 animate-fade-in"
               >
                 <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                 You&apos;re on the list! Check your inbox soon.
-              </motion.div>
+              </div>
             ) : (
               <form
                 onSubmit={handleSubscribe}
@@ -221,14 +216,12 @@ export default function Footer() {
                   placeholder="you@example.com"
                   className="flex-1 h-11 rounded-xl border-2 border-indigo/20 bg-white px-4 text-sm placeholder:text-thread/60 focus:outline-none focus:border-indigo focus:bg-white transition-all hover:border-indigo/30"
                 />
-                <motion.button
+                <button
                   type="submit"
-                  className="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-xl bg-linear-to-r from-indigo to-indigo-light text-white text-sm font-semibold shadow-lg shadow-indigo/25 hover:shadow-xl hover:shadow-indigo/30 hover:-translate-y-0.5 active:translate-y-0 transition-all whitespace-nowrap"
-                  whileHover={{ y: -1 }}
-                  whileTap={{ y: 0, scale: 0.98 }}
+                  className="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-xl bg-linear-to-r from-indigo to-indigo-light text-white text-sm font-semibold shadow-lg shadow-indigo/25 hover:shadow-xl hover:shadow-indigo/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all whitespace-nowrap"
                 >
                   Subscribe <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </motion.button>
+                </button>
               </form>
             )}
           </div>

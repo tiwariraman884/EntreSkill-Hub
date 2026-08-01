@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, type Easing } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
@@ -27,25 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { CompanyLogos } from "@/components/ui/company-logos";
 import { MOCK_IDEAS } from "@/data/mock-ideas";
 import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
-
-const easeOut: Easing = "easeOut";
-
-const sectionVariants = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: easeOut },
-};
-
-const containerVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1, ease: easeOut } },
-};
-
-const cardVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: easeOut } },
-};
-
+import Image from "next/image";
 const FEATURES = [
   {
     icon: Route,
@@ -120,8 +101,7 @@ const AVATARS = [47, 12, 5, 60, 68];
 
 function HeroSection() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="relative pt-16 pb-16 lg:pt-24 lg:pb-24 overflow-hidden"
       aria-labelledby="hero-heading"
     >
@@ -133,12 +113,12 @@ function HeroSection() {
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div className="max-w-2xl">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <div>
               <Badge variant="default" className="mb-6">
                 <Sparkles className="size-3.5" aria-hidden="true" />
                 Skill-To-Startup Platform
               </Badge>
-            </motion.div>
+            </div>
 
             <h1
               id="hero-heading"
@@ -156,7 +136,7 @@ function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-start gap-4 mb-10">
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+              <div>
                 <Link
                   href="/register"
                   className={cn(buttonVariants({ size: "xl" }), "w-full sm:w-auto")}
@@ -165,8 +145,8 @@ function HeroSection() {
                   Start Your Journey
                   <ArrowRight className="ml-2 size-5" aria-hidden="true" />
                 </Link>
-              </motion.div>
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+              </div>
+              <div>
                 <Link
                   href="#features"
                   className={cn(
@@ -177,7 +157,7 @@ function HeroSection() {
                 >
                   Explore Roadmaps
                 </Link>
-              </motion.div>
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-sm text-thread font-medium">
@@ -185,12 +165,17 @@ function HeroSection() {
                 {AVATARS.map((img) => (
                   <div
                     key={img}
-                    className="w-9 h-9 rounded-full bg-muted border-2 border-white overflow-hidden"
-                    style={{
-                      backgroundImage: `url(https://i.pravatar.cc/100?img=${img})`,
-                      backgroundSize: "cover",
-                    }}
-                  />
+                    className="w-9 h-9 rounded-full bg-muted border-2 border-white overflow-hidden relative"
+                  >
+                    <Image
+                      src={`https://i.pravatar.cc/100?img=${img}`}
+                      alt="User"
+                      fill
+                      sizes="36px"
+                      priority
+                      className="object-cover"
+                    />
+                  </div>
                 ))}
               </div>
               <span>Trusted by 10,000+ entrepreneurs worldwide</span>
@@ -201,10 +186,7 @@ function HeroSection() {
           </div>
 
           <div className="hidden lg:block relative h-140">
-            <motion.div
-              initial={{ opacity: 0, x: 40, y: 20 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: easeOut }}
+            <div
             >
               <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-120 shadow-premium">
                 <div className="h-11 bg-linear-to-r from-indigo to-indigo-light rounded-t-2xl flex items-center px-5 gap-1.5">
@@ -224,12 +206,9 @@ function HeroSection() {
                   <div className="h-28 bg-muted/40 rounded-xl border border-border/40" />
                 </div>
               </Card>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4, ease: easeOut }}
+            <div
             >
               <Card className="absolute top-8 right-0 p-4 shadow-premium">
                 <div className="flex items-center gap-3">
@@ -242,12 +221,9 @@ function HeroSection() {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.5, ease: easeOut }}
+            <div
             >
               <Card className="absolute bottom-16 left-0 p-4 shadow-premium">
                 <div className="flex items-center gap-3">
@@ -260,12 +236,9 @@ function HeroSection() {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.6, ease: easeOut }}
+            <div
             >
               <Card className="absolute bottom-4 right-4 p-4 shadow-premium">
                 <div className="flex items-center gap-3">
@@ -278,52 +251,50 @@ function HeroSection() {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function StatsSection() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-12 border-y border-border/40"
       aria-label="Platform statistics"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
-        <motion.div variants={containerVariants} initial="initial" animate="animate" className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((s) => (
-            <motion.div key={s.label} variants={cardVariants} className="text-center">
+            <div key={s.label} className="text-center">
               <div className="text-3xl md:text-4xl font-bold font-heading text-indigo mb-1">
                 {s.value}
               </div>
               <div className="text-sm text-thread font-medium">{s.label}</div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function DashboardPreview() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-20"
       aria-labelledby="dashboard-heading"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="text-center mb-12">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+          <div>
             <Badge variant="outline" className="mb-4">
               <Sparkles className="size-3.5" aria-hidden="true" />
               Live Platform Preview
             </Badge>
-          </motion.div>
+          </div>
           <h2 id="dashboard-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
             Your entrepreneurship workspace, built for founders
           </h2>
@@ -333,10 +304,7 @@ function DashboardPreview() {
           </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: easeOut }}
+        <div
           className="relative mx-auto max-w-5xl rounded-2xl border border-border/50 bg-white shadow-premium overflow-hidden"
         >
           <div className="flex items-center gap-2 px-5 h-12 border-b border-border/40">
@@ -400,9 +368,9 @@ function DashboardPreview() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
@@ -417,19 +385,18 @@ function FeaturesSection() {
   ];
 
   return (
-    <motion.section
+    <section
       id="features"
-      {...sectionVariants}
       aria-labelledby="features-heading"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="text-center mb-12">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+          <div>
             <Badge variant="secondary" className="mb-4">
               <Target className="size-3.5" aria-hidden="true" />
               Core Features
             </Badge>
-          </motion.div>
+          </div>
           <h2 id="features-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
             Everything you need to launch with confidence
           </h2>
@@ -439,16 +406,13 @@ function FeaturesSection() {
           </p>
         </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="initial"
-          animate="animate"
+        <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {FEATURES.map((feature, i) => {
             const Icon = feature.icon;
             return (
-              <motion.div key={feature.title} variants={cardVariants}>
+              <div key={feature.title}>
                 <Card
                   hoverable
                   className="group p-6 bg-white border-border/40"
@@ -467,43 +431,39 @@ function FeaturesSection() {
                   </h3>
                   <p className="text-sm text-thread leading-relaxed">{feature.description}</p>
                 </Card>
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function TestimonialsSection() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-20"
       aria-labelledby="testimonials-heading"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="text-center mb-12">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+          <div>
             <Badge variant="outline" className="mb-4">
               <Star className="size-3.5 fill-current" aria-hidden="true" />
               Social Proof
             </Badge>
-          </motion.div>
+          </div>
           <h2 id="testimonials-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
             Trusted by founders who started with a skill
           </h2>
         </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="initial"
-          animate="animate"
+        <div
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
           {TESTIMONIALS.map((t) => (
-            <motion.div key={t.name} variants={cardVariants}>
+            <div key={t.name}>
               <Card
                 hoverable
                 className="p-6 bg-white border-border/40 flex flex-col"
@@ -530,30 +490,29 @@ function TestimonialsSection() {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function LearningPreview() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-20 bg-linear-to-b from-muted/20 via-muted/10 to-transparent"
       aria-labelledby="learning-heading"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <div>
               <Badge variant="default" className="mb-4">
                 <BookOpen className="size-3.5" aria-hidden="true" />
                 Learning Resources
               </Badge>
-            </motion.div>
+            </div>
             <h2 id="learning-heading" className="text-3xl md:text-4xl font-bold font-heading mb-4 tracking-tight">
               Structured learning for every stage
             </h2>
@@ -562,11 +521,10 @@ function LearningPreview() {
               finance, and law — all curated for founders.
             </p>
 
-            <motion.div variants={containerVariants} initial="initial" animate="animate" className="space-y-3">
+            <div className="space-y-3">
               {MOCK_LEARNING_RESOURCES.slice(0, 3).map((resource) => (
-                <motion.div
+                <div
                   key={resource.id}
-                  variants={cardVariants}
                   className="flex items-center gap-4 p-4 rounded-xl border border-border/40 bg-white hover:shadow-premium transition-all duration-300"
                   tabIndex={0}
                   role="article"
@@ -597,16 +555,13 @@ function LearningPreview() {
                     <p className="text-xs text-thread">{resource.duration}</p>
                   </div>
                   <ArrowRight className="size-4 text-thread shrink-0" aria-hidden="true" />
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
           <div className="hidden lg:flex items-center justify-center">
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: easeOut }}
+            <div
             >
               <Card className="p-6 shadow-premium">
                 <div className="flex items-center gap-3 mb-4">
@@ -640,11 +595,11 @@ function LearningPreview() {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
@@ -652,19 +607,18 @@ function IdeasPreview() {
   const ideas = MOCK_IDEAS.slice(0, 3);
 
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-20"
       aria-labelledby="ideas-heading"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="text-center mb-12">
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+          <div>
             <Badge variant="secondary" className="mb-4">
               <Lightbulb className="size-3.5" aria-hidden="true" />
               Business Ideas
             </Badge>
-          </motion.div>
+          </div>
           <h2 id="ideas-heading" className="text-3xl md:text-4xl font-bold font-heading mb-3 tracking-tight">
             Curated ideas matched to your skills
           </h2>
@@ -674,14 +628,11 @@ function IdeasPreview() {
           </p>
         </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="initial"
-          animate="animate"
+        <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {ideas.map((idea) => (
-            <motion.div key={idea.id} variants={cardVariants}>
+            <div key={idea.id}>
               <Card
                 hoverable
                 className="overflow-hidden bg-white border-border/40"
@@ -735,18 +686,17 @@ function IdeasPreview() {
                   </Link>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function FinalCTA() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-20"
       aria-labelledby="cta-heading"
     >
@@ -754,12 +704,12 @@ function FinalCTA() {
         <div className="relative bg-linear-to-br from-indigo via-indigo-light to-indigo-dark rounded-3xl overflow-hidden px-8 py-16 md:py-20 text-center">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(232,163,61,0.12),transparent)] pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 max-w-2xl mx-auto">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <div>
               <Badge variant="secondary" className="mb-6">
                 <Sparkles className="size-3.5" aria-hidden="true" />
                 Get Started Today
               </Badge>
-            </motion.div>
+            </div>
             <h2 id="cta-heading" className="text-3xl md:text-5xl font-bold font-heading mb-4 text-white tracking-tight">
               Start Your Entrepreneurial Journey
             </h2>
@@ -768,7 +718,7 @@ function FinalCTA() {
               account and get personalized recommendations in minutes.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+              <div>
                 <Link
                   href="/register"
                   className={cn(
@@ -780,8 +730,8 @@ function FinalCTA() {
                   Create Free Account
                   <ArrowRight className="ml-2 size-5" aria-hidden="true" />
                 </Link>
-              </motion.div>
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+              </div>
+              <div>
                 <Link
                   href="#features"
                   className={cn(buttonVariants({ variant: "outline", size: "xl" }), "w-full sm:w-auto border-white/40 text-white hover:bg-white/10")}
@@ -789,12 +739,12 @@ function FinalCTA() {
                 >
                   See How It Works
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
@@ -864,34 +814,30 @@ const FAQS = [
 
 function FAQSection() {
   return (
-    <motion.section
-      {...sectionVariants}
+    <section
       className="py-20"
       aria-labelledby="faq-heading"
     >
       <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+            <div>
               <Badge variant="outline" className="mb-4">
                 <CheckSquare className="size-3.5" aria-hidden="true" />
                 FAQ
               </Badge>
-            </motion.div>
+            </div>
             <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold font-heading tracking-tight">
               Frequently Asked Questions
             </h2>
           </div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: easeOut }}
+          <div
           >
             <Accordion items={FAQS} />
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

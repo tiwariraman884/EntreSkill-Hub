@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, type Easing } from "framer-motion";
 import {
   Card,
   CardContent,
@@ -52,45 +51,7 @@ import {
 
 const joinDate = "March 2022";
 
-const easeOut: Easing = "easeOut";
 
-const containerVariants = {
-  initial: { opacity: 0 },
-  animate: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06, delayChildren: 0.1, ease: easeOut },
-  },
-};
-
-const itemVariants = {
-  initial: { opacity: 0, y: 24 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: easeOut },
-  },
-};
-
-const sectionVariants = {
-  initial: { opacity: 0, y: 32 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: easeOut },
-  },
-};
-
-const cardVariants = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.4,
-      ease: easeOut,
-    },
-  },
-};
 
 const STATS = [
   { label: "XP", value: DUMMY_USER.xp, icon: TrendingUp, color: "text-primary" },
@@ -254,7 +215,7 @@ function ProgressRing({ value, size = 120 }: { value: number; size?: number }) {
           strokeWidth={stroke}
           fill="none"
         />
-        <motion.circle
+        <circle
           cx="60"
           cy="60"
           r={radius}
@@ -264,23 +225,14 @@ function ProgressRing({ value, size = 120 }: { value: number; size?: number }) {
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{
-            pathLength: animatedValue / 100,
-            opacity: 1,
-          }}
-          transition={{ duration: 1.1, ease: easeOut }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <motion.span
+        <span
           className="text-2xl font-bold text-white"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.35, duration: 0.5, ease: easeOut }}
         >
           {value}%
-        </motion.span>
+        </span>
         <span className="text-[11px] text-white/70 font-medium">Complete</span>
       </div>
     </div>
@@ -311,18 +263,12 @@ function StreakCalendar() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <motion.p
+        <p
           className="text-sm font-semibold font-heading text-ink"
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4, ease: easeOut }}
         >
           {monthName}
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, ease: easeOut }}
+        </p>
+        <div
         >
           <Flame
             className={cn(
@@ -330,22 +276,19 @@ function StreakCalendar() {
               DUMMY_USER.streakDays > 0 ? "text-orange-500 animate-flame" : "text-muted-foreground"
             )}
           />
-        </motion.div>
+        </div>
       </div>
       <div className="grid grid-cols-7 gap-1.5">
-        {weekDays.map((w, idx) => (
-          <motion.div
+        {weekDays.map((w) => (
+          <div
             key={w}
             className="text-center text-[10px] font-semibold text-thread uppercase tracking-wide"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.04, duration: 0.3, ease: easeOut }}
           >
             {w}
-          </motion.div>
+          </div>
         ))}
         {days.map((d, idx) => (
-          <motion.div
+          <div
             key={idx}
             className={cn(
               "aspect-square flex items-center justify-center rounded-lg text-xs font-medium transition-colors duration-300",
@@ -353,17 +296,10 @@ function StreakCalendar() {
               d.isToday ? "ring-2 ring-marigold ring-offset-1" : "",
               d.active ? "bg-primary/10 text-primary" : "text-muted-foreground/50"
             )}
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              delay: idx * 0.015,
-              duration: 0.35,
-              ease: easeOut,
-            }}
           >
             {d.date > 0 && d.active && <Circle className="size-2.5 text-marigold" />}
             {d.date > 0 && !d.active && d.date}
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
@@ -394,23 +330,17 @@ function ProfileHero() {
   const publicUrl = profile?.profile?.publicProfileUrl || DUMMY_USER.username;
 
   return (
-    <motion.section
+    <section
       className="relative overflow-hidden bg-linear-to-br from-indigo via-indigo-light to-indigo-dark py-12 lg:py-16"
-      variants={sectionVariants}
-      initial="initial"
-      animate="animate"
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08),transparent)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(232,163,61,0.08),transparent)] pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 lg:px-8 relative z-10">
-        <motion.div
+        <div
           className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12"
-          variants={containerVariants}
-          initial="initial"
-          animate="animate"
         >
-          <motion.div className="relative shrink-0" variants={itemVariants}>
+          <div className="relative shrink-0">
             <div className="relative rounded-full p-0.75 bg-linear-to-br from-indigo to-marigold">
               <Avatar size="xl" className="size-28 lg:size-32 rounded-full ring-4 ring-white shadow-2xl shadow-black/20">
                 <AvatarImage
@@ -427,9 +357,9 @@ function ProfileHero() {
                 L{DUMMY_USER.level}
               </Badge>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div className="flex-1 text-center lg:text-left" variants={itemVariants}>
+          <div className="flex-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 mb-3">
               <h1 className="text-3xl lg:text-4xl font-heading font-bold text-white tracking-tight">
                 {fullName}
@@ -473,42 +403,38 @@ function ProfileHero() {
                 Download Resume
               </Button>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div className="hidden xl:flex flex-col items-center gap-3 shrink-0" variants={itemVariants}>
+          <div className="hidden xl:flex flex-col items-center gap-3 shrink-0">
             <ProgressRing value={DUMMY_USER.completionPercentage} size={130} />
             <p className="text-xs text-white/60 font-medium">Profile Strength</p>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        <motion.div
+        <div
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mt-10"
-          variants={containerVariants}
-          initial="initial"
-          animate="animate"
         >
           {STATS.map((stat) => (
-            <motion.div
+            <div
               key={stat.label}
               className="flex flex-col items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 px-3 py-4 transition-all duration-300 hover:-translate-y-1 hover:bg-white/15"
-              variants={itemVariants}
             >
               <stat.icon className={cn("size-5 mb-2", stat.color)} />
               <span className="text-xl font-heading font-bold text-white">{stat.value}</span>
               <span className="text-[11px] text-white/60 font-medium">{stat.label}</span>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 
 function OverviewTab() {
   return (
-    <motion.div className="space-y-6" variants={containerVariants} initial="initial" animate="animate">
+    <div className="space-y-6">
       {/* Skills Card */}
-      <motion.div variants={itemVariants}>
+      <div>
         <Card className="overflow-hidden border border-border/60 shadow-premium hoverable">
           <div className="h-1 w-full bg-linear-to-r from-primary via-indigo-light to-accent" />
           <CardHeader className="pb-3 pt-5">
@@ -523,12 +449,9 @@ function OverviewTab() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {SKILLS.map((skill) => (
-                <motion.div
+                <div
                   key={skill.name}
                   className="space-y-1.5"
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, ease: easeOut }}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-ink">{skill.name}</span>
@@ -540,16 +463,16 @@ function OverviewTab() {
                     )}>{skill.proficiency}%</span>
                   </div>
                   <Progress value={skill.proficiency} />
-                </motion.div>
+                </div>
               ))}
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Preferred Industries */}
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="overflow-hidden border border-border/60 shadow-premium hoverable h-full">
             <div className="h-1 w-full bg-linear-to-r from-marigold to-marigold-light" />
             <CardHeader className="pb-3 pt-5">
@@ -570,10 +493,10 @@ function OverviewTab() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Learning Streak */}
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="overflow-hidden border border-border/60 shadow-premium hoverable h-full">
             <div className="h-1 w-full bg-linear-to-r from-orange-400 to-red-500" />
             <CardHeader className="pb-3 pt-5">
@@ -591,12 +514,12 @@ function OverviewTab() {
               <StreakCalendar />
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Recent Achievements */}
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="overflow-hidden border border-border/60 shadow-premium hoverable h-full">
             <div className="h-1 w-full bg-linear-to-r from-amber-400 to-yellow-500" />
             <CardHeader className="pb-3 pt-5">
@@ -620,10 +543,10 @@ function OverviewTab() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Activity Summary */}
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="overflow-hidden border border-border/60 shadow-premium hoverable h-full">
             <div className="h-1 w-full bg-linear-to-r from-emerald-400 to-teal-500" />
             <CardHeader className="pb-3 pt-5">
@@ -643,25 +566,22 @@ function OverviewTab() {
                   { label: "XP This Week", value: "+85 XP", color: "text-primary", bg: "bg-primary/10" },
                   { label: "Community Rank", value: "Top 5%", color: "text-emerald-600", bg: "bg-emerald-50" },
                 ].map((item) => (
-                  <motion.div
+                  <div
                     key={item.label}
                     className="flex items-center justify-between py-1.5 border-b border-border/40 last:border-0"
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, ease: easeOut }}
                   >
                     <span className="text-sm text-thread">{item.label}</span>
                     <span className={cn("text-sm font-bold tabular-nums px-2.5 py-0.5 rounded-lg", item.color, item.bg)}>
                       {item.value}
                     </span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -670,11 +590,8 @@ function ProjectsTab() {
     return (
       <Card className="bg-white border-border/40 shadow-premium">
         <CardContent className="py-12">
-          <motion.div
+          <div
             className="flex flex-col items-center text-center"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: easeOut }}
           >
             <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
               <FolderOpen className="size-8 text-muted-foreground" />
@@ -688,32 +605,19 @@ function ProjectsTab() {
               <FolderOpen className="size-4" />
               Add Your First Project
             </Button>
-          </motion.div>
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <motion.div
+    <div
       className="grid grid-cols-1 md:grid-cols-2 gap-4"
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
     >
-      {MOCK_PROJECTS.map((project, idx) => (
-        <motion.div
+      {MOCK_PROJECTS.map((project) => (
+        <div
           key={project.id}
-          variants={{
-            ...cardVariants,
-            animate: {
-              ...cardVariants.animate,
-              transition: {
-                ...cardVariants.animate.transition,
-                delay: idx * 0.06,
-              },
-            },
-          }}
         >
           <Card className="overflow-hidden border border-border/60 shadow-premium hoverable h-full transition-all duration-300 hover:-translate-y-1">
             <div className="h-1 w-full bg-linear-to-r from-primary via-indigo-light to-accent" />
@@ -745,9 +649,9 @@ function ProjectsTab() {
               </div>
             </CardFooter>
           </Card>
-        </motion.div>
+        </div>
       ))}
-    </motion.div>
+    </div>
   );
 }
 
@@ -756,11 +660,8 @@ function CertificatesTab() {
     return (
       <Card className="bg-white border-border/40 shadow-premium">
         <CardContent className="py-12">
-          <motion.div
+          <div
             className="flex flex-col items-center text-center"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: easeOut }}
           >
             <div className="w-16 h-16 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
               <Award className="size-8 text-muted-foreground" />
@@ -773,32 +674,19 @@ function CertificatesTab() {
               <BookOpen className="size-4" />
               Browse Courses
             </Button>
-          </motion.div>
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <motion.div
+    <div
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
     >
-      {MOCK_CERTIFICATES.map((cert, idx) => (
-        <motion.div
+      {MOCK_CERTIFICATES.map((cert) => (
+        <div
           key={cert.id}
-          variants={{
-            ...cardVariants,
-            animate: {
-              ...cardVariants.animate,
-              transition: {
-                ...cardVariants.animate.transition,
-                delay: idx * 0.05,
-              },
-            },
-          }}
         >
           <Card className="overflow-hidden border border-border/60 shadow-premium hoverable h-full group transition-all duration-300 hover:-translate-y-1">
             <div className="h-1 w-full bg-linear-to-r from-marigold to-amber-500" />
@@ -830,9 +718,9 @@ function CertificatesTab() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       ))}
-    </motion.div>
+    </div>
   );
 }
 
@@ -877,9 +765,9 @@ function StartupIdeasTab() {
   };
 
   return (
-    <motion.div className="space-y-4" variants={containerVariants} initial="initial" animate="animate">
+    <div className="space-y-4">
       {savedIdeas.length === 0 ? (
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="bg-white border-border/40 shadow-premium">
             <CardContent className="py-12">
               <div className="flex flex-col items-center text-center">
@@ -898,21 +786,11 @@ function StartupIdeasTab() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       ) : (
-        savedIdeas.map((idea, idx) => (
-          <motion.div
+        savedIdeas.map((idea) => (
+          <div
             key={idea.id}
-            variants={{
-              ...cardVariants,
-              animate: {
-                ...cardVariants.animate,
-                transition: {
-                  ...cardVariants.animate.transition,
-                  delay: idx * 0.06,
-                },
-              },
-            }}
           >
             <Card className="bg-white border-border/40 shadow-premium hoverable h-full">
               <CardContent className="p-5">
@@ -948,7 +826,7 @@ function StartupIdeasTab() {
                     </div>
                   </div>
                   <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-2 sm:gap-3 shrink-0">
-                    <motion.button
+                    <button
                       onClick={() => toggleBookmark(idea.id)}
                       className={cn(
                         "p-2 rounded-xl transition-all duration-300",
@@ -956,10 +834,9 @@ function StartupIdeasTab() {
                           ? "bg-marigold/10 text-marigold shadow-sm"
                           : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-primary"
                       )}
-                      whileTap={{ scale: 0.9 }}
                     >
                       <Bookmark className={cn("size-4", savedIds.has(idea.id) ? "fill-current" : "")} />
-                    </motion.button>
+                    </button>
                     <Button variant="ghost" size="sm" className="text-primary hover:text-primary-light px-2">
                       View Details <ArrowUpRight className="size-3.5 ml-1" />
                     </Button>
@@ -967,10 +844,10 @@ function StartupIdeasTab() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         ))
       )}
-    </motion.div>
+    </div>
   );
 }
 
@@ -990,8 +867,8 @@ function SettingsTab() {
   ];
 
   return (
-    <motion.div className="space-y-6" variants={containerVariants} initial="initial" animate="animate">
-      <motion.div variants={itemVariants}>
+    <div className="space-y-6">
+      <div>
         <Card className="bg-white border-border/40 shadow-premium hoverable glow">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -1001,13 +878,10 @@ function SettingsTab() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {accountInfo.map((item, idx) => (
-                <motion.div
+              {accountInfo.map((item) => (
+                <div
                   key={item.label}
                   className="flex items-center gap-3 rounded-xl bg-muted/30 px-4 py-3"
-                  initial={{ opacity: 0, x: -16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.08, duration: 0.4, ease: easeOut }}
                 >
                   <div className="shrink-0 w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <item.icon className="size-4 text-primary" />
@@ -1018,14 +892,14 @@ function SettingsTab() {
                     </p>
                     <p className="text-sm font-semibold text-ink truncate">{item.value}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants}>
+      <div>
         <Card className="bg-white border-border/40 shadow-premium hoverable">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -1055,8 +929,8 @@ function SettingsTab() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -1067,7 +941,7 @@ function Sidebar() {
   return (
     <div className="space-y-6">
       {/* XP / Level Card */}
-      <motion.div variants={sectionVariants} initial="initial" animate="animate">
+      <div>
         <Card className="overflow-hidden border-0 bg-linear-to-br from-indigo via-indigo-dark to-[#1e1b4b] shadow-2xl shadow-indigo/30">
           <div className="relative">
             <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/5 blur-2xl" aria-hidden="true" />
@@ -1094,9 +968,9 @@ function Sidebar() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={sectionVariants} initial="initial" animate="animate">
+      <div>
         <Card className="bg-white border-border/40 shadow-premium hoverable">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -1117,9 +991,9 @@ function Sidebar() {
             </p>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={sectionVariants} initial="initial" animate="animate">
+      <div>
         <Card className="bg-white border-border/40 shadow-premium hoverable">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -1131,17 +1005,15 @@ function Sidebar() {
             <div className="grid grid-cols-4 gap-3">
               {ACHIEVEMENTS.slice(0, 8).map((badge, idx) => (
                 <div key={badge} className="flex flex-col items-center gap-1.5">
-                  <motion.div
+                  <div
                     className={cn(
                       "w-10 h-10 rounded-xl flex items-center justify-center shadow-sm transition-all duration-300",
                       idx === 0 && "animate-badgePop",
                       "bg-linear-to-br from-marigold/20 to-marigold/10 border border-marigold/20"
                     )}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
                     <Award className="size-5 text-marigold-dark" />
-                  </motion.div>
+                  </div>
                   <span className="text-[10px] text-muted-foreground text-center leading-tight">
                     {badge}
                   </span>
@@ -1150,27 +1022,22 @@ function Sidebar() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={sectionVariants} initial="initial" animate="animate">
+      <div>
         <Card className="bg-white border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center">
-              <motion.div
+              <div
                 className="w-16 h-16 rounded-2xl bg-linear-to-br from-amber-100 to-orange-50 border border-amber-200/60 flex items-center justify-center mb-4 shadow-sm"
-                animate={{ y: [0, -4, 0] }}
-                transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
               >
                 <Trophy className="size-8 text-amber-600" />
-              </motion.div>
-              <motion.h3
+              </div>
+              <h3
                 className="text-base font-heading font-semibold text-ink mb-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.4 }}
               >
                 Achievement Unlocked
-              </motion.h3>
+              </h3>
               <p className="text-sm text-thread mb-4">
                 Complete your weekly goal to unlock the Consistency Champion badge.
               </p>
@@ -1181,9 +1048,9 @@ function Sidebar() {
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={sectionVariants} initial="initial" animate="animate">
+      <div>
         <Card className="bg-white border-border/40 shadow-premium">
           <CardContent className="p-5">
             <Link
@@ -1198,7 +1065,7 @@ function Sidebar() {
             </Link>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -1208,20 +1075,14 @@ export default function ProfilePage() {
     <main className="min-h-screen bg-background">
       <ProfileHero />
 
-      <motion.section
+      <section
         className="py-12 lg:py-20"
-        variants={sectionVariants}
-        initial="initial"
-        animate="animate"
       >
         <div className="mx-auto max-w-7xl px-4 lg:px-8">
-          <motion.div
+          <div
             className="grid grid-cols-1 lg:grid-cols-12 gap-8"
-            variants={containerVariants}
-            initial="initial"
-            animate="animate"
           >
-            <motion.div className="lg:col-span-8" variants={itemVariants}>
+            <div className="lg:col-span-8">
               <Tabs defaultValue="overview">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 mb-8 bg-muted/50 p-1.5 rounded-xl">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -1251,14 +1112,14 @@ export default function ProfilePage() {
                   <SettingsTab />
                 </TabsContent>
               </Tabs>
-            </motion.div>
+            </div>
 
-            <motion.div className="lg:col-span-4" variants={itemVariants}>
+            <div className="lg:col-span-4">
               <Sidebar />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
-      </motion.section>
+      </section>
     </main>
   );
 }

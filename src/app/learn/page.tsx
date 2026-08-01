@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import { Input } from "@/components/ui/input";
@@ -25,24 +24,6 @@ import {
  } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const listVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
-  },
-};
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
 
 export default function LearnPage() {
   const [search, setSearch] = useState("");
@@ -84,9 +65,9 @@ export default function LearnPage() {
   };
 
   const typeConfig: Record<string, { icon: typeof PlayCircle; color: string; bg: string; border: string; label: string }> = {
-    video:    { icon: PlayCircle,  color: "text-white",             bg: "bg-gradient-to-r from-[#DC2626] to-[#EF4444]",       border: "border-[#DC2626]", label: "Video" },
-    article:  { icon: FileText,    color: "text-white",             bg: "bg-gradient-to-r from-indigo to-indigo-light",       border: "border-indigo",    label: "Article" },
-    checklist:{ icon: CheckSquare, color: "text-white",             bg: "bg-gradient-to-r from-emerald-600 to-emerald-500",   border: "border-emerald-600", label: "Checklist" },
+    video:    { icon: PlayCircle,  color: "text-white",             bg: "bg-linear-to-r from-[#DC2626] to-[#EF4444]",       border: "border-[#DC2626]", label: "Video" },
+    article:  { icon: FileText,    color: "text-white",             bg: "bg-linear-to-r from-indigo to-indigo-light",       border: "border-indigo",    label: "Article" },
+    checklist:{ icon: CheckSquare, color: "text-white",             bg: "bg-linear-to-r from-emerald-600 to-emerald-500",   border: "border-emerald-600", label: "Checklist" },
   };
 
   const difficultyClasses: Record<string, string> = {
@@ -115,29 +96,26 @@ export default function LearnPage() {
   return (
     <div className="min-h-screen bg-canvas">
       {/* ─── Hero ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo via-indigo-dark to-[#3730A3] py-16 lg:py-24">
+      <section className="relative overflow-hidden bg-linear-to-br from-indigo via-indigo-dark to-[#3730A3] py-16 lg:py-24">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.12),_transparent_60%)] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(245,158,11,0.18),_transparent_55%)] pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06),_transparent)] pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-175 h-87.5 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06),_transparent)] pointer-events-none" />
         <div className="absolute top-10 right-10 w-20 h-20 rounded-full border border-white/10 animate-float opacity-40" />
         <div className="absolute bottom-10 left-10 w-12 h-12 rounded-full border border-marigold/20 animate-float-delayed opacity-50" />
 
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            <div
             >
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-bold mb-6 backdrop-blur-sm">
                 <Zap className="size-3.5 fill-marigold text-marigold" />
                 Curated Learning Hub
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-[2.875rem] font-bold font-heading text-white mb-5 leading-[1.15] tracking-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-[2.875rem] font-bold font-heading text-white mb-5 leading-tight tracking-tight">
                 Master the skills of a
                 <br />
-                <span className="bg-gradient-to-r from-marigold-light via-marigold to-marigold-dark bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-marigold-light via-marigold to-marigold-dark bg-clip-text text-transparent">
                   successful entrepreneur
                 </span>
               </h1>
@@ -164,43 +142,33 @@ export default function LearnPage() {
                   Take Assessment
                 </Link>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            <div
               className="hidden lg:grid grid-cols-2 gap-4"
             >
-              {stats.map((stat, i) => (
-                <motion.div
+              {stats.map((stat) => (
+                <div
                   key={stat.label}
-                  initial={{ opacity: 0, scale: 0.92 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.25 + i * 0.08, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ y: -4, scale: 1.02 }}
                   className="rounded-2xl p-5 border border-white/10 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors duration-300 cursor-default group"
                 >
-                  <div className={cn("w-10 h-10 rounded-xl bg-gradient-to-br flex items-center justify-center mb-3.5 shadow-lg", stat.iconBg)}>
+                  <div className={cn("w-10 h-10 rounded-xl bg-linear-to-br flex items-center justify-center mb-3.5 shadow-lg", stat.iconBg)}>
                     <stat.icon className="size-5 text-white" />
                   </div>
                   <p className="text-[1.65rem] font-bold text-white leading-none mb-1 tracking-tight">{stat.value}</p>
                   <p className="text-[11px] text-white/50 font-semibold uppercase tracking-wider">{stat.label}</p>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-canvas to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-canvas to-transparent pointer-events-none" />
       </section>
 
       {/* ─── Library ───────────────────────────────────────── */}
-      <div id="library" className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
+      <div id="library" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        <div
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8"
         >
           <div>
@@ -223,14 +191,10 @@ export default function LearnPage() {
               Clear all filters
             </Button>
           )}
-        </motion.div>
+        </div>
 
         {/* ─── Filters ─────────────────── */}
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.08 }}
+        <div
           className="flex flex-col xl:flex-row gap-3 mb-10"
         >
           <div className="relative flex-1 xl:max-w-sm group">
@@ -245,7 +209,7 @@ export default function LearnPage() {
 
           <div className="flex flex-wrap gap-2.5">
             <Select value={category} onValueChange={(v) => setCategory(v || "All")}>
-              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-[150px] transition-all duration-300 hover:border-indigo/30 text-sm">
+              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-37.5 transition-all duration-300 hover:border-indigo/30 text-sm">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -256,7 +220,7 @@ export default function LearnPage() {
             </Select>
 
             <Select value={type} onValueChange={(v) => setType(v || "All")}>
-              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-[150px] transition-all duration-300 hover:border-indigo/30 text-sm">
+              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-37.5 transition-all duration-300 hover:border-indigo/30 text-sm">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
@@ -268,7 +232,7 @@ export default function LearnPage() {
             </Select>
 
             <Select value={difficulty} onValueChange={(v) => setDifficulty(v || "All")}>
-              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-[160px] transition-all duration-300 hover:border-indigo/30 text-sm">
+              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-40 transition-all duration-300 hover:border-indigo/30 text-sm">
                 <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent>
@@ -280,7 +244,7 @@ export default function LearnPage() {
             </Select>
 
             <Select value={sort} onValueChange={(v) => setSort(v || "popular")}>
-              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-[170px] transition-all duration-300 hover:border-indigo/30 text-sm">
+              <SelectTrigger className="h-11 rounded-xl bg-surface-elevated border-border shadow-premium w-42.5 transition-all duration-300 hover:border-indigo/30 text-sm">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -290,16 +254,12 @@ export default function LearnPage() {
               </SelectContent>
             </Select>
           </div>
-        </motion.div>
+        </div>
 
         {/* ─── Active filter pills ─────────────────── */}
-        <AnimatePresence>
+        
           {hasActiveFilters && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
+            <div
               className="flex flex-wrap gap-2 mb-8"
             >
               {search && (
@@ -338,16 +298,13 @@ export default function LearnPage() {
                   </button>
                 </Badge>
               )}
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        
 
         {/* ─── Grid / Empty ─────────────────── */}
         {filteredResources.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+          <div
           >
             <EmptyState
               icon="search"
@@ -357,15 +314,12 @@ export default function LearnPage() {
               onAction={clearFilters}
               className="py-20"
             />
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            variants={listVariants}
-            initial="hidden"
-            animate="visible"
+          <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
           >
-            {filteredResources.map((resource, idx) => {
+            {filteredResources.map((resource) => {
               const completed   = isResourceCompleted(resource.id);
               const bookmarked  = isBookmarked(resource.id);
               const tc          = typeConfig[resource.type] ?? typeConfig.article;
@@ -375,13 +329,8 @@ export default function LearnPage() {
               const simulatedProg = completed ? 100 : idSeed % 71;
 
               return (
-                <motion.div
+                <div
                   key={resource.id}
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ type: "spring", stiffness: 300, damping: 20, delay: idx * 0.06 }}
-                  whileHover={{ y: -4 }}
                 >
                   <Link
                     href={`/learn/${resource.id}`}
@@ -405,7 +354,7 @@ export default function LearnPage() {
                           className="object-cover transition-transform duration-700 ease-out group-hover/card:scale-110"
                         />
 
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
 
                         {/* Type badge — top-left */}
                         <div className="absolute top-2.5 left-2.5 z-10">
@@ -505,7 +454,7 @@ export default function LearnPage() {
                           className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110",
                             bookmarked
-                              ? "bg-gradient-to-r from-indigo to-indigo-light text-white shadow-md shadow-indigo/25"
+                              ? "bg-linear-to-r from-indigo to-indigo-light text-white shadow-md shadow-indigo/25"
                               : "bg-muted text-thread hover:bg-indigo/10 hover:text-indigo"
                           )}
                         >
@@ -514,10 +463,10 @@ export default function LearnPage() {
                       </CardFooter>
                     </Card>
                   </Link>
-                </motion.div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

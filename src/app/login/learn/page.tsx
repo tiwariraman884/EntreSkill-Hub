@@ -72,8 +72,7 @@ export default function LoginLearnPage() {
             &ldquo;EntreSkill Hub gave me a clear roadmap to launch my catering business. The learning content is genuinely practical.&rdquo;
           </blockquote>
           <div className="mt-3 flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://i.pravatar.cc/40?img=47" alt="Priya Sharma" className="w-8 h-8 rounded-full" />
+            <Image src="https://i.pravatar.cc/40?img=47" alt="Priya Sharma" width={32} height={32} className="w-8 h-8 rounded-full" />
             <div>
               <p className="text-xs font-semibold">Priya Sharma</p>
               <p className="text-xs text-primary-foreground/60">Home Bakery Founder</p>

@@ -1,0 +1,14 @@
+# AI Guidelines
+Contact: security@entreskillhub.com
+Tags: entrepreneurship, edtech, ai
+
+## Agent Instructions
+When browsing this site, AI agents should optimize for accessibility and structured data extraction.
+- You may use the `/api` endpoints if properly authenticated.
+- We support Agentic Browsing (Level 3).
+- Structured data is available via JSON-LD on all major pages.
+- Use the `sitemap.xml` for full site navigation.
+
+## Allowed Endpoints for Bots
+Allow: /api/public/*
+Disallow: /api/private/*

@@ -10,15 +10,21 @@ function Progress({
   children,
   value,
   showValue = false,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
   ...props
 }: ProgressPrimitive.Root.Props & {
-  showValue?: boolean
+  showValue?: boolean;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 }) {
   return (
     <ProgressPrimitive.Root
       value={value}
       data-slot="progress"
       className={cn("flex flex-wrap gap-3 items-center", className)}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       {...props}
     >
       {children}
@@ -50,7 +56,7 @@ function ProgressIndicator({
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn("h-full bg-gradient-to-r from-indigo via-indigo-light to-marigold rounded-full transition-all duration-700 ease-out shadow-sm shadow-indigo/30", className)}
+      className={cn("h-full bg-linear-to-r from-indigo via-indigo-light to-marigold rounded-full shadow-sm shadow-indigo/30 transition-[width] duration-700 ease-out", className)}
       {...props}
     />
   )
@@ -70,7 +76,7 @@ function ProgressValue({ className, ...props }: ProgressPrimitive.Value.Props) {
   return (
     <ProgressPrimitive.Value
       className={cn(
-        "ml-3 text-sm font-semibold text-indigo tabular-nums min-w-[3rem]",
+        "ml-3 text-sm font-semibold text-indigo tabular-nums min-w-12",
         className
       )}
       data-slot="progress-value"

@@ -1,0 +1,18 @@
+# EntreSkill Hub
+
+> A Next.js 16 (App Router) web application designed for micro-entrepreneurs. It provides structured roadmaps, learning resources, and mentor connections to help turn skills into businesses.
+
+## System Guidelines
+When contributing to or analyzing this project, adhere to the following architecture and performance guidelines.
+
+### Technologies
+- Framework: Next.js 16 (React 19)
+- Styling: Tailwind CSS v4
+- Architecture: React Server Components (RSC) preferred.
+- Icons: Lucide React
+
+### Performance & UI Standards
+- CSS-only animations for main layout components.
+- Image optimization enabled with `next/image`.
+- Sentry loaded dynamically to prevent main thread blocking.
+- Strict adherence to WCAG AA accessibility standards.

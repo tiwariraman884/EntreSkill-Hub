@@ -73,8 +73,7 @@ export default function LoginMentorPage() {
               { name: "Neha Kapoor", role: "D2C Expert · 150+ sessions", img: "https://i.pravatar.cc/40?img=5" },
             ].map((m) => (
               <div key={m.name} className="flex items-center gap-3 p-3 rounded-xl bg-background border border-border/60 shadow-sm hover:shadow-md hover:border-border/80 transition-all duration-300">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={m.img} alt={m.name} className="w-9 h-9 rounded-full" />
+                <Image src={m.img} alt={m.name} width={36} height={36} className="w-9 h-9 rounded-full" />
                 <div>
                   <p className="text-sm font-semibold">{m.name}</p>
                   <p className="text-xs text-muted-foreground">{m.role}</p>

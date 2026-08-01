@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
@@ -264,28 +263,6 @@ const SORT_OPTIONS = ["Highest Rated", "Most Experienced", "Most Sessions"];
 
 type MentorType = typeof DEMO_MENTORS[0];
 
-const sectionVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7 },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 28, scale: 0.97 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      delay: i * 0.07,
-      duration: 0.5,
-    },
-  }),
-};
-
 const StatsPill = ({ value, label }: { value: string; label: string }) => (
   <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg shadow-black/5">
     <span className="text-white font-bold text-sm tracking-tight">{value}</span>
@@ -361,13 +338,8 @@ export default function MentorsPage() {
       />
     ));
 
-  const MentorCard = ({ mentor, index }: { mentor: typeof DEMO_MENTORS[0]; index: number }) => (
-    <motion.div
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      layout
+  const MentorCard = ({ mentor, index: _index }: { mentor: typeof DEMO_MENTORS[0]; index: number }) => (
+    <div
     >
       <Card hoverable glow={mentor.featured} className="border-border/40 bg-surface-elevated overflow-hidden">
         <CardHeader className="relative pb-4">
@@ -378,7 +350,7 @@ export default function MentorsPage() {
                 <AvatarFallback>{mentor.name.slice(0, 2)}</AvatarFallback>
               </Avatar>
               {mentor.verified && (
-                <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-indigo to-indigo-light rounded-full flex items-center justify-center ring-2 ring-surface-elevated shadow-sm">
+                <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-linear-to-br from-indigo to-indigo-light rounded-full flex items-center justify-center ring-2 ring-surface-elevated shadow-sm">
                   <CheckCircle className="size-3 text-white" />
                 </span>
               )}
@@ -438,7 +410,7 @@ export default function MentorsPage() {
               <span className="font-bold text-sm">{mentor.rating}</span>
               <span className="text-xs text-thread">({mentor.bookedSessions} sessions)</span>
             </div>
-            <div className="text-xs font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo to-indigo-light text-white shadow-sm shadow-indigo/20">
+            <div className="text-xs font-bold px-3 py-1.5 rounded-lg bg-linear-to-r from-indigo to-indigo-light text-white shadow-sm shadow-indigo/20">
               {mentor.sessionFee}
             </div>
           </div>
@@ -460,55 +432,40 @@ export default function MentorsPage() {
           </Button>
         </CardFooter>
       </Card>
-    </motion.div>
+    </div>
   );
 
   return (
     <div className="min-h-screen bg-canvas pb-20">
       {/* HERO */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative overflow-hidden bg-gradient-to-br from-indigo via-indigo-light to-indigo-dark py-16 lg:py-24"
+      <section
+        className="relative overflow-hidden bg-linear-to-br from-indigo via-indigo-light to-indigo-dark py-16 lg:py-24"
       >
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.12),_transparent)] pointer-events-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_rgba(232,163,61,0.15),_transparent)] pointer-events-none" />
 
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <h1
             className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-5 tracking-tight text-white"
           >
             Learn from founders who&apos;ve done it
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+          </h1>
+          <p
             className="text-lg text-white/80 max-w-2xl mb-10 leading-relaxed"
           >
             Book 1:1 sessions with verified mentors. Get personalized guidance on your startup journey.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
+          <div
             className="flex flex-wrap items-center gap-3 mb-10"
           >
             <StatsPill value="Verified Mentors" label="Verified Mentors" />
             <StatsPill value="Avg Rating 4.9" label="Avg Rating 4.9" />
             <StatsPill value="500+ Sessions" label="500+ Sessions" />
             <StatsPill value="94% Satisfaction" label="94% Satisfaction" />
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
+          <div
             className="flex flex-wrap gap-4"
           >
             <Button
@@ -527,19 +484,16 @@ export default function MentorsPage() {
             >
               Become a Mentor
             </Link>
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* AI MATCHING BANNER */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
-        className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20"
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20"
       >
         <Card className="rounded-3xl overflow-hidden border-0 shadow-premium">
-          <div className="bg-gradient-to-r from-indigo to-indigo-light p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5">
+          <div className="bg-linear-to-r from-indigo to-indigo-light p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5">
             <div className="shrink-0 w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center border border-white/20">
               <Sparkles className="size-6 text-white" />
             </div>
@@ -557,15 +511,12 @@ export default function MentorsPage() {
             </Button>
           </div>
         </Card>
-      </motion.div>
+      </div>
 
       {/* MAIN CONTENT */}
-      <main className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 mt-14">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14">
         {/* FILTERS */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
+        <div
           className="bg-surface-elevated rounded-2xl border border-border/40 shadow-premium p-4 mb-14 sticky top-6 z-10"
         >
           <div className="flex flex-col gap-4">
@@ -590,21 +541,21 @@ export default function MentorsPage() {
               </Button>
               <div className={cn("flex flex-wrap items-center gap-2", showFilters ? "flex" : "hidden lg:flex")}>
                 <Select value={selectedExpertise} onValueChange={(val) => setSelectedExpertise(val || "All")}>
-                  <SelectTrigger className="w-[160px] border-indigo/20 hover:border-indigo/40">
+                  <SelectTrigger className="w-40 border-indigo/20 hover:border-indigo/40">
                     <SelectValue placeholder="Expertise" />
                   </SelectTrigger>
                   <SelectContent>{EXPERTISE_OPTIONS.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                 </Select>
 
                 <Select value={selectedAvailability} onValueChange={(val) => setSelectedAvailability(val || "All")}>
-                  <SelectTrigger className="w-[160px] border-indigo/20 hover:border-indigo/40">
+                  <SelectTrigger className="w-40 border-indigo/20 hover:border-indigo/40">
                     <SelectValue placeholder="Availability" />
                   </SelectTrigger>
                   <SelectContent>{AVAILABILITY_OPTIONS.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
                 </Select>
 
                 <Select value={sortBy} onValueChange={(val) => setSortBy(val || "Highest Rated")}>
-                  <SelectTrigger className="w-[160px] border-indigo/20 hover:border-indigo/40">
+                  <SelectTrigger className="w-40 border-indigo/20 hover:border-indigo/40">
                     <SelectValue placeholder="Sort By" />
                   </SelectTrigger>
                   <SelectContent>{SORT_OPTIONS.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}</SelectContent>
@@ -624,13 +575,10 @@ export default function MentorsPage() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* MENTOR GRID */}
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
+        <div
           id="mentor-grid"
           className="scroll-mt-28"
         >
@@ -646,17 +594,14 @@ export default function MentorsPage() {
             <div className="space-y-16">
               {featuredMentors.length > 0 && (
                 <section>
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                  <div
                     className="flex items-center gap-3 mb-8"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-marigold to-marigold-light flex items-center justify-center shadow-lg shadow-marigold/20">
+                    <div className="w-10 h-10 rounded-xl bg-linear-to-br from-marigold to-marigold-light flex items-center justify-center shadow-lg shadow-marigold/20">
                       <Star className="size-5 text-white fill-current" />
                     </div>
                     <h2 className="text-xl font-heading font-bold">Featured Mentors</h2>
-                  </motion.div>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {featuredMentors.map((m, i) => <MentorCard key={m.mentorId} mentor={m} index={i} />)}
                   </div>
@@ -665,17 +610,14 @@ export default function MentorsPage() {
 
               {regularMentors.length > 0 && (
                 <section>
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                  <div
                     className="flex items-center gap-3 mb-8"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo to-indigo-light flex items-center justify-center shadow-lg shadow-indigo/20">
+                    <div className="w-10 h-10 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center shadow-lg shadow-indigo/20">
                       <Users className="size-5 text-white" />
                     </div>
                     <h2 className="text-xl font-heading font-bold">All Mentors</h2>
-                  </motion.div>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {regularMentors.map((m, i) => <MentorCard key={m.mentorId} mentor={m} index={i} />)}
                   </div>
@@ -683,7 +625,7 @@ export default function MentorsPage() {
               )}
             </div>
           )}
-        </motion.div>
+        </div>
       </main>
 
       {/* PROFILE MODAL */}
@@ -698,7 +640,7 @@ export default function MentorsPage() {
                     <AvatarFallback>{selectedProfile.name.slice(0, 2)}</AvatarFallback>
                   </Avatar>
                   {selectedProfile.verified && (
-                    <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-indigo to-indigo-light rounded-full flex items-center justify-center ring-2 ring-surface-elevated">
+                    <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-linear-to-br from-indigo to-indigo-light rounded-full flex items-center justify-center ring-2 ring-surface-elevated">
                       <CheckCircle className="size-4 text-white" />
                     </span>
                   )}
@@ -723,7 +665,7 @@ export default function MentorsPage() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 bg-gradient-to-br from-indigo/5 to-indigo-light/5 p-4 rounded-2xl border border-indigo/10">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 bg-linear-to-br from-indigo/5 to-indigo-light/5 p-4 rounded-2xl border border-indigo/10">
                     <div>
                       <div className="text-xs text-thread font-medium mb-0.5">Rating</div>
                       <div className="font-bold flex items-center gap-1">
@@ -776,7 +718,7 @@ export default function MentorsPage() {
                   <h3 className="text-base font-heading font-semibold mb-4 pb-2 border-b border-border/40">Recent Reviews</h3>
                   <div className="space-y-3">
                     {selectedProfile.reviews.map((rev: MentorType["reviews"][0], idx: number) => (
-                      <div key={idx} className="bg-gradient-to-br from-indigo/5 to-indigo-light/5 rounded-xl p-4 border border-indigo/10">
+                      <div key={idx} className="bg-linear-to-br from-indigo/5 to-indigo-light/5 rounded-xl p-4 border border-indigo/10">
                         <div className="flex items-center justify-between mb-2">
                           <span className="font-semibold text-sm">{rev.reviewer}</span>
                           <span className="text-xs text-thread">{rev.date}</span>
@@ -799,7 +741,7 @@ export default function MentorsPage() {
               </Button>
               <Button
                 onClick={() => { setIsProfileModalOpen(false); handleBookSession(selectedProfile); }}
-                className="bg-gradient-to-r from-indigo to-indigo-light shadow-md shadow-indigo/20"
+                className="bg-linear-to-r from-indigo to-indigo-light shadow-md shadow-indigo/20"
               >
                 Book Session
               </Button>
@@ -811,7 +753,7 @@ export default function MentorsPage() {
       {/* BOOKING MODAL */}
       {selectedProfile && (
         <Dialog open={isBookingModalOpen} onOpenChange={setIsBookingModalOpen}>
-          <DialogContent className="sm:max-w-[425px] rounded-3xl shadow-2xl">
+          <DialogContent className="sm:max-w-106.25 rounded-3xl shadow-2xl">
             <DialogHeader>
               <DialogTitle className="font-heading text-xl">Book a Session</DialogTitle>
               <DialogDescription>
@@ -821,7 +763,7 @@ export default function MentorsPage() {
 
             {bookingStep === 1 ? (
               <div className="py-4 space-y-6">
-                <div className="flex items-center gap-4 bg-gradient-to-br from-indigo/5 to-indigo-light/5 p-3 rounded-2xl border border-indigo/10">
+                <div className="flex items-center gap-4 bg-linear-to-br from-indigo/5 to-indigo-light/5 p-3 rounded-2xl border border-indigo/10">
                   <Avatar size="lg">
                     <AvatarImage src={selectedProfile.profileImage} alt={selectedProfile.name} />
                     <AvatarFallback>{selectedProfile.name.slice(0, 2)}</AvatarFallback>
@@ -864,18 +806,18 @@ export default function MentorsPage() {
                 <div className="space-y-2">
                   <label className="text-sm font-semibold">Message to Mentor (Optional)</label>
                   <textarea
-                    className="w-full p-3 text-sm border-2 border-indigo/20 rounded-xl bg-transparent outline-none focus:border-indigo transition-all min-h-[80px]"
+                    className="w-full p-3 text-sm border-2 border-indigo/20 rounded-xl bg-transparent outline-none focus:border-indigo transition-all min-h-20"
                     placeholder="Briefly describe what you'd like to discuss..."
                   />
                 </div>
               </div>
             ) : (
               <div className="py-12 flex flex-col items-center justify-center text-center space-y-4">
-                <div className="size-16 bg-gradient-to-br from-emerald-400 to-teal-500 text-white rounded-full flex items-center justify-center mb-2 shadow-lg shadow-emerald-500/25">
+                <div className="size-16 bg-linear-to-br from-emerald-400 to-teal-500 text-white rounded-full flex items-center justify-center mb-2 shadow-lg shadow-emerald-500/25">
                   <CheckCircle className="size-8" />
                 </div>
                 <h3 className="text-xl font-heading font-bold">Booking Confirmed!</h3>
-                <p className="text-sm text-thread max-w-[250px]">
+                <p className="text-sm text-thread max-w-62.5">
                   An invitation has been sent to your email. See you at the session!
                 </p>
               </div>
@@ -893,7 +835,7 @@ export default function MentorsPage() {
                   </Button>
                   <Button
                     onClick={confirmBooking}
-                    className="flex-1 bg-gradient-to-r from-indigo to-indigo-light shadow-md shadow-indigo/20"
+                    className="flex-1 bg-linear-to-r from-indigo to-indigo-light shadow-md shadow-indigo/20"
                   >
                     Confirm Booking
                   </Button>

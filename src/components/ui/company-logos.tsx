@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "framer-motion"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { useEffect, useRef, useState } from "react"
@@ -24,12 +23,11 @@ const logos: Logo[] = [
 
 function LogoItem({ logo }: { logo: Logo }) {
   return (
-    <motion.a
+    <a
       href={logo.href}
       target="_blank"
       rel="noopener noreferrer"
-      whileHover={{ y: -4, scale: 1.1 }}
-      className="group relative flex items-center justify-center shrink-0"
+      className="group relative flex items-center justify-center shrink-0 hover:-translate-y-1 hover:scale-110 transition-all duration-300"
       aria-label={`${logo.name} - trusted partner`}
     >
       <div className="h-8 w-24 md:h-10 md:w-28 opacity-40 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0">
@@ -38,7 +36,7 @@ function LogoItem({ logo }: { logo: Logo }) {
       <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-card border border-border rounded-md text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
         {logo.name}
       </div>
-    </motion.a>
+    </a>
   )
 }
 
@@ -67,31 +65,22 @@ export function CompanyLogos({ className }: { className?: string }) {
         Trusted by teams at leading companies
       </p>
       <div
-        className="relative"
+        className="relative flex overflow-hidden group"
         ref={scrollRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <motion.div
-          className="flex items-center gap-8 md:gap-12 w-max"
-          animate={isPaused ? {} : { x: [0, -(logos.length * (150 + 48))] }}
-          transition={{
-            x: {
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 30,
-              ease: "linear",
-            },
-          }}
+        <div
+          className={cn("flex items-center gap-8 md:gap-12 w-max animate-marquee", isPaused && "paused")}
         >
           {Array.from({ length: duplicateCount + 1 }).map((_, groupIdx) =>
             logos.map((logo, logoIdx) => (
               <LogoItem key={`${groupIdx}-${logoIdx}`} logo={logo} />
             ))
           )}
-        </motion.div>
-        <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
+        </div>
+        <div className="absolute inset-y-0 left-0 w-16 bg-linear-to-r from-background to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-y-0 right-0 w-16 bg-linear-to-l from-background to-transparent pointer-events-none z-10" />
       </div>
     </div>
   )

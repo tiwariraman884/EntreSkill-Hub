@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ALL_IDEAS } from "@/data/mock-ideas";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +31,7 @@ export default function IdeaDetailsPage({ params }: { params: Promise<{ id: stri
       {/* ─── HERO SECTION ─── */}
       <div className="bg-background border-b relative">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent" />
+          <div className="absolute top-0 right-0 w-1/3 h-full bg-linear-to-l from-primary/5 to-transparent" />
         </div>
         
         <div className="container mx-auto px-4 pt-8 pb-12 max-w-5xl relative z-10">
@@ -76,10 +77,9 @@ export default function IdeaDetailsPage({ params }: { params: Promise<{ id: stri
               </div>
             </div>
 
-            <div className="w-full lg:w-[400px] shrink-0">
+            <div className="w-full lg:w-100 shrink-0">
               <div className="rounded-2xl overflow-hidden border shadow-xl shadow-black/5 bg-background">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={idea.coverImage} alt={idea.title} className="w-full h-48 object-cover" />
+                <Image src={idea.coverImage} alt={idea.title} width={800} height={400} className="w-full h-48 object-cover" />
                 <div className="p-6 grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-1">Investment</p>

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useGlobalState } from "@/context/GlobalStateContext";
@@ -10,10 +11,12 @@ import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-  ResponsiveContainer, Tooltip
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const RadarChart = dynamic(() => import("@/components/charts/radar-chart"), {
+  ssr: false,
+  loading: () => <div className="w-full h-75 bg-muted/50 animate-pulse rounded-xl" />
+});
 import { Target, GraduationCap, ArrowRight, TrendingUp, AlertTriangle, Clock } from "lucide-react";
 import { useIsClient } from "@/lib/use-is-client";
 
@@ -103,42 +106,15 @@ export default function AssessmentResultsPage() {
               <CardTitle className="text-2xl font-heading">Skill Radar</CardTitle>
               <CardDescription>Visual breakdown of your proficiency across key business domains.</CardDescription>
             </CardHeader>
-            <CardContent className="h-[350px] md:h-[420px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={chartData}>
-                  <PolarGrid stroke="#e5e7eb" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: '#64748B', fontSize: 12, fontWeight: 600 }}
-                  />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: '12px',
-                      border: 'none',
-                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                      background: 'rgba(255,255,255,0.95)',
-                      backdropFilter: 'blur(8px)',
-                    }}
-                    formatter={(value) => [`${Number(value ?? 0)}%`, 'Proficiency']}
-                  />
-                  <Radar
-                    name="Your Score"
-                    dataKey="score"
-                    stroke="hsl(var(--primary))"
-                    fill="hsl(var(--primary))"
-                    fillOpacity={0.35}
-                    strokeWidth={2}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+            <CardContent className="h-87.5 md:h-105">
+                <RadarChart data={chartData.map(d => ({ subject: d.subject, A: d.score, fullMark: d.fullMark }))} />
             </CardContent>
           </Card>
         </motion.div>
 
         {/* Score Summary Sidebar */}
         <motion.div variants={item} className="space-y-6">
-          <Card className="bg-gradient-to-br from-indigo to-indigo-dark text-white border-0 shadow-premium overflow-hidden relative">
+          <Card className="bg-linear-to-br from-indigo to-indigo-dark text-white border-0 shadow-premium overflow-hidden relative">
             <div className="absolute -right-6 -top-6 size-40 bg-white/10 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -left-4 -bottom-4 size-24 bg-marigold/10 rounded-full blur-2xl pointer-events-none" />
             <CardHeader className="pb-3 relative">
@@ -230,13 +206,13 @@ export default function AssessmentResultsPage() {
                 <Link href={`/resource/${resource.id}`}>
                   <Card className="h-full border-0 shadow-premium bg-white/80 backdrop-blur-2xl overflow-hidden hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
                     <div className="h-40 bg-muted/60 relative overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={resource.thumbnail}
                         alt={resource.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <Badge className="absolute top-3 right-3 bg-white/90 text-foreground border-none backdrop-blur-sm font-semibold">
                         {resource.category}
                       </Badge>
@@ -288,7 +264,7 @@ export default function AssessmentResultsPage() {
                         <Badge variant="outline" className="text-xs font-semibold border-border/60">
                           {idea.category}
                         </Badge>
-                        <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-none shadow-sm shadow-emerald-500/20 font-semibold">
+                        <Badge className="bg-linear-to-r from-emerald-500 to-emerald-600 text-white border-none shadow-sm shadow-emerald-500/20 font-semibold">
                           {idea.aiMatchScore}% Match
                         </Badge>
                       </div>

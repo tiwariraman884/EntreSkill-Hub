@@ -2,6 +2,7 @@
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { MOCK_LEARNING_RESOURCES } from "@/data/mock-learning";
 import { useGlobalState } from "@/context/GlobalStateContext";
 import { Button } from "@/components/ui/button";
@@ -216,13 +217,13 @@ export default function ResourcePage({ params }: { params: Promise<{ id: string 
                 />
               ) : (
                 <>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={resource.thumbnail}
                     alt={resource.title}
-                    className="absolute inset-0 w-full h-full object-cover opacity-50"
+                    fill
+                    className="object-cover opacity-50"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
                   <div className="relative z-10 flex flex-col items-center justify-center text-white p-6 text-center">
                     {resource.type !== "video" && (
                       <motion.div
@@ -310,10 +311,11 @@ export default function ResourcePage({ params }: { params: Promise<{ id: string 
                         key={i}
                         className="size-8 rounded-full bg-muted border-2 border-background overflow-hidden shadow-sm"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                           src={`https://i.pravatar.cc/100?img=${i + 10}`}
                           alt="Learner"
+                          width={32}
+                          height={32}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -409,7 +411,7 @@ export default function ResourcePage({ params }: { params: Promise<{ id: string 
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.4 }}
-                className="mt-14 p-6 bg-gradient-to-br from-muted/40 to-muted/10 border border-border rounded-2xl flex flex-col items-center text-center shadow-sm"
+                className="mt-14 p-6 bg-linear-to-br from-muted/40 to-muted/10 border border-border rounded-2xl flex flex-col items-center text-center shadow-sm"
               >
                 <h3 className="font-heading font-bold text-lg text-foreground mb-1.5">
                   Finished this lesson?
@@ -446,7 +448,7 @@ export default function ResourcePage({ params }: { params: Promise<{ id: string 
                 </CardHeader>
                 <CardContent>
                   <div className="relative space-y-1">
-                    <div className="absolute inset-y-0 left-[11px] w-px bg-muted" />
+                    <div className="absolute inset-y-0 left-2.75 w-px bg-muted" />
                     <div className="space-y-1.5">
                       {["Introduction", "Core Concepts", "Real-world Examples", "Conclusion"].map(
                         (chapter, i) => (
@@ -466,8 +468,8 @@ export default function ResourcePage({ params }: { params: Promise<{ id: string 
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2, duration: 0.45, ease: "easeOut" }}
               >
-                <Card className="relative overflow-hidden bg-gradient-to-br from-primary/8 to-primary/3 border-primary/15 shadow-sm">
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-primary/8 to-transparent rounded-bl-full pointer-events-none" />
+                <Card className="relative overflow-hidden bg-linear-to-br from-primary/8 to-primary/3 border-primary/15 shadow-sm">
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-bl from-primary/8 to-transparent rounded-bl-full pointer-events-none" />
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm font-semibold text-primary">
                       Need Clarification?

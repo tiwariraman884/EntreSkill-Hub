@@ -18,9 +18,11 @@ import {
   Settings,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import UserMenu from "@/components/profile/UserMenu";
 import { useProfileContext } from "@/context/ProfileContext";
+
+// ─── NavLink ─────────────────────────────────────────────────────────────────
+// Fully CSS-driven — no framer-motion dependency.
 
 function NavLink({
   label,
@@ -44,11 +46,21 @@ function NavLink({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
   return (
     <div className="relative" ref={ref}>
       <Link
         href={href}
-        className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+        className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
           isActive
             ? "text-primary bg-primary/8 shadow-sm shadow-primary/10"
             : "text-thread hover:text-ink hover:bg-muted/60"
@@ -56,29 +68,27 @@ function NavLink({
         aria-current={isActive ? "page" : undefined}
         onClick={() => setOpen(false)}
       >
+        {/* Active indicator — CSS transition only, no framer-motion */}
         {isActive && (
-          <motion.span
-            layoutId="nav-indicator"
-            className="absolute inset-x-2 -bottom-1 h-0.5 bg-linear-to-r from-primary to-accent rounded-full"
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          />
+          <span className="absolute inset-x-2 -bottom-1 h-0.5 bg-linear-to-r from-primary to-accent rounded-full" />
         )}
         <Icon className="h-4 w-4" aria-hidden="true" />
         {label}
         {dropdownItems && (
-          <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
-            <ChevronDown className="h-3.5 w-3.5" />
-          </motion.div>
+          <ChevronDown
+            className="h-3.5 w-3.5 transition-transform duration-200"
+            style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+          />
         )}
       </Link>
-      
+
       {dropdownItems && open && (
-        <motion.div
-          initial={{ opacity: 0, y: -8, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -8, scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        <div
           className="absolute top-full left-0 mt-2 w-56 rounded-xl bg-card border border-border/60 shadow-premium-hover py-2 z-50"
+          style={{
+            animation: "scaleIn 0.15s ease-out",
+            transformOrigin: "top left",
+          }}
         >
           {dropdownItems.map((item) => (
             <Link
@@ -90,11 +100,13 @@ function NavLink({
               {item.label}
             </Link>
           ))}
-        </motion.div>
+        </div>
       )}
     </div>
   );
 }
+
+// ─── Header ───────────────────────────────────────────────────────────────────
 
 export default function Header() {
   const pathname = usePathname();
@@ -105,20 +117,33 @@ export default function Header() {
   const isAuthed = !!session;
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Close mobile nav on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   if (status === "loading" || profileLoading) {
     return (
       <header className="sticky top-0 z-50 border-b border-border/40 bg-white/80 backdrop-blur-2xl">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="EntreSkill Hub Logo" width={48} height={48} priority className="h-10 w-10 md:h-11 md:w-11 lg:h-12 lg:w-12 object-contain select-none shrink-0" />
-            <span className="font-bold text-xl bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">EntreSkill Hub</span>
+            <Image
+              src="/logo.png"
+              alt="EntreSkill Hub Logo"
+              width={44}
+              height={44}
+              priority
+              className="h-10 w-10 md:h-11 md:w-11 object-contain select-none shrink-0"
+              sizes="44px"
+            />
+            <span className="font-bold text-xl bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
+              EntreSkill Hub
+            </span>
           </div>
         </div>
       </header>
@@ -126,33 +151,29 @@ export default function Header() {
   }
 
   return (
-        <motion.header
-          className={`sticky top-0 z-50 transition-all duration-500 ${
-            scrolled
-              ? "bg-card/90 backdrop-blur-2xl border-b border-border/40 shadow-premium"
-              : "bg-card/70 backdrop-blur-xl border-b border-transparent"
-          }`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-card/90 backdrop-blur-2xl border-b border-border/40 shadow-premium"
+          : "bg-card/70 backdrop-blur-xl border-b border-transparent"
+      }`}
+      style={{ animation: "slideDown 0.3s ease-out" }}
     >
       <div className="container mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-3 group" aria-label="EntreSkill Hub home">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative h-9 w-9 md:h-10 md:w-10 rounded-xl bg-linear-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/30 transition-all duration-300"
-            >
-              <Image 
-                src="/logo.png" 
-                alt="EntreSkill Hub Logo" 
-                width={48} 
-                height={48} 
-                priority 
+            {/* Logo — CSS scale on hover, no framer-motion */}
+            <div className="relative h-9 w-9 md:h-10 md:w-10 rounded-xl bg-linear-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/30 transition-all duration-200 group-hover:scale-105 active:scale-95">
+              <Image
+                src="/logo.png"
+                alt="EntreSkill Hub Logo"
+                width={44}
+                height={44}
+                priority
                 className="h-9 w-9 md:h-10 md:w-10 object-contain select-none shrink-0"
+                sizes="44px"
               />
-            </motion.div>
+            </div>
             <span className="font-bold text-lg hidden sm:inline-block tracking-tight bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
               EntreSkill Hub
             </span>
@@ -212,150 +233,149 @@ export default function Header() {
 
         <div className="flex items-center gap-2">
           {/* Mobile Menu Toggle */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
+          <button
+            type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="lg:hidden flex items-center justify-center h-10 w-10 rounded-xl hover:bg-muted/60 transition-colors"
+            className="lg:hidden flex items-center justify-center h-10 w-10 rounded-xl hover:bg-muted/60 transition-colors active:scale-95"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </motion.button>
+          </button>
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-2">
             {session ? (
               <div className="flex items-center gap-2">
-                <UserMenu 
+                <UserMenu
                   user={{
                     name: profile?.name || session.user.name,
                     email: profile?.email || session.user.email,
                     image: profile?.profile?.avatar || session.user.image,
-                  }} 
+                  }}
                 />
               </div>
             ) : (
               <div className="flex items-center gap-2">
-              <Link
-                    href="/login"
-                    className="inline-flex h-10 items-center justify-center rounded-xl border-2 border-primary/20 bg-card px-5 py-2 text-sm font-semibold transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="inline-flex h-10 items-center justify-center rounded-xl bg-linear-to-r from-primary to-primary-light px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-px active:translate-y-0 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    Get Started
-                  </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex h-10 items-center justify-center rounded-xl border-2 border-primary/20 bg-card px-5 py-2 text-sm font-semibold transition-all duration-200 hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex h-10 items-center justify-center rounded-xl bg-linear-to-r from-primary to-primary-light px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-px active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  Get Started
+                </Link>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-border/40 bg-white/95 backdrop-blur-xl overflow-hidden"
+      {/* Mobile Navigation — CSS-only expand animation */}
+      <div
+        id="mobile-nav"
+        className="lg:hidden border-t border-border/40 bg-white/95 backdrop-blur-xl overflow-hidden"
+        style={{
+          display: mobileOpen ? "block" : "none",
+        }}
+        aria-hidden={!mobileOpen}
+      >
+        <nav className="container mx-auto px-4 py-4 space-y-1" aria-label="Mobile navigation">
+          {isAuthed && (
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+              Dashboard
+            </Link>
+          )}
+          <Link
+            href="/learn"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+            onClick={() => setMobileOpen(false)}
           >
-            <nav className="container mx-auto px-4 py-4 space-y-1" aria-label="Mobile navigation">
-              {isAuthed && (
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              )}
+            <Compass className="h-4 w-4" aria-hidden="true" />
+            Learn
+          </Link>
+          <Link
+            href="/roadmaps"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+            onClick={() => setMobileOpen(false)}
+          >
+            <Map className="h-4 w-4" aria-hidden="true" />
+            Roadmaps
+          </Link>
+          <Link
+            href="/mentors"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+            onClick={() => setMobileOpen(false)}
+          >
+            <MessageSquare className="h-4 w-4" aria-hidden="true" />
+            Mentors
+          </Link>
+          <Link
+            href="/ideas"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+            onClick={() => setMobileOpen(false)}
+          >
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            Ideas
+          </Link>
+          {session ? (
+            <>
               <Link
-                href="/learn"
+                href="/notifications"
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
-                <Compass className="h-4 w-4" />
-                Learn
+                <Bell className="h-4 w-4" aria-hidden="true" />
+                Notifications
               </Link>
               <Link
-                href="/roadmaps"
+                href="/settings"
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
-                <Map className="h-4 w-4" />
-                Roadmaps
+                <Settings className="h-4 w-4" aria-hidden="true" />
+                Settings
               </Link>
+              <div className="pt-2 border-t border-border/40">
+                <UserMenu
+                  user={{
+                    name: profile?.name || session.user.name,
+                    email: profile?.email || session.user.email,
+                    image: profile?.profile?.avatar || session.user.image,
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2 pt-2 border-t border-border/40">
               <Link
-                href="/mentors"
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+                href="/login"
+                className="inline-flex h-10 items-center justify-center rounded-xl border-2 border-primary/20 bg-card px-5 py-2 text-sm font-semibold transition-all duration-200 hover:border-primary/40 hover:bg-primary/5"
                 onClick={() => setMobileOpen(false)}
               >
-                <MessageSquare className="h-4 w-4" />
-                Mentors
+                Log in
               </Link>
               <Link
-                href="/ideas"
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
+                href="/register"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-linear-to-r from-primary to-primary-light px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/25"
                 onClick={() => setMobileOpen(false)}
               >
-                <Sparkles className="h-4 w-4" />
-                Ideas
+                Get Started
               </Link>
-              {session ? (
-                <>
-                  <Link
-                    href="/notifications"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <Bell className="h-4 w-4" />
-                    Notifications
-                  </Link>
-                  <Link
-                    href="/settings"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-thread hover:text-ink hover:bg-muted/60 transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Link>
-                  <div className="pt-2 border-t border-border/40">
-                    <UserMenu 
-                      user={{
-                        name: profile?.name || session.user.name,
-                        email: profile?.email || session.user.email,
-                        image: profile?.profile?.avatar || session.user.image,
-                      }} 
-                    />
-                  </div>
-                </>
-              ) : (
-                <div className="flex flex-col gap-2 pt-2 border-t border-border/40">
-                  <Link
-                    href="/login"
-                    className="inline-flex h-10 items-center justify-center rounded-xl border-2 border-primary/20 bg-card px-5 py-2 text-sm font-semibold transition-all duration-300 hover:border-primary/40 hover:bg-primary/5"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="inline-flex h-10 items-center justify-center rounded-xl bg-linear-to-r from-primary to-primary-light px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/25"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    Get Started
-                  </Link>
-                </div>
-              )}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+            </div>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 }

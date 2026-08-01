@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Sun, Moon, Monitor, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { Theme } from "@/types/appearance";
 
 interface ThemeOption {
@@ -39,9 +38,9 @@ export function ThemeSelector({ currentTheme, onChange }: ThemeSelectorProps) {
           >
             {/* Gradient border & glow on selection */}
             {isSelected && (
-              <div className="absolute inset-0 p-[2px] rounded-2xl bg-gradient-to-r from-primary to-primary-light -z-10">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary-light opacity-25 blur-lg" />
-                <div className="w-full h-full bg-white dark:bg-[#111827] rounded-2xl" />
+              <div className="absolute inset-0 p-0.5 rounded-2xl bg-linear-to-r from-primary to-primary-light -z-10">
+                <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-light opacity-25 blur-lg" />
+                <div className="w-full h-full bg-white dark:bg-surface rounded-2xl" />
               </div>
             )}
 
@@ -64,7 +63,7 @@ export function ThemeSelector({ currentTheme, onChange }: ThemeSelectorProps) {
                 animate={{ scale: 1, opacity: 1 }}
                 className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white shadow-sm"
               >
-                <Check className="size-3 stroke-[3]" />
+                <Check className="size-3 stroke-3" />
               </motion.div>
             )}
           </button>
