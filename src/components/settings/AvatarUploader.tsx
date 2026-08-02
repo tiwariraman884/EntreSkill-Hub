@@ -5,7 +5,6 @@ import { Upload, X, Loader2 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface AvatarUploaderProps {
   currentAvatar: string | null;
@@ -72,34 +71,23 @@ export function AvatarUploader({
         isDragging ? "border-primary bg-primary/5" : "border-border bg-muted/5"
       )}
     >
-      {/* Visual Upload Progress */}
-      <AnimatePresence>
-        {isUploading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-white/80 dark:bg-black/80 z-20 flex flex-col items-center justify-center gap-2"
-          >
-            <Loader2 className="size-8 animate-spin text-primary" />
-            <p className="text-sm font-semibold text-foreground">Uploading avatar... {uploadProgress}%</p>
-            <div className="w-48 h-1.5 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${uploadProgress}%` }}
-                className="h-full bg-primary"
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Upload Overlay — CSS fade-in */}
+      {isUploading && (
+        <div className="absolute inset-0 bg-white/80 dark:bg-black/80 z-20 flex flex-col items-center justify-center gap-2 animate-in fade-in duration-200">
+          <Loader2 className="size-8 animate-spin text-primary" />
+          <p className="text-sm font-semibold text-foreground">Uploading avatar... {uploadProgress}%</p>
+          <div className="w-48 h-1.5 bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary transition-all duration-150"
+              style={{ width: `${uploadProgress}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="relative group shrink-0">
-        {/* Animated ring & hover scale */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="relative rounded-full p-1"
-        >
+        {/* Avatar ring & hover scale — CSS only */}
+        <div className="relative rounded-full p-1 hover:scale-105 transition-transform duration-300">
           <div className="absolute inset-0 rounded-full bg-linear-to-r from-primary to-primary-light animate-pulse opacity-60 blur-[2px]" />
           <div className="w-30 h-30 rounded-full overflow-hidden relative border-2 border-white dark:border-surface">
             <Avatar className="w-full h-full">
@@ -109,7 +97,7 @@ export function AvatarUploader({
               </AvatarFallback>
             </Avatar>
           </div>
-        </motion.div>
+        </div>
 
         <button
           type="button"

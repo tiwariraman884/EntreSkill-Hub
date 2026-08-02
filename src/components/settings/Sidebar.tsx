@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export type SettingsTab = "general" | "account" | "appearance" | "notifications" | "privacy" | "security" | "danger";
@@ -45,27 +44,17 @@ export function Sidebar({ sections, activeTab, onChange }: SidebarProps) {
                       "w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 relative group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       isSelected
                         ? "text-white shadow-md shadow-primary/20"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:scale-[1.02]"
                     )}
                   >
-                    {/* Hover state scale container */}
-                    <motion.div
-                      className="absolute inset-0 rounded-2xl -z-10"
-                      whileHover={!isSelected ? { scale: 1.02 } : undefined}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    >
-                      {isSelected ? (
-                        <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-light rounded-2xl shadow-sm" />
-                      ) : null}
-                    </motion.div>
+                    {/* Selected background */}
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-light rounded-2xl shadow-sm -z-10" />
+                    )}
 
                     {/* Selected state left accent bar */}
                     {isSelected && (
-                      <motion.div
-                        layoutId="activeSidebarIndicator"
-                        className="absolute left-0 top-3 bottom-3 w-1 bg-white rounded-r-full"
-                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                      />
+                      <div className="absolute left-0 top-3 bottom-3 w-1 bg-white rounded-r-full" />
                     )}
 
                     <Icon className="size-4 shrink-0" />

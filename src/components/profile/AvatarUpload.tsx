@@ -3,7 +3,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import type { Area, Point } from "react-easy-crop";
-import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import {
   Upload,
@@ -346,22 +345,15 @@ export function AvatarUpload({
             </AvatarFallback>
           </Avatar>
 
-          {/* Drag overlay */}
-          <AnimatePresence>
-            {dragOver && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="absolute inset-0 rounded-full bg-primary/90 flex items-center justify-center cursor-copy z-10"
-              >
-                <div className="text-center text-white">
-                  <Upload className="size-6 mx-auto mb-1" />
-                  <span className="text-xs font-medium">Drop here</span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Drag overlay — CSS fade-in */}
+          {dragOver && (
+            <div className="absolute inset-0 rounded-full bg-primary/90 flex items-center justify-center cursor-copy z-10 animate-in fade-in zoom-in-95 duration-150">
+              <div className="text-center text-white">
+                <Upload className="size-6 mx-auto mb-1" />
+                <span className="text-xs font-medium">Drop here</span>
+              </div>
+            </div>
+          )}
 
           {/* Hover overlay */}
           <div
@@ -383,169 +375,145 @@ export function AvatarUpload({
           )}
 
           {/* Validation error */}
-          <AnimatePresence>
-            {validationError && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-danger font-medium whitespace-nowrap"
-              >
-                {validationError}
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {validationError && (
+            <p className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-danger font-medium whitespace-nowrap animate-in fade-in slide-in-from-top-1 duration-150">
+              {validationError}
+            </p>
+          )}
         </div>
       )}
 
       {/* Cropping Dialog */}
-      <AnimatePresence>
-        {status === "cropping" && imageSrc && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) handleCancel();
-            }}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            >
-              <Card className="w-full max-w-lg bg-white dark:bg-surface shadow-premium overflow-hidden">
-                {/* Header */}
-                <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-                  <div className="flex items-center gap-2">
-                    <Crop className="size-5 text-primary" />
-                    <h3 className="text-lg font-heading font-semibold">Crop Avatar</h3>
+      {status === "cropping" && imageSrc && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCancel();
+          }}
+        >
+          <div className="animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
+            <Card className="w-full max-w-lg bg-white dark:bg-surface shadow-premium overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                <div className="flex items-center gap-2">
+                  <Crop className="size-5 text-primary" />
+                  <h3 className="text-lg font-heading font-semibold">Crop Avatar</h3>
+                </div>
+                <button
+                  onClick={handleCancel}
+                  className="p-1.5 rounded-lg hover:bg-muted transition-colors"
+                  aria-label="Cancel crop"
+                >
+                  <X className="size-5 text-thread" />
+                </button>
+              </div>
+
+              {/* Crop area */}
+              <div className="relative w-full h-80 bg-muted/50">
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  rotation={rotation}
+                  aspect={1}
+                  cropShape={cropShape}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onCropComplete={onCropComplete}
+                  showGrid={true}
+                />
+              </div>
+
+              {/* Controls */}
+              <div className="px-5 py-4 space-y-4">
+                {/* Zoom slider */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleZoomOut}
+                    className="p-1.5 rounded-lg hover:bg-muted transition-colors"
+                    aria-label="Zoom out"
+                  >
+                    <ZoomOut className="size-4 text-thread" />
+                  </button>
+                  <div className="flex-1">
+                    <input
+                      type="range"
+                      min={0.5}
+                      max={3}
+                      step={0.1}
+                      value={zoom}
+                      onChange={(e) => setZoom(Number(e.target.value))}
+                      className="w-full accent-primary"
+                      aria-label="Zoom level"
+                    />
                   </div>
                   <button
-                    onClick={handleCancel}
+                    onClick={handleZoomIn}
                     className="p-1.5 rounded-lg hover:bg-muted transition-colors"
-                    aria-label="Cancel crop"
+                    aria-label="Zoom in"
                   >
-                    <X className="size-5 text-thread" />
+                    <ZoomIn className="size-4 text-thread" />
                   </button>
                 </div>
 
-                {/* Crop area */}
-                <div className="relative w-full h-80 bg-muted/50">
-                  <Cropper
-                    image={imageSrc}
-                    crop={crop}
-                    zoom={zoom}
-                    rotation={rotation}
-                    aspect={1}
-                    cropShape={cropShape}
-                    onCropChange={setCrop}
-                    onZoomChange={setZoom}
-                    onCropComplete={onCropComplete}
-                    showGrid={true}
-                  />
-                </div>
-
-                {/* Controls */}
-                <div className="px-5 py-4 space-y-4">
-                  {/* Zoom slider */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={handleZoomOut}
-                      className="p-1.5 rounded-lg hover:bg-muted transition-colors"
-                      aria-label="Zoom out"
+                {/* Toolbar */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleRotate}
+                      className="rounded-xl"
+                      aria-label="Rotate 90 degrees"
                     >
-                      <ZoomOut className="size-4 text-thread" />
-                    </button>
-                    <div className="flex-1">
-                      <input
-                        type="range"
-                        min={0.5}
-                        max={3}
-                        step={0.1}
-                        value={zoom}
-                        onChange={(e) => setZoom(Number(e.target.value))}
-                        className="w-full accent-primary"
-                        aria-label="Zoom level"
-                      />
-                    </div>
-                    <button
-                      onClick={handleZoomIn}
-                      className="p-1.5 rounded-lg hover:bg-muted transition-colors"
-                      aria-label="Zoom in"
+                      <RotateCw className="size-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleCropShapeToggle}
+                      className="rounded-xl"
+                      aria-label={`Switch to ${cropShape === "round" ? "square" : "circle"} crop`}
                     >
-                      <ZoomIn className="size-4 text-thread" />
-                    </button>
+                      <SlidersHorizontal className="size-4" />
+                    </Button>
+                    <span className="text-xs text-muted-foreground ml-1">
+                      {cropShape === "round" ? "Circle" : "Square"}
+                    </span>
                   </div>
 
-                  {/* Toolbar */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleRotate}
-                        className="rounded-xl"
-                        aria-label="Rotate 90 degrees"
-                      >
-                        <RotateCw className="size-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleCropShapeToggle}
-                        className="rounded-xl"
-                        aria-label={`Switch to ${cropShape === "round" ? "square" : "circle"} crop`}
-                      >
-                        <SlidersHorizontal className="size-4" />
-                      </Button>
-                      <span className="text-xs text-muted-foreground ml-1">
-                        {cropShape === "round" ? "Circle" : "Square"}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" onClick={handleCancel} className="rounded-xl">
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleApplyCrop}
-                        className="rounded-xl"
-                        disabled={!croppedAreaPixels}
-                      >
-                        <Check className="size-4 mr-1.5" />
-                        Apply
-                      </Button>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" onClick={handleCancel} className="rounded-xl">
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={handleApplyCrop}
+                      className="rounded-xl"
+                      disabled={!croppedAreaPixels}
+                    >
+                      <Check className="size-4 mr-1.5" />
+                      Apply
+                    </Button>
                   </div>
                 </div>
-              </Card>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
 
-      {/* Upload Progress Overlay */}
-      <AnimatePresence>
-        {status === "uploading" && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="mt-3 w-full max-w-[200px]"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <Loader2 className="size-3 animate-spin text-primary" />
-              <span className="text-xs text-muted-foreground font-medium">
-                {uploadProgress < 100 ? "Uploading..." : "Processing..."}
-              </span>
-            </div>
-            <Progress value={uploadProgress} className="h-1.5" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Upload Progress Overlay — CSS transition */}
+      {status === "uploading" && (
+        <div className="mt-3 w-full max-w-[200px] animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="flex items-center gap-2 mb-1">
+            <Loader2 className="size-3 animate-spin text-primary" />
+            <span className="text-xs text-muted-foreground font-medium">
+              {uploadProgress < 100 ? "Uploading..." : "Processing..."}
+            </span>
+          </div>
+          <Progress value={uploadProgress} className="h-1.5" />
+        </div>
+      )}
     </>
   );
 }

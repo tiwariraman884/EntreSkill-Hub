@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 // Inline style for shimmer — avoids Tailwind v4 unknown-utility-class error
 const shimmerStyle: React.CSSProperties = {
   animation: "shimmer 1.8s ease-in-out infinite",
-  background: "linear-gradient(90deg, #e6dfcc 25%, rgba(255,255,255,0.7) 50%, #e6dfcc 75%)",
+  background: "linear-gradient(90deg, #d8dee9 25%, rgba(255,255,255,0.7) 50%, #d8dee9 75%)",
   backgroundSize: "200% 100%",
   borderRadius: "0.5rem",
 };
@@ -14,7 +14,7 @@ function Shimmer({ className }: { className?: string }) {
 
 export function SkeletonCard({ className }: { className?: string }) {
   return (
-    <div className={cn("rounded-2xl border border-border/40 bg-white overflow-hidden shadow-sm", className)}>
+    <div className={cn("rounded-2xl border border-border/40 bg-card overflow-hidden shadow-sm", className)}>
       <Shimmer className="h-48 w-full rounded-none!" />
       <div className="p-5 space-y-3">
         <Shimmer className="h-5 w-3/4" />
@@ -32,7 +32,7 @@ export function SkeletonCard({ className }: { className?: string }) {
 
 export function SkeletonStatCard({ className }: { className?: string }) {
   return (
-    <div className={cn("rounded-2xl border border-border/40 bg-white p-6 shadow-sm", className)}>
+    <div className={cn("rounded-2xl border border-border/40 bg-card p-6 shadow-sm", className)}>
       <div className="flex items-start justify-between mb-4">
         <div className="space-y-2">
           <Shimmer className="h-3.5 w-28" />
@@ -65,7 +65,7 @@ export function SkeletonText({ lines = 3, className }: { lines?: number; classNa
 
 export function SkeletonLearningCard({ className }: { className?: string }) {
   return (
-    <div className={cn("rounded-2xl border border-border/40 bg-white overflow-hidden shadow-sm", className)}>
+    <div className={cn("rounded-2xl border border-border/40 bg-card overflow-hidden shadow-sm", className)}>
       <Shimmer className="h-44 w-full rounded-none!" />
       <div className="p-4 space-y-3">
         <div className="flex justify-between">

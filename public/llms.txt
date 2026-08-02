@@ -1,18 +1,40 @@
 # EntreSkill Hub
 
-> A Next.js 16 (App Router) web application designed for micro-entrepreneurs. It provides structured roadmaps, learning resources, and mentor connections to help turn skills into businesses.
+> EntreSkill Hub is a production-grade web application designed to help micro-entrepreneurs build their businesses through structured roadmaps, curated learning resources, business idea tools, and mentor connections.
 
-## System Guidelines
-When contributing to or analyzing this project, adhere to the following architecture and performance guidelines.
+## App Info
 
-### Technologies
-- Framework: Next.js 16 (React 19)
+- URL: https://entreskill-hub.vercel.app
+- Framework: Next.js 16 (App Router)
+- Language: TypeScript
 - Styling: Tailwind CSS v4
-- Architecture: React Server Components (RSC) preferred.
-- Icons: Lucide React
 
-### Performance & UI Standards
-- CSS-only animations for main layout components.
-- Image optimization enabled with `next/image`.
-- Sentry loaded dynamically to prevent main thread blocking.
-- Strict adherence to WCAG AA accessibility standards.
+## Pages
+
+- [Home](/) — Landing page with feature overview and social proof
+- [Dashboard](/dashboard) — User's personalized learning and progress dashboard
+- [Roadmaps](/roadmaps) — Business skill-building roadmaps
+- [Ideas](/ideas) — Business idea generation and scoring tool
+- [Learning Hub](/learning-hub) — Curated resources for entrepreneurs
+- [Mentors](/mentors) — Find and connect with expert mentors
+- [Assessment](/assessment) — Skills assessment and recommendation engine
+- [Bookmarks](/bookmarks) — Saved resources and ideas
+- [Notifications](/notifications) — In-app activity feed
+- [Profile](/profile) — User profile and settings
+- [Settings](/settings) — App and account preferences
+
+## API
+
+- `GET /api/profile/me` — Fetch current user profile
+- `GET /api/recommendations` — Personalized content recommendations
+- `GET /api/roadmaps/[id]` — Fetch a specific roadmap
+- `GET /api/resources` — List all learning resources
+- `GET /api/mentors` — List available mentors
+- `POST /api/auth/register` — Register a new user
+- `POST /api/assessment` — Submit skills assessment
+
+## Notes
+
+- Requires authentication for dashboard, profile, and protected routes
+- MongoDB is used for persistent data storage
+- Next.js middleware handles auth routing and redirects

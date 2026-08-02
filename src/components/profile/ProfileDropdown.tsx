@@ -113,9 +113,9 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
         </Button>
 
         {open && (
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white/95 backdrop-blur-2xl border-2 border-border/40 rounded-2xl shadow-2xl shadow-indigo/10 z-50 animate-scale-in overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-card/95 backdrop-blur-2xl border-2 border-border/40 rounded-2xl shadow-2xl shadow-indigo/10 z-50 animate-scale-in overflow-hidden">
             {/* Profile Header */}
-            <div className="p-4 border-b border-border/40 bg-gradient-to-br from-indigo/5 to-marigold/5">
+            <div className="p-4 border-b border-border/40 bg-linear-to-br from-indigo/5 to-marigold/5">
               <div className="flex items-center gap-3">
                 <ProfileAvatar src={avatarUrl} name={displayName} size="default" />
                 <div className="flex-1 min-w-0">

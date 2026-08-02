@@ -34,7 +34,7 @@ export function QuickActions() {
           <Link
             key={action.href}
             href={action.href}
-            className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white border border-border/40 shadow-premium hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300"
+            className="group flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-card border border-border/40 shadow-premium hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300"
           >
             <div className="w-12 h-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center text-white group-hover:from-indigo group-hover:to-indigo-light transition-colors">
               <action.icon className="size-5" />
@@ -87,7 +87,7 @@ export function AIFeaturesGrid() {
       <h2 className="text-lg font-semibold font-heading mb-4">AI Features</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* AI Roadmap Generator */}
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="w-12 h-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center mb-4 shadow-md">
               <Bot className="size-6 text-white" />
@@ -99,7 +99,7 @@ export function AIFeaturesGrid() {
         </Card>
 
         {/* AI Mentor Matching */}
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="w-12 h-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center mb-4 shadow-md">
               <Users className="size-6 text-white" />
@@ -111,7 +111,7 @@ export function AIFeaturesGrid() {
         </Card>
 
         {/* AI Resume Review */}
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="w-12 h-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center mb-4 shadow-md">
               <FileText className="size-6 text-white" />
@@ -123,7 +123,7 @@ export function AIFeaturesGrid() {
         </Card>
 
         {/* AI Skill Assessment */}
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="w-12 h-12 rounded-xl bg-linear-to-br from-indigo to-indigo-light flex items-center justify-center mb-4 shadow-md">
               <Brain className="size-6 text-white" />
@@ -141,7 +141,7 @@ export function AIFeaturesGrid() {
 export function RecentActivity() {
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: "300ms" }}>
-      <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+      <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <ActivityIcon className="size-5 text-indigo" />

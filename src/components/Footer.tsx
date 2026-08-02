@@ -193,7 +193,7 @@ export default function Footer() {
 
             {subscribed ? (
               <div
-                className="flex items-center gap-2 text-sm font-medium text-emerald-600 bg-emerald-50 px-5 py-3 rounded-xl border border-emerald-200 animate-fade-in"
+                className="flex items-center gap-2 text-sm font-medium text-emerald-600 bg-emerald-50 px-5 py-3 rounded-xl border border-emerald-200"
               >
                 <CheckCircle2 className="h-5 w-5" aria-hidden="true" />
                 You&apos;re on the list! Check your inbox soon.
@@ -232,7 +232,7 @@ export default function Footer() {
         <div className="container mx-auto px-4 h-14 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-thread">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
             </span>
             <span className="font-medium">All systems operational</span>

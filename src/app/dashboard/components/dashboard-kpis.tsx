@@ -67,7 +67,7 @@ export default function DashboardKPIs() {
 
       {/* Learning Streak */}
       <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
@@ -91,7 +91,7 @@ export default function DashboardKPIs() {
 
       {/* Completed Resources */}
       <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
@@ -112,7 +112,7 @@ export default function DashboardKPIs() {
 
       {/* AI Assessment Score */}
       <div className="animate-fade-in-up" style={{ animationDelay: "300ms" }}>
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
               <div>

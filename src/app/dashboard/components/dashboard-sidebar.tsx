@@ -57,7 +57,7 @@ export default function DashboardSidebar() {
     <div className="space-y-6">
       {/* Daily Goal with Progress Ring */}
       <div className="animate-fade-in-up" style={{ animationDelay: "0ms" }}>
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable overflow-hidden">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable overflow-hidden">
           <div className="h-1 bg-linear-to-r from-indigo via-indigo-light to-marigold" />
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2 text-indigo">
@@ -96,7 +96,7 @@ export default function DashboardSidebar() {
       {/* Recommended Mentors / AI Recommendations */}
       {hasTakenAssessment && (
         <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-          <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable overflow-hidden">
+          <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable overflow-hidden">
             <div className="h-1 bg-linear-to-r from-purple-500 via-indigo to-indigo-light" />
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
@@ -136,7 +136,7 @@ export default function DashboardSidebar() {
 
       {/* Upcoming Sessions */}
       <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-        <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+        <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
           <CardHeader className="pb-4">
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="size-5 text-indigo" />

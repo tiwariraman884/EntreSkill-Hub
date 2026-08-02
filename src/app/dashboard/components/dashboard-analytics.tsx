@@ -12,7 +12,7 @@ import {
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { value: number; name?: string }[]; label?: string }) {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white/95 backdrop-blur-xl border border-border/60 rounded-xl px-3 py-2 shadow-premium">
+      <div className="bg-card/95 backdrop-blur-xl border border-border/60 rounded-xl px-3 py-2 shadow-premium">
         <p className="text-xs font-semibold text-thread mb-1">{label}</p>
         <p className="text-sm font-bold text-indigo">{payload[0].value} min</p>
       </div>
@@ -39,7 +39,7 @@ export default function DashboardAnalytics({
   skillData: SkillData[];
 }) {
   return (
-    <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+    <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg flex items-center gap-2">
           <BarChart3 className="size-5 text-indigo" />

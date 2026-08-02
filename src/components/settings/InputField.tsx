@@ -3,7 +3,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, AlertCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -95,34 +94,29 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
             {label}
           </label>
 
-          {/* Success Checkmark / Error Warning Icons */}
+          {/* Success Checkmark / Error Warning Icons — CSS zoom-in */}
           <div className="absolute right-4 flex items-center z-20">
             {isSuccess && !error && (
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+              <div className="animate-in zoom-in-50 duration-200">
                 <CheckCircle2 className="size-5 text-emerald-500 stroke-[2.5]" />
-              </motion.div>
+              </div>
             )}
             {error && (
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+              <div className="animate-in zoom-in-50 duration-200">
                 <AlertCircle className="size-5 text-destructive stroke-[2.5]" />
-              </motion.div>
+              </div>
             )}
           </div>
         </div>
 
-        <AnimatePresence>
-          {error && (
-            <motion.p
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              className="text-xs font-semibold text-destructive px-1"
-              role="alert"
-            >
-              {error}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        {error && (
+          <p
+            className="text-xs font-semibold text-destructive px-1 animate-in fade-in slide-in-from-top-1 duration-200"
+            role="alert"
+          >
+            {error}
+          </p>
+        )}
       </div>
     );
   }

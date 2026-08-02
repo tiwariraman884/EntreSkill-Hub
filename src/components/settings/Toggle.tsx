@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface ToggleProps {
@@ -23,12 +22,10 @@ export function Toggle({ checked, onChange, disabled }: ToggleProps) {
         disabled && "opacity-50 cursor-not-allowed"
       )}
     >
-      <motion.span
-        layout
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+      <span
         className={cn(
-          "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-md",
-          checked ? "ml-auto" : "mr-auto"
+          "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-md transition-transform duration-300",
+          checked ? "translate-x-5" : "translate-x-0"
         )}
       />
     </button>

@@ -134,7 +134,7 @@ export default function Header() {
           <div className="flex items-center gap-3">
             <Image
               src="/logo.png"
-              alt="EntreSkill Hub Logo"
+              alt=""
               width={44}
               height={44}
               priority
@@ -166,7 +166,7 @@ export default function Header() {
             <div className="relative h-9 w-9 md:h-10 md:w-10 rounded-xl bg-linear-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/30 transition-all duration-200 group-hover:scale-105 active:scale-95">
               <Image
                 src="/logo.png"
-                alt="EntreSkill Hub Logo"
+                alt=""
                 width={44}
                 height={44}
                 priority

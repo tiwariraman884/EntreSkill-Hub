@@ -33,7 +33,7 @@ export function ContinueLearning() {
 
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-      <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+      <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             <PlayCircleIcon className="size-5 text-indigo" />
@@ -63,7 +63,7 @@ export function ContinueLearning() {
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent flex items-center justify-center">
-                    <div className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-full bg-card/90 flex items-center justify-center">
                       <PlayCircleIcon className="size-5 text-indigo" />
                     </div>
                   </div>
@@ -128,7 +128,7 @@ export function DashboardBookmarks() {
 
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-      <Card className="rounded-2xl bg-white border-border/40 shadow-premium hoverable">
+      <Card className="rounded-2xl bg-card border-border/40 shadow-premium hoverable">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             <BookmarkIcon className="size-5 text-indigo" />

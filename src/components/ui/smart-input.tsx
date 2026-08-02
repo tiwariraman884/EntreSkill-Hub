@@ -1,8 +1,7 @@
-﻿"use client";
+"use client";
 
 import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
-import { motion, AnimatePresence } from "framer-motion"
 import { Eye, EyeOff, CheckCircle2, AlertCircle, Loader2, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -64,12 +63,7 @@ function PasswordStrengthMeter({ password }: { password: string }) {
   if (strength === "none") return null
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      className="mt-2 space-y-1"
-    >
+    <div className="mt-2 space-y-1 animate-in fade-in slide-in-from-top-1 duration-200">
       <div className="flex gap-1 h-1.5">
         {["weak", "medium", "strong", "very-strong"].map((level) => (
           <div
@@ -91,7 +85,7 @@ function PasswordStrengthMeter({ password }: { password: string }) {
       <p className={cn("text-[11px] font-medium", config.textColor)}>
         {config.label}
       </p>
-    </motion.div>
+    </div>
   )
 }
 
@@ -204,22 +198,18 @@ function SmartInput({
   const shouldShowPasswordToggle = passwordToggle && type === "password" && !isLoading && !hasError && !hasSuccess
 
   const commonLabel = label && (
-    <AnimatePresence>
-      <motion.label
-        initial={false}
-        animate={showFloating ? { top: 0, fontSize: "12px", y: 0, scale: 0.85, opacity: 1 } : { top: "50%", fontSize: "14px", y: "-50%", scale: 1, opacity: 0.7 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        onClick={() => { inputRef.current?.focus(); textareaRef.current?.focus() }}
-        className={cn(
-          "absolute left-4 pointer-events-none origin-left z-[1] text-muted-foreground",
-          showFloating && "text-primary font-medium",
-          hasError && "text-danger"
-        )}
-        style={{ top: showFloating ? "0px" : "50%", transform: showFloating ? "translateY(-50%)" : "translateY(-50%)" }}
-      >
-        {label}
-      </motion.label>
-    </AnimatePresence>
+    <label
+      onClick={() => { inputRef.current?.focus(); textareaRef.current?.focus() }}
+      className={cn(
+        "absolute left-4 pointer-events-none origin-left z-[1] transition-all duration-200 ease-out",
+        showFloating
+          ? "top-0 text-[12px] -translate-y-1/2 scale-85 opacity-100 font-medium text-primary"
+          : "top-1/2 text-sm -translate-y-1/2 opacity-70 text-muted-foreground",
+        hasError && "text-danger"
+      )}
+    >
+      {label}
+    </label>
   )
 
   const commonPadding = animatedLabel ? "pt-5 pb-1.5" : ""
@@ -312,14 +302,9 @@ function SmartInput({
           </button>
         )}
 
-        {/* Focus ring animation */}
+        {/* Focus ring - CSS only */}
         {isFocused && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 rounded-xl ring-2 ring-primary/20 pointer-events-none"
-          />
+          <div className="absolute inset-0 rounded-xl ring-2 ring-primary/20 pointer-events-none animate-in fade-in duration-150" />
         )}
       </div>
 
@@ -331,57 +316,43 @@ function SmartInput({
       {/* Helper text row */}
       <div className="mt-1.5 flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <AnimatePresence>
-            {hasSuccess && successMessage && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="text-xs text-success font-medium flex items-center gap-1"
-                role="status"
-              >
-                <CheckCircle2 className="size-3" aria-hidden="true" />
-                {successMessage}
-              </motion.p>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {hasError && internalError && (
-              <motion.p
-                id="input-error"
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="text-xs text-danger font-medium flex items-center gap-1"
-                role="alert"
-              >
-                <AlertCircle className="size-3" aria-hidden="true" />
-                {internalError}
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {hasSuccess && successMessage && (
+            <p
+              className="text-xs text-success font-medium flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-200"
+              role="status"
+            >
+              <CheckCircle2 className="size-3" aria-hidden="true" />
+              {successMessage}
+            </p>
+          )}
+          {hasError && internalError && (
+            <p
+              id="input-error"
+              className="text-xs text-danger font-medium flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-200"
+              role="alert"
+            >
+              <AlertCircle className="size-3" aria-hidden="true" />
+              {internalError}
+            </p>
+          )}
           {helperText && !hasError && !hasSuccess && (
-            <motion.p
+            <p
               id="input-helper"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-xs text-muted-foreground"
+              className="text-xs text-muted-foreground animate-in fade-in duration-200"
             >
               {helperText}
-            </motion.p>
+            </p>
           )}
         </div>
         {showCharacterCount && maxLength && (
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <span
             className={cn(
               "text-xs tabular-nums transition-colors duration-200",
               (currentLength || 0) > maxLength * 0.9 ? "text-danger font-medium" : (currentLength || 0) > maxLength * 0.75 ? "text-warning" : "text-muted-foreground"
             )}
           >
             {(currentLength || 0)}/{maxLength}
-          </motion.span>
+          </span>
         )}
       </div>
     </div>
@@ -390,4 +361,3 @@ function SmartInput({
 
 export { SmartInput }
 export type { SmartInputProps, InputState }
-

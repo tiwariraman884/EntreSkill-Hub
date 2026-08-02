@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface SettingsLayoutProps {
   sidebar: React.ReactNode;
@@ -50,43 +49,35 @@ export function SettingsLayout({
         </div>
       </div>
 
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 bg-black z-50 lg:hidden"
-            />
-            {/* Sidebar drawer panel */}
-            <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed inset-y-0 left-0 w-80 bg-white dark:bg-[#0f172a] z-50 p-6 shadow-2xl overflow-y-auto lg:hidden"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-base font-bold text-foreground font-heading">Settings Navigation</span>
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  className="p-2 rounded-xl hover:bg-muted"
-                >
-                  <X className="size-5" />
-                </button>
-              </div>
-              <div onClick={() => setMobileOpen(false)}>
-                {sidebar}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Mobile Drawer — CSS only */}
+      {mobileOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 bg-black/40 z-50 lg:hidden animate-in fade-in duration-200"
+          />
+          {/* Sidebar drawer panel */}
+          <div
+            className="fixed inset-y-0 left-0 w-80 bg-white dark:bg-[#0f172a] z-50 p-6 shadow-2xl overflow-y-auto lg:hidden animate-in slide-in-from-left duration-300"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <span className="text-base font-bold text-foreground font-heading">Settings Navigation</span>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="p-2 rounded-xl hover:bg-muted"
+                aria-label="Close navigation"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+            <div onClick={() => setMobileOpen(false)}>
+              {sidebar}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

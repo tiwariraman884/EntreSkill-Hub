@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { AccentColor } from "@/types/appearance";
 
@@ -41,29 +40,20 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
             aria-checked={isSelected}
             aria-label={option.label}
             onClick={() => onChange(option.value)}
-            className="group relative flex h-14 w-14 items-center justify-center rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer"
+            className={cn(
+              "group relative flex h-14 w-14 items-center justify-center rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer transition-all duration-200",
+              isSelected && "ring-2 ring-primary ring-offset-2"
+            )}
           >
-            {/* Ripple effect and hover lift wrapper */}
-            <motion.div
-              whileHover={{ scale: 1.15, rotate: 5 }}
-              whileTap={{ scale: 0.9 }}
+            <div
               className={cn(
-                "relative h-10 w-10 rounded-xl transition-all duration-300 shadow-md group-hover:shadow-lg",
+                "relative h-10 w-10 rounded-xl transition-all duration-300 shadow-md group-hover:shadow-lg group-hover:scale-110 group-hover:rotate-5 group-active:scale-90",
                 option.colorClass
               )}
             >
-              {/* Internal ripple circle on hover */}
+              {/* Internal highlight on hover */}
               <div className="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-            </motion.div>
-
-            {/* Selected animated ring */}
-            {isSelected && (
-              <motion.div
-                layoutId="activeColorRing"
-                className="absolute inset-0 rounded-2xl border-2 border-primary"
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              />
-            )}
+            </div>
           </button>
         );
       })}

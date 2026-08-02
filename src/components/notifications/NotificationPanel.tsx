@@ -109,12 +109,12 @@ export default function NotificationPanel({ open, onClose, anchorRef }: Notifica
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-[45]" onClick={onClose} />
+      <div className="fixed inset-0 z-45" onClick={onClose} />
       
       {/* Panel */}
       <div
         ref={panelRef}
-        className="fixed z-50 w-[420px] max-h-[650px] bg-white/95 backdrop-blur-2xl border-2 border-border/40 rounded-2xl shadow-2xl shadow-indigo/10 flex flex-col animate-scale-in"
+        className="fixed z-50 w-105 max-h-162.5 bg-card/95 backdrop-blur-2xl border-2 border-border/40 rounded-2xl shadow-2xl shadow-indigo/10 flex flex-col animate-scale-in"
         style={{
           top: position.top,
           right: position.right,

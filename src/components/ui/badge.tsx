@@ -11,11 +11,11 @@ const badgeVariants = cva(
       variant: {
         default: "bg-gradient-to-r from-primary to-primary-light text-white shadow-sm shadow-primary/20 hover:shadow-md hover:shadow-primary/30",
         secondary:
-          "bg-gradient-to-r from-warning to-warning-light text-ink shadow-sm shadow-warning/20 hover:shadow-md hover:shadow-warning/30 [a]:hover:opacity-90",
+          "bg-gradient-to-r from-warning to-warning-light text-ink shadow-sm shadow-warning/20 hover:shadow-md hover:shadow-warning/30 [a]:hover:opacity-90 dark:text-foreground",
         destructive:
           "bg-gradient-to-r from-danger to-danger-light text-white shadow-sm shadow-danger/20 hover:shadow-md hover:shadow-danger/30 focus-visible:ring-destructive/20 dark:bg-gradient-to-r dark:from-danger dark:to-danger-light dark:focus-visible:ring-destructive/40 [a]:hover:opacity-90",
         outline:
-          "border-2 border-primary/30 bg-white text-primary hover:bg-primary/5 hover:border-primary/50",
+          "border-2 border-primary/30 bg-background text-primary hover:bg-primary/5 hover:border-primary/50 dark:border-border/60 dark:bg-card dark:text-foreground dark:hover:bg-muted/70",
         ghost:
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",

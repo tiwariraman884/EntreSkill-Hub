@@ -66,7 +66,7 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       {/* Sticky Header */}
-      <header className="sticky top-16 z-30 bg-white/80 backdrop-blur-xl border-b border-border/40 shadow-premium animate-fade-in-up">
+      <header className="sticky top-16 z-30 bg-card/80 backdrop-blur-xl border-b border-border/40 shadow-premium animate-fade-in-up">
         <div className="w-full max-w-7xl mx-auto px-4 lg:px-6 h-20 flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold font-heading tracking-tight">
